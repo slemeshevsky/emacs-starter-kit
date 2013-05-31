@@ -1,0 +1,120 @@
+#+TITLE: Emacs Starter Kit
+
+1. Определение загрузочных файлов и установки загрузочных путей
+#+begin_src emacs-lisp  
+(setq dotfiles-dir (file-name-directory
+                     (or load-file-name (buffer-file-name))))
+  
+(add-to-list 'load-path dotfiles-dir)
+(setq package-user-dir (concat dotfiles-dir "elpa"))
+#+end_src
+
+2. Загружаем пакетный менеджер ELPA
+#+begin_src emacs-lisp  
+(require 'package)
+(package-initialize)
+#+end_src
+
+3. Установка пакетов из ELPA по списку
+#+begin_src emacs-lisp  
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(defvar my-packages '(auctex reftex)
+  "A list of packages to ensure are installed at launch.")
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+#+end_src
+
+4. Определение файлов настроек, специфичных для пользователя и машины.
+#+begin_src emacs-lisp  
+(setq system-specific-config (concat dotfiles-dir system-name ".el")
+          system-specific-literate-config (concat dotfiles-dir system-name ".org")
+          user-specific-config (concat dotfiles-dir user-login-name ".el")
+          user-specific-literate-config (concat dotfiles-dir user-login-name ".org")
+          user-specific-dir (concat dotfiles-dir user-login-name))
+    (add-to-list 'load-path user-specific-dir)
+#+end_src
+
+5. Пакеты emacs-lisp, загруженные из директории =src= замещают те, что установленны 
+   через ELPA. Это полезно если вы используете самые свежие версии пакетов или если 
+   их нет в ELPA.
+#+begin_src emacs-lisp  
+(add-to-list 'load-path sitelisp-dir)
+#+end_src
+
+6. Чрезвычайно полезная функция — используйте её если вам нужно отредактировать 
+   системные файлы от имени суперпользователя.
+#+begin_src emacs-lisp  
+(defun sudo-edit (&optional arg)
+  (interactive "p")
+  (if arg
+      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
+     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+#+end_src
+
+7. Этот код загружает цветовые темы, тем самым делая их доступными
+   по-умолчанию.
+#+begin_src emacs-lisp  
+(add-to-list 'load-path (expand-file-name "color-theme" sitelisp-dir))
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn (color-theme-initialize)))
+#+end_src
+
+8. Прикручиваем типографику к Emacs
+#+begin_src emacs-lisp  
+(require 'typopunct)
+(setq-default typopunct-buffer-language 'russian)
+;; Функция включает typopunct-mode.
+(defun turn-on-typopunct-mode ()
+  (typopunct-mode t))
+#+end_src
+
+9. Браузер
+#+begin_src emacs-lisp  
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+#+end_src
+
+10. Включить подсветку синтаксиса для старых эмаксов.
+#+begin_src emacs-lisp  
+(global-font-lock-mode t)
+#+end_src
+
+11. Подсвечитвать совпадающие скобки
+#+begin_src emacs-lisp  
+(show-paren-mode 1)
+#+end_src
+
+12. Подключаем ESS
+#+begin_src emacs-lisp  
+(require 'ess-site)
+#+end_src
+
+13. Печать кириллицы в postscript
+#+begin_src emacs-lisp  
+(load-library "ps-mule") 
+(setq bdf-directory-list '("/usr/share/emacs/fonts/bdf")) 
+(setq ps-mule-font-info-database-default ps-mule-font-info-database-bdf) 
+(setq ps-multibyte-buffer 'bdf-font-except-latin)
+#+end_src
+
+14. Загрузка настроек конкретного пользователя и машины
+#+begin_src emacs-lisp  
+(if (file-exists-p sitelisp-dir)
+  (let ((default-directory sitelisp-dir))
+    (normal-top-level-add-subdirs-to-load-path)))
+ (if (file-exists-p user-specific-config) (load user-specific-config))
+(if (file-exists-p user-specific-literate-config)
+    (org-babel-load-file user-specific-literate-config))
+(when (file-exists-p user-specific-dir)
+  (let ((default-directory user-specific-dir))
+    (mapc #'load (directory-files user-specific-dir nil ".*el$"))
+     (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
+ (if (file-exists-p system-specific-config) (load system-specific-config))
+ (if (file-exists-p system-specific-literate-config)
+     (org-babel-load-file system-specific-literate-config))
+#+end_src
