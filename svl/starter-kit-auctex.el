@@ -10,6 +10,8 @@
 (setq TeX-source-correlate-start-server t)
 
 ;; Evince для просмотра PDF
+(setq TeX-view-program-list (quote (("Okular" "okular --unique %o#src:%n'pwd'/./%b"))))
+(setq TeX-view-program-selection (quote ((output-pdf "Okular") ((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "xpdf") (output-html "xdg-open"))))
 (if (require 'dbus "dbus" t)
     (progn
       ;; universal time, need by evince
