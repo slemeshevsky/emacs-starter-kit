@@ -7,11 +7,12 @@
 
 (require 'package)
 (package-initialize)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex)
+(defvar my-packages '(auctex reftex ess)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
