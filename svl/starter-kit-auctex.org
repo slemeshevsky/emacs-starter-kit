@@ -5,6 +5,11 @@
 (require 'tex-site)
 #+end_src
 
+2. Добавление расширений для LaTeX-mode
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.rtx\\'" . LaTeX-mode))
+#+end_src
+
 2. Подключение RefTeX
 #+begin_src emacs-lisp
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
