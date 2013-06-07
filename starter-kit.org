@@ -21,7 +21,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex ess)
+(defvar my-packages '(auctex reftex ess magit)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -118,4 +118,9 @@
  (if (file-exists-p system-specific-config) (load system-specific-config))
  (if (file-exists-p system-specific-literate-config)
      (org-babel-load-file system-specific-literate-config))
+#+end_src
+
+15. Загрузка пакета =magit= при первом вызове команды ~magit-status~
+#+begin_src emacs-lisp
+(autoload 'magit-status "magit" nil t)
 #+end_src
