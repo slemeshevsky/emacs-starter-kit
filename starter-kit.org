@@ -124,3 +124,20 @@
 #+begin_src emacs-lisp
 (autoload 'magit-status "magit" nil t)
 #+end_src
+
+16. Отключение панели инструментов
+#+begin_src emacs-lisp
+(when (fboundp 'tool-bar-mode) (tool-bar-mode nil))
+#+end_src
+
+#+results:
+: t
+
+17. Отключение меню
+#+begin_src emacs-lisp
+(when (fboundp 'menu-bar-mode) (menu-bar-mode nil))
+#+end_src
+
+#+results:
+: t
+
