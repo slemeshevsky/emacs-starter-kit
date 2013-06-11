@@ -127,17 +127,32 @@
 
 16. Отключение панели инструментов
 #+begin_src emacs-lisp
-(when (fboundp 'tool-bar-mode) (tool-bar-mode nil))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 #+end_src
-
-#+results:
-: t
 
 17. Отключение меню
 #+begin_src emacs-lisp
-(when (fboundp 'menu-bar-mode) (menu-bar-mode nil))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 #+end_src
 
-#+results:
-: t
+18. Размещаем окно emacs в левом верхнем углу
+#+begin_src emacs-lisp
+(setq initial-frame-alist '((top . 0) (left . 0) ))
+#+end_src
 
+19. Функция, которая меняет размер окна (на всю левую половину экрана в зависимости от разрешения)
+#+begin_src emacs-lisp
+(defun set-frame-size-according-to-resolution ()
+(interactive)
+(if window-system
+(progn
+(add-to-list 'default-frame-alist
+(cons 'width (/ (/ (x-display-pixel-width) 2) (frame-char-width))))
+(add-to-list 'default-frame-alist 
+(cons 'height (/ (- (x-display-pixel-height) 0) (frame-char-height)))))))
+#+end_src
+
+20. Вызываем функцию при загрузке
+#+begin_src emacs-lisp
+(set-frame-size-according-to-resolution)
+#+end_src
