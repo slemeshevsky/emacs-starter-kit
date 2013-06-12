@@ -14,6 +14,7 @@
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 #+end_src
 
 3. Установка пакетов из ELPA по списку
@@ -21,7 +22,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex ess)
+(defvar my-packages '(auctex reftex ess magit)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -118,4 +119,117 @@
  (if (file-exists-p system-specific-config) (load system-specific-config))
  (if (file-exists-p system-specific-literate-config)
      (org-babel-load-file system-specific-literate-config))
+#+end_src
+
+15. Загрузка пакета =magit= при первом вызове команды ~magit-status~
+#+begin_src emacs-lisp
+(autoload 'magit-status "magit" nil t)
+#+end_src
+
+16. Отключение панели инструментов
+#+begin_src emacs-lisp
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+#+end_src
+
+17. Отключение меню
+#+begin_src emacs-lisp
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+#+end_src
+
+18. Размещаем окно emacs в левом верхнем углу
+#+begin_src emacs-lisp
+(setq initial-frame-alist '((top . 0) (left . 0) ))
+#+end_src
+
+19. Функция, которая меняет размер окна (на всю левую половину экрана
+    в зависимости от разрешения) 
+#+begin_src emacs-lisp
+(defun set-frame-size-according-to-resolution ()
+(interactive)
+(if window-system
+(progn
+(add-to-list 'default-frame-alist
+(cons 'width (/ (/ (x-display-pixel-width) 2) (frame-char-width))))
+(add-to-list 'default-frame-alist 
+(cons 'height (/ (- (x-display-pixel-height) 0) (frame-char-height)))))))
+#+end_src
+
+20. Вызываем функцию при загрузке
+#+begin_src emacs-lisp
+(set-frame-size-according-to-resolution)
+#+end_src
+
+21. Устанавливаем режим =auto-fill=
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+#+end_src
+
+22. *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в
+    режиме ~text-mode~ и отключаем его для режимов ~log-edit-mode~ и
+    ~change-log-mode~
+#+begin_src emacs-lisp
+(dolist (hook '(text-mode-hook))
+     (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+     (add-hook hook (lambda () (flyspell-mode -1))))
+#+end_src
+
+Выбираем для проверки орфографии =aspell=
+#+begin_src emacs-lisp
+(setq ispell-program-name "aspell")
+#+end_src
+
+Если ~flyspell~ используется с программой ~aspell~ вместо ~ispell~
+нужно добавить следующую команду:
+#+begin_src emacs-lisp
+(setq ispell-list-command "--list")
+#+end_src
+Из-за того, что опция =-l= означает =--lang= в ~aspell~, а в ~ispell~
+=-l= означает =--list=, ~flyspell-buffer~ и ~flyspell-region~ страдают
+от этой проблемы. 
+
+Меняем словари. Для переключения между английским и русским можно
+использовать следующую функцию
+#+begin_src emacs-lisp
+(defun fd-switch-dictionary()
+(interactive)
+(let* ((dic ispell-current-dictionary)
+   (change (if (string= dic "russian") "english" "russian")))
+   (ispell-change-dictionary change)
+   (message "Dictionary switched from %s to %s" dic change)
+))
+    
+(global-set-key (kbd "<f8>")   'fd-switch-dictionary)
+#+end_src
+
+23. Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.doc\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.odt\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+#+end_src
+
+24. Подключаем ~lambda-mode~ 
+#+begin_src emacs-lisp
+(require 'lambda-mode)
+(add-hook 'org-mode-hook 'lambda-mode 1)
+(add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
+(setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 #+end_src
