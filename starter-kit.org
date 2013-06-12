@@ -140,7 +140,8 @@
 (setq initial-frame-alist '((top . 0) (left . 0) ))
 #+end_src
 
-19. Функция, которая меняет размер окна (на всю левую половину экрана в зависимости от разрешения)
+19. Функция, которая меняет размер окна (на всю левую половину экрана
+    в зависимости от разрешения) 
 #+begin_src emacs-lisp
 (defun set-frame-size-according-to-resolution ()
 (interactive)
@@ -156,3 +157,10 @@
 #+begin_src emacs-lisp
 (set-frame-size-according-to-resolution)
 #+end_src
+
+21. Устанавливаем режим =auto-fill=
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+#+end_src
+
+
