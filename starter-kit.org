@@ -201,3 +201,27 @@
     
 (global-set-key (kbd "<f8>")   'fd-switch-dictionary)
 #+end_src
+
+23. Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.doc\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.odt\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+#+end_src
