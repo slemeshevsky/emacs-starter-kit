@@ -225,3 +225,11 @@
    )
 )
 #+end_src
+
+24. Подключаем ~lambda-mode~ 
+#+begin_src emacs-lisp
+(require 'lambda-mode)
+(add-hook 'org-mode-hook 'lambda-mode 1)
+(add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
+(setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
+#+end_src
