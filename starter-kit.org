@@ -163,4 +163,40 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+end_src
 
+22. *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в
+    режиме ~text-mode~ и отключаем его для режимов ~log-edit-mode~ и
+    ~change-log-mode~
+#+begin_src emacs-lisp
+(dolist (hook '(text-mode-hook))
+     (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+     (add-hook hook (lambda () (flyspell-mode -1))))
+#+end_src
 
+Выбираем для проверки орфографии =aspell=
+#+begin_src emacs-lisp
+(setq ispell-program-name "aspell")
+#+end_src
+
+Если ~flyspell~ используется с программой ~aspell~ вместо ~ispell~
+нужно добавить следующую команду:
+#+begin_src emacs-lisp
+(setq ispell-list-command "--list")
+#+end_src
+Из-за того, что опция =-l= означает =--lang= в ~aspell~, а в ~ispell~
+=-l= означает =--list=, ~flyspell-buffer~ и ~flyspell-region~ страдают
+от этой проблемы. 
+
+Меняем словари. Для переключения между английским и русским можно
+использовать следующую функцию
+#+begin_src emacs-lisp
+(defun fd-switch-dictionary()
+(interactive)
+(let* ((dic ispell-current-dictionary)
+   (change (if (string= dic "russian") "english" "russian")))
+   (ispell-change-dictionary change)
+   (message "Dictionary switched from %s to %s" dic change)
+))
+    
+(global-set-key (kbd "<f8>")   'fd-switch-dictionary)
+#+end_src
