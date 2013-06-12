@@ -17,7 +17,7 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 #+end_src
 
-3. Установка пакетов из ELPA по списку
+3. Установка пакетов из ELPA по списку.
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -29,6 +29,9 @@
   (when (not (package-installed-p p))
     (package-install p)))
 #+end_src
+Мои настройки для ~org-mode~, ~auctex~, а также файл для настройки
+кастомизации хранятся в каталоге =svl/= ветки =svl=
+
 
 4. Определение файлов настроек, специфичных для пользователя и машины.
 #+begin_src emacs-lisp  
