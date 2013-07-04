@@ -22,7 +22,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex ess magit)
+(defvar my-packages '(auctex reftex ess magit ido)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -235,4 +235,10 @@
 (add-hook 'org-mode-hook 'lambda-mode 1)
 (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
+#+end_src
+
+25. Подключаем ~ido~
+#+begin_src emacs-lisp
+(require 'ido)
+(ido-mode t)
 #+end_src
