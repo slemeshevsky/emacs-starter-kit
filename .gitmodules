@@ -1,0 +1,3 @@
+[submodule "src/ecb"]
+	path = src/ecb
+	url = https://github.com/alexott/ecb.git

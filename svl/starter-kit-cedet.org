@@ -1,0 +1,62 @@
+#+TITLE: CEDET configurations
+* Включение Semantic
+1. Перед включением ~Semantic~ необходимо заполнить список
+   ~semsntic-default-submodes~
+   1. Включение глобальной поддержки ~Semanticmdb~
+      #+begin_src emacs-lisp 
+(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+      #+end_src
+   2. Включение режима автоматического запоминания информации о
+      редактируемых тагах, так что можно перейти к ним позднее с
+      помощью команды ~semantic-mrub-switch-tags~
+      #+begin_src emacs-lisp
+(add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+      #+end_src
+   3. Активация контекстного меню, привязанного к правой клавише мыши
+      (у меня не сработало)
+      #+begin_src emacs-lisp
+; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+      #+end_src
+   4. Активация подстветки первой строки текущего тага (функции,
+      класса и т.п.)
+      #+begin_src emacs-lisp
+(add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+      #+end_src
+   5. Активация автоматического анализа кода в буферах когда Emacs
+      "свободен" и ожидает ввода данных от пользователя (idle time) 
+      #+begin_src emacs-lisp
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+      #+end_src
+2. Включаем ~Semantic~ 
+   #+begin_src emacs-lisp
+   (semantic-mode 1) 
+   #+end_src
+3. Для использования  возможности по дополнению имен и показу
+   информации о функциях и классах необходимо загрузить пакет
+   ~semantic/ia~
+   #+begin_src emacs-lisp
+(require 'semantic/ia)
+   #+end_src
+
+* Системные подключаемые файлы
+1. Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет
+   может автоматически получить данные о нахождении системных
+   подключаемых файлов. Для этого вам необходимо загрузить пакет
+   ~semantic/bovine/gcc~:
+   #+begin_src emacs-lisp
+(require 'semantic/bovine/gcc)
+   #+end_src
+
+* Натройка EDE
+1. Для использования проектов необходимо включить соответствующий
+   режим, реализуемый пакетом ~EDE~
+   #+begin_src emacs-lisp
+(global-ede-mode 1)
+   #+end_src
+
+* Настройка ECB
+1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
+   от AlexOtt
+   #+begin_src emacs-lisp
+(require 'ecb)
+   #+end_src
