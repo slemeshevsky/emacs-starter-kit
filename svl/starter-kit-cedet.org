@@ -1,3 +1,4 @@
+
 #+TITLE: CEDET configurations
 * Включение Semantic
 1. Перед включением ~Semantic~ необходимо заполнить список
@@ -23,9 +24,21 @@
 (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
       #+end_src
    5. Активация автоматического анализа кода в буферах когда Emacs
-      "свободен" и ожидает ввода данных от пользователя (idle time) 
+      «свободен» и ожидает ввода данных от пользователя (idle time) 
       #+begin_src emacs-lisp
 (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+      #+end_src
+   6. Активация показа возможных дополнений имен во время ожидания
+      ввода. Требует чтобы был включен
+      ~global-semantic-idle-scheduler-mode~
+      #+begin_src emacs-lisp
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-completions-mode)
+      #+end_src
+   7. Активация показа информации о текущем таге во время ожидания
+      ввода. Требует чтобы был включен 
+      ~global-semantic-idle-scheduler-mode~ 
+      #+begin_src emacs-lisp
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
       #+end_src
 2. Включаем ~Semantic~ 
    #+begin_src emacs-lisp
@@ -47,11 +60,56 @@
 (require 'semantic/bovine/gcc)
    #+end_src
 
+* Настройка Semanticdb
+1. Включаем поддержку ~gnu global~ 
+   #+begin_src emacs-lisp
+(when (cedet-gnu-global-version-check t)
+  (semanticdb-enable-gnu-global-databases 'c-mode)
+  (semanticdb-enable-gnu-global-databases 'c++-mode))
+  #+end_src
+2. Включаем поддержку ~ctags~ для основных языков: ~Unix Shell~,
+   ~Perl~, ~Pascal~, ~Tcl~, ~Fortran~, ~Asm~
+   #+begin_src emacs-lisp
+(when (cedet-ectag-version-check)
+  (semantic-load-enable-primary-exuberent-ctags-support))
+   #+end_src
+3. Настройка CEDET для работы с библиотекой Qt4.
+   #+begin_src emacs-lisp
+(setq qt4-base-dir "/usr/include/qt4")
+(semantic-add-system-include qt4-base-dir 'c++-mode)
+(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
+   #+end_src
+
+* Использование Semantic
+1. Дополнение имен
+
 * Натройка EDE
 1. Для использования проектов необходимо включить соответствующий
    режим, реализуемый пакетом ~EDE~
    #+begin_src emacs-lisp
-(global-ede-mode 1)
+;(global-ede-mode 1)
+   #+end_src
+2. Настройка команды компиляции для qt проекта
+   #+begin_src emacs-lisp
+(setq compilation-scroll-output 1)
+(global-set-key (kbd "\e\em") 'save-and-make)
+(global-set-key (kbd "\e\eq") 'save-and-qmake)
+(global-set-key (kbd "\e\ek") 'kill-compilation)
+(defun save-and-qmake ()
+  "save and call compile as qmake and make"
+  (interactive)
+  (save-buffer)
+  (compile "qmake")
+  (message "qmake executed!"))
+(defun save-and-make ()
+  "save and call compile as qmake and make"
+  (interactive)
+  (save-buffer)
+  (compile "make")
+  (message "make executed!"))
    #+end_src
 
 * Настройка ECB
@@ -60,3 +118,46 @@
    #+begin_src emacs-lisp
 (require 'ecb)
    #+end_src
+2. Настройки окна компиляции
+   #+begin_src emacs-lisp
+(setq ecb-compile-window-temporally-enlarge 'after-selection)
+(setq ecb-compile-window-width 'edit-window)
+(setq ecb-compile-window-height 10)
+   #+end_src
+3. Отключение «подсказки дня»
+   #+begin_src emacs-lisp
+(setq ecb-tip-of-the-day nil)
+   #+end_src
+4. Отключаем автоматическое определение пустых директорий
+   #+begin_src emacs-lisp
+(setq ecb-prescan-directories-for-emptyness 0)
+   #+end_src
+5. Комбинация клавиш для быстрой активации/деактивации ECB, 
+   #+begin_src emacs-lisp
+(global-set-key (kbd "\e\eE") 'ecb-activate)
+(global-set-key (kbd "\e\eD") 'ecb-deactivate)
+(global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
+   #+end_src
+* Настройка дополнительных пакетов для редактирования кода
+1. Натройки модуля ~hideshow~ для свертывания кода
+   #+begin_src emacs-lisp
+(load-library "hideshow")
+(add-hook 'c++-mode-hook  ; other modes similarly
+           (lambda () (hs-minor-mode 1)))
+(global-set-key (kbd "C-c @ h") 'hs-hide-block)
+(global-set-key (kbd "C-c @ s") 'hs-show-block)
+(global-set-key (kbd "C-c @ SPC") 'hs-show-block)
+   #+end_src
+
+   #+RESULTS:
+   : hs-show-block
+
+2. Настройка ~auto-complete~
+   #+begin_src emacs-lisp
+(defun my-c-mode-cedet-hook ()
+  (add-to-list 'ac-sources 'ac-source-gtags)
+  (add-to-list 'ac-sources 'ac-source-semantic))
+(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+   #+end_src
+
+

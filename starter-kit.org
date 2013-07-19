@@ -22,7 +22,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex ess magit ido)
+(defvar my-packages '(auctex reftex ess magit ido hideshow auto-complete)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
