@@ -1,3 +1,6 @@
 [submodule "src/ecb"]
 	path = src/ecb
 	url = https://github.com/alexott/ecb.git
+[submodule "src/auto-complete"]
+	path = src/auto-complete
+	url = https://github.com/auto-complete/auto-complete.git
