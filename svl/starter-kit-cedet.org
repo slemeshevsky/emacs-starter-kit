@@ -1,4 +1,3 @@
-
 #+TITLE: CEDET configurations
 * Включение Semantic
 1. Перед включением ~Semantic~ необходимо заполнить список
@@ -63,29 +62,36 @@
 * Настройка Semanticdb
 1. Включаем поддержку ~gnu global~ 
    #+begin_src emacs-lisp
-(when (cedet-gnu-global-version-check t)
-  (semanticdb-enable-gnu-global-databases 'c-mode)
-  (semanticdb-enable-gnu-global-databases 'c++-mode))
+;;(when (cedet-gnu-global-version-check t)
+;;  (semanticdb-enable-gnu-global-databases 'c-mode)
+;;  (semanticdb-enable-gnu-global-databases 'c++-mode))
   #+end_src
 2. Включаем поддержку ~ctags~ для основных языков: ~Unix Shell~,
    ~Perl~, ~Pascal~, ~Tcl~, ~Fortran~, ~Asm~
    #+begin_src emacs-lisp
-(when (cedet-ectag-version-check)
-  (semantic-load-enable-primary-exuberent-ctags-support))
+;; (when (cedet-ectag-version-check)
+;;  (semantic-load-enable-primary-exuberent-ctags-support))
    #+end_src
 3. Настройка CEDET для работы с библиотекой Qt4.
    #+begin_src emacs-lisp
-(setq qt4-base-dir "/usr/include/qt4")
-(semantic-add-system-include qt4-base-dir 'c++-mode)
-(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
+;;(setq qt4-base-dir "/usr/include/qt4")
+;;(semantic-add-system-include qt4-base-dir 'c++-mode)
+;;(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
+;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
+;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
+;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
    #+end_src
 
 * Использование Semantic
-1. Дополнение имен
-
+1. Для дополнение имен для языков с C-подобным синтаксисом можно
+   воспользоваться командой ~semantic-complete-self-insert~,
+   привязанной к клавишам ~.~ и ~>~:
+   #+begin_src emacs-lisp
+(defun my-c-mode-cedet-hook ()
+ (local-set-key "." 'semantic-complete-self-insert)
+ (local-set-key ">" 'semantic-complete-self-insert))
+(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+   #+end_src
 * Натройка EDE
 1. Для использования проектов необходимо включить соответствующий
    режим, реализуемый пакетом ~EDE~
@@ -149,11 +155,11 @@
 (global-set-key (kbd "C-c @ SPC") 'hs-show-block)
    #+end_src
 
-   #+RESULTS:
-   : hs-show-block
-
 2. Настройка ~auto-complete~
    #+begin_src emacs-lisp
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
+(ac-config-default)
 (defun my-c-mode-cedet-hook ()
   (add-to-list 'ac-sources 'ac-source-gtags)
   (add-to-list 'ac-sources 'ac-source-semantic))
