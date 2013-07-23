@@ -119,11 +119,12 @@
 )
 #+end_src
 
+6. Запускаем при старте ~org-mobile-pull~
 #+begin_src emacs-lisp
 (org-mobile-pull) ;; run org-mobile-pull at startup
 #+end_src
 
-6. Включаем ~typopunt~ в режиме ~org-mode~
+7. Включаем ~typopunt~ в режиме ~org-mode~
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-typopunct-mode)
 #+end_src

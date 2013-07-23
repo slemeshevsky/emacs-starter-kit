@@ -92,53 +92,35 @@
  (local-set-key ">" 'semantic-complete-self-insert))
 (add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
    #+end_src
-* Натройка EDE
-1. Для использования проектов необходимо включить соответствующий
-   режим, реализуемый пакетом ~EDE~
-   #+begin_src emacs-lisp
-;(global-ede-mode 1)
-   #+end_src
-2. Настройка команды компиляции для qt проекта
-   #+begin_src emacs-lisp
-(setq compilation-scroll-output 1)
-(global-set-key (kbd "\e\em") 'save-and-make)
-(global-set-key (kbd "\e\eq") 'save-and-qmake)
-(global-set-key (kbd "\e\ek") 'kill-compilation)
-(defun save-and-qmake ()
-  "save and call compile as qmake and make"
-  (interactive)
-  (save-buffer)
-  (compile "qmake")
-  (message "qmake executed!"))
-(defun save-and-make ()
-  "save and call compile as qmake and make"
-  (interactive)
-  (save-buffer)
-  (compile "make")
-  (message "make executed!"))
-   #+end_src
-
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
    от AlexOtt
    #+begin_src emacs-lisp
 (require 'ecb)
    #+end_src
-2. Настройки окна компиляции
+2. Версия ECB
+   #+begin_src emacs-lisp
+(setq ecb-options-version "2.40")
+   #+end_src
+3. Настройки окна компиляции
    #+begin_src emacs-lisp
 (setq ecb-compile-window-temporally-enlarge 'after-selection)
 (setq ecb-compile-window-width 'edit-window)
-(setq ecb-compile-window-height 10)
+(setq ecb-compile-window-height 8)
    #+end_src
-3. Отключение «подсказки дня»
+4. Отключение «подсказки дня»
    #+begin_src emacs-lisp
 (setq ecb-tip-of-the-day nil)
    #+end_src
-4. Отключаем автоматическое определение пустых директорий
+5. Отключаем автоматическое определение пустых директорий
    #+begin_src emacs-lisp
 (setq ecb-prescan-directories-for-emptyness 0)
    #+end_src
-5. Комбинация клавиш для быстрой активации/деактивации ECB, 
+6. Установка ширины окон.
+   #+begin_src emacs-lisp
+(setq ecb-windows-width 0.25)
+   #+end_src
+7. Комбинация клавиш для быстрой активации/деактивации ECB, 
    #+begin_src emacs-lisp
 (global-set-key (kbd "\e\eE") 'ecb-activate)
 (global-set-key (kbd "\e\eD") 'ecb-deactivate)

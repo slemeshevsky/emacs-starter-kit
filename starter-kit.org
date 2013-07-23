@@ -136,7 +136,7 @@
 
 17. Отключение меню
 #+begin_src emacs-lisp
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+;;(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 #+end_src
 
 18. Размещаем окно emacs в левом верхнем углу
@@ -241,4 +241,9 @@
 #+begin_src emacs-lisp
 (require 'ido)
 (ido-mode t)
+#+end_src
+
+26. Отключение полосы прокрутки
+#+begin_src emacs-lisp
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 #+end_src
