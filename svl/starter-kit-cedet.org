@@ -127,17 +127,17 @@
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
    #+end_src
 * Настройка дополнительных пакетов для редактирования кода
-1. Натройки модуля ~hideshow~ для свертывания кода
+1. Натройки модуля =hideshow= для свертывания кода
    #+begin_src emacs-lisp
 (load-library "hideshow")
 (add-hook 'c++-mode-hook  ; other modes similarly
            (lambda () (hs-minor-mode 1)))
 (global-set-key (kbd "C-c @ h") 'hs-hide-block)
 (global-set-key (kbd "C-c @ s") 'hs-show-block)
-(global-set-key (kbd "C-c @ SPC") 'hs-show-block)
+(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
    #+end_src
 
-2. Настройка ~auto-complete~
+2. Настройка =auto-complete=
    #+begin_src emacs-lisp
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")

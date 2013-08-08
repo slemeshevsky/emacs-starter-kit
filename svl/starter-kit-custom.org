@@ -1,4 +1,4 @@
 1. Включение понравившейся цветовой темы
 #+begin_src emacs-lisp
-;(color-theme-calm-forest)
+(color-theme-classic)
 #+end_src

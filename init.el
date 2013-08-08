@@ -27,4 +27,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(ecb-options-version "2.40")
+ '(ecb-prescan-directories-for-emptyness (quote unless-remote)))
+(put 'upcase-region 'disabled nil)
