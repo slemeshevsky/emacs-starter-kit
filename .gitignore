@@ -7,7 +7,6 @@ ede-projects.el
 init.el.before_ecb_2.40
 semanticdb
 ac-comphist.dat
-/eshell/history
-/eshell/lastdir
-/init.el.before_ecb_2.40__1
-/tramp
+eshell
+init.el.before_ecb_2.40__1
+tramp
