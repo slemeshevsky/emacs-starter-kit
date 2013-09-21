@@ -1,4 +1,51 @@
-1. Включение понравившейся цветовой темы
+* Включение понравившейся цветовой темы. 
+  Мне понравились:
+1. Classic
 #+begin_src emacs-lisp
-(color-theme-classic)
+;;(color-theme-classic)
+#+end_src
+
+2. Euphoria
+#+begin_src emacs-lisp
+;(color-theme-euphoria)
+#+end_src
+
+3. Gnome2
+#+begin_src emacs-lisp
+;(color-theme-gnome2)
+#+end_src
+
+4. Jonadabian
+#+begin_src emacs-lisp
+;(color-theme-jonadabian)
+#+end_src
+
+5. Raspopovich
+#+begin_src emacs-lisp
+;(color-theme-raspopovic)
+#+end_src
+
+6. Shaman
+#+begin_src emacs-lisp
+;(color-theme-shaman)
+#+end_src
+
+7. Xemacs
+#+begin_src emacs-lisp
+;(color-theme-xemacs)
+#+end_src
+
+8. Word-perfect
+#+begin_src emacs-lisp
+;(color-theme-word-perfect)
+#+end_src
+
+9. Clarity
+#+begin_src emacs-lisp
+(color-theme-clarity)
+#+end_src
+
+10. Calm-forest
+#+begin_src emacs-lisp
+(color-theme-calm-forest)
 #+end_src

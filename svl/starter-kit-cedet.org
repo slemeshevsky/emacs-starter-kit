@@ -1,5 +1,7 @@
 #+TITLE: CEDET configurations
-* Включение Semantic
+Настройки =CEDET= сделаны на основе [[http://alexott.net/ru/writings/emacs-devenv/EmacsCedet.html][статьи Алекса Отта]] и его
+[[https://github.com/alexott/emacs-configs/blob/master/rc/emacs-rc-cedet.el][конфигурационного файла]]
+* Включение =Semantic=
 1. Перед включением ~Semantic~ необходимо заполнить список
    ~semsntic-default-submodes~
    1. Включение глобальной поддержки ~Semanticmdb~
@@ -42,6 +44,8 @@
 2. Включаем ~Semantic~ 
    #+begin_src emacs-lisp
    (semantic-mode 1) 
+   (semantic-load-enable-excessive-code-helpers)
+   (global-semantic-tag-folding-mode 1)
    #+end_src
 3. Для использования  возможности по дополнению имен и показу
    информации о функциях и классах необходимо загрузить пакет
@@ -56,45 +60,131 @@
    подключаемых файлов. Для этого вам необходимо загрузить пакет
    ~semantic/bovine/gcc~:
    #+begin_src emacs-lisp
+(require 'semantic/bovine/c)
 (require 'semantic/bovine/gcc)
+(require 'cedet-files)
    #+end_src
 
-* Настройка Semanticdb
-1. Включаем поддержку ~gnu global~ 
+* Загрузка дополнительных пакетов
+  1. =Eassist=
+#+begin_src emacs-lisp
+(require 'eassist)
+#+end_src
+  2. =Autocomplete=
+#+begin_src emacs-lisp
+(require 'auto-complete-config)
+(ac-config-default)
+(setq ac-auto-start nil)
+(define-key ac-mode-map [(meta return)] 'auto-complete)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
+#+end_src
+  3. =Hideshow=
+#+begin_src emacs-lisp
+;;(load-library "hideshow")
+#+end_src
+  4. =Semantic-tag-folding=
+#+begin_src emacs-lisp
+;;(require 'semantic-tag-folding)
+#+end_src
+* Настройка =Semanticdb=
+1. Настройка CEDET для работы с библиотекой Qt4.
    #+begin_src emacs-lisp
-;;(when (cedet-gnu-global-version-check t)
-;;  (semanticdb-enable-gnu-global-databases 'c-mode)
-;;  (semanticdb-enable-gnu-global-databases 'c++-mode))
+(setq qt4-base-dir "/usr/include/qt4")
+(semantic-add-system-include qt4-base-dir 'c++-mode)
+(semantic-add-system-include qt4-base-dir 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/Qt3Support") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/Qt3Support") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDBus") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDBus") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDeclarative") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDeclarative") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDesiner") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtDesiner") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtGui") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtGui") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtHelp") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtHelp") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtNetwork") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtNetwork") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtOpenGL") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtOpenGL") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtScript") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtScript") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtScriptTools") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtScriptTools") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtSql") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtSql") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtSvg") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtSvg") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtTest") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtTest") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtUiTools") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtUiTools") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtWebKit") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtWebKit") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtXml") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtXml") 'c-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c++-mode)
+(semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c-mode)
+(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
+(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c-mode))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
+   #+end_src
+   
+* Настройка режимов
+  1. Привязка клавиш к командам =Semantic=
+  #+begin_src emacs-lisp
+(defun svl/cedet-hook()
+  (local-set-key [(control return)] 'semantic-ia-complete-symbol-menu)
+  (local-set-key "\C-c?" 'semantic-ia-complete-symbol)
+
+  (local-set-key "\C-c>" 'semantic-comsemantic-ia-complete-symbolplete-analyze-inline)
+  (local-set-key "\C-c=" 'semantic-decoration-include-visit)
+
+  (local-set-key "\C-cj" 'semantic-ia-fast-jump)
+  (local-set-key "\C-cq" 'semantic-ia-show-doc)
+  (local-set-key "\C-cs" 'semantic-ia-show-summary)
+  (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle)
+  (local-set-key "\C-cf" 'senator-fold-tag)
+  (local-set-key "\C-cu" 'senator-unfold-tag)
+  (local-set-key "\C-c\C-t" 'senator-fold-tag-toggle)
+
+  (add-to-list 'ac-sources 'ac-source-semantic)
+)
+(defun svl/c-mode-cedet-hook ()
+  (local-set-key "\C-ct" 'eassist-switch-h-cpp)
+  (local-set-key "\C-xt" 'eassist-switch-h-cpp)
+  (local-set-key "\C-ce" 'eassist-list-methods)
+  (local-set-key "\C-c\C-r" 'semantic-symref)
+
+  (add-to-list 'ac-sources 'ac-source-gtags)
+)
+
+(add-hook 'c-mode-common-hook 'svl/cedet-hook)
+(add-hook 'c-mode-common-hook 'svl/c-mode-cedet-hook)
   #+end_src
-2. Включаем поддержку ~ctags~ для основных языков: ~Unix Shell~,
-   ~Perl~, ~Pascal~, ~Tcl~, ~Fortran~, ~Asm~
-   #+begin_src emacs-lisp
-;; (when (cedet-ectag-version-check)
-;;  (semantic-load-enable-primary-exuberent-ctags-support))
-   #+end_src
-3. Настройка CEDET для работы с библиотекой Qt4.
-   #+begin_src emacs-lisp
-;;(setq qt4-base-dir "/usr/include/qt4")
-;;(semantic-add-system-include qt4-base-dir 'c++-mode)
-;;(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
-;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
-;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
-;;(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
-   #+end_src
-
-* Использование Semantic
-1. Для дополнение имен для языков с C-подобным синтаксисом можно
-   воспользоваться командой ~semantic-complete-self-insert~,
-   привязанной к клавишам ~.~ и ~>~:
-   #+begin_src emacs-lisp
-(defun my-c-mode-cedet-hook ()
- (local-set-key "." 'semantic-complete-self-insert)
- (local-set-key ">" 'semantic-complete-self-insert))
-(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
-   #+end_src
+  2. Включаем поддержку =gnu global=
+#+begin_src emacs-lisp
+(when (cedet-gnu-global-version-check t)
+  (semanticdb-enable-gnu-global-databases 'c-mode t)
+  (semanticdb-enable-gnu-global-databases 'c++-mode t))
+#+end_src
+  3. Включаем поддержку =ectags= 
+#+begin_src emacs-lisp
+(when (cedet-ectag-version-check t)
+  (semantic-load-enable-primary-ectags-support))
+  #+end_src
+* =SRecode=
+  #+begin_src emacs-lisp
+(global-srecode-minor-mode 1)
+  #+end_src
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
-   от AlexOtt
+   от Алекса Отта
    #+begin_src emacs-lisp
 (require 'ecb)
    #+end_src
@@ -127,25 +217,14 @@
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
    #+end_src
 * Настройка дополнительных пакетов для редактирования кода
-1. Натройки модуля =hideshow= для свертывания кода
+1. Настройки модуля =hideshow= для свертывания кода
    #+begin_src emacs-lisp
-(load-library "hideshow")
-(add-hook 'c++-mode-hook  ; other modes similarly
-           (lambda () (hs-minor-mode 1)))
-(global-set-key (kbd "C-c @ h") 'hs-hide-block)
-(global-set-key (kbd "C-c @ s") 'hs-show-block)
-(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
+;;(add-hook 'c++-mode-hook  ; other modes similarly
+;;           (lambda () (hs-minor-mode 1)))
+;;(add-hook 'c-mode-common-hook  ; other modes similarly
+;;           (lambda () (hs-minor-mode 1)))
+;;(global-set-key (kbd "C-c @ h") 'hs-hide-block)
+;;(global-set-key (kbd "C-c @ s") 'hs-show-block)
+;;(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
    #+end_src
-
-2. Настройка =auto-complete=
-   #+begin_src emacs-lisp
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
-(ac-config-default)
-(defun my-c-mode-cedet-hook ()
-  (add-to-list 'ac-sources 'ac-source-gtags)
-  (add-to-list 'ac-sources 'ac-source-semantic))
-(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
-   #+end_src
-
 

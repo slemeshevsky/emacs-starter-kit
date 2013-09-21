@@ -10,3 +10,5 @@ ac-comphist.dat
 eshell
 init.el.before_ecb_2.40__1
 tramp
+*.el
+/svl/#starter-kit-cedet.el#

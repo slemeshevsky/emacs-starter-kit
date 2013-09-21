@@ -159,7 +159,7 @@
 
 20. Вызываем функцию при загрузке
 #+begin_src emacs-lisp
-(set-frame-size-according-to-resolution)
+;; (set-frame-size-according-to-resolution)
 #+end_src
 
 21. Устанавливаем режим =auto-fill=
@@ -189,7 +189,7 @@
 #+end_src
 Из-за того, что опция =-l= означает =--lang= в ~aspell~, а в ~ispell~
 =-l= означает =--list=, ~flyspell-buffer~ и ~flyspell-region~ страдают
-от этой проблемы. 
+от этой проблемы.
 
 Меняем словари. Для переключения между английским и русским можно
 использовать следующую функцию

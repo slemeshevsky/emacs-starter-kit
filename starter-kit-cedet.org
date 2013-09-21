@@ -132,6 +132,8 @@
 (load-library "hideshow")
 (add-hook 'c++-mode-hook  ; other modes similarly
            (lambda () (hs-minor-mode 1)))
+(add-hook 'clang-mode-hook  ; other modes similarly
+           (lambda () (hs-minor-mode 1)))
 (global-set-key (kbd "C-c @ h") 'hs-hide-block)
 (global-set-key (kbd "C-c @ s") 'hs-show-block)
 (global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)

@@ -4,6 +4,14 @@
 ;;
 ;; This is the first thing to get loaded.
 ;;
+;;Так как я использую автономную версию ~CEDET~, то необходимо выполнить 
+;; загрузку пакета с помощью команды
+;; #+begin_src emacs-lisp
+(add-to-list 'load-path "~/projects/cedet-bzr/contrib/")
+(load-file "~/bin/emacs/cedet-bzr/cedet-devel-load.el")
+(load-file "~/bin/emacs/cedet-bzr/contrib/cedet-contrib-load.el")
+(add-to-list  'Info-directory-list "~/projects/cedet-bzr/doc/info")
+;;#+end_src 
 
 (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
 (setq sitelisp-dir (expand-file-name "src" dotfiles-dir))
