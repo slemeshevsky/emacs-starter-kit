@@ -42,7 +42,7 @@
 
 9. Clarity
 #+begin_src emacs-lisp
-(color-theme-clarity)
+;(color-theme-clarity)
 #+end_src
 
 10. Calm-forest

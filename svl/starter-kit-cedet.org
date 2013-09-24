@@ -90,6 +90,7 @@
 1. Настройка CEDET для работы с библиотекой Qt4.
    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
+(setq qwt-base-dir "/usr/include/qwt")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
 (semantic-add-system-include qt4-base-dir 'c-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c++-mode)
@@ -128,6 +129,8 @@
 (semantic-add-system-include (concat qt4-base-dir "/QtXml") 'c-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c++-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c-mode)
+(semantic-add-system-include qwt-base-dir 'c++-mode)
+(semantic-add-system-include qwt-base-dir 'c-mode)
 (add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
 (add-to-list 'auto-mode-alist (cons qt4-base-dir 'c-mode))
 (add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))

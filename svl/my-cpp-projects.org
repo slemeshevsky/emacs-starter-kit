@@ -1,5 +1,5 @@
 #+TITLE: My C++ projects by using EDE
-* Натройка EDE
+* Настройка EDE
 1. Для использования проектов необходимо включить соответствующий
    режим, реализуемый пакетом ~EDE~
    #+begin_src emacs-lisp
@@ -28,16 +28,9 @@
 * Проект 3DMathdent
 1. Определение проекта
    #+begin_src emacs-lisp
-;;(ede-cpp-root-project "MathDent"
-;;              :name "MathDentProject"
-;;              :file "~/Projects/mathdent/3dmathdent-src.pro"
-;;	      :include-path '("/"
-;;			      "/gui"
-;;			      "/interfaces"
-;;			      "/Model"
-;;			      "/plugins/"
-;;			      "/plugins/AnalyzeFileImportPlugin"
-;;			      "/plugins/ProjectPlugin"
-;;			      )
-;;)
+(ede-cpp-root-project "MathDent"
+              :name "MathDentProject"
+              :file "~/Projects/mathdent/3dmathdent-src.pro"
+              :compile-command "qmake && make"
+)
    #+end_src
