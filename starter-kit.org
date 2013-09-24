@@ -22,7 +22,11 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+<<<<<<< HEAD
 (defvar my-packages '(auctex reftex ess magit)
+=======
+(defvar my-packages '(auctex reftex ess magit ido hideshow auto-complete)
+>>>>>>> svl
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -136,7 +140,11 @@
 
 17. Отключение меню
 #+begin_src emacs-lisp
+<<<<<<< HEAD
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+=======
+;;(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+>>>>>>> svl
 #+end_src
 
 18. Размещаем окно emacs в левом верхнем углу
@@ -159,7 +167,11 @@
 
 20. Вызываем функцию при загрузке
 #+begin_src emacs-lisp
+<<<<<<< HEAD
 (set-frame-size-according-to-resolution)
+=======
+;; (set-frame-size-according-to-resolution)
+>>>>>>> svl
 #+end_src
 
 21. Устанавливаем режим =auto-fill=
@@ -189,7 +201,11 @@
 #+end_src
 Из-за того, что опция =-l= означает =--lang= в ~aspell~, а в ~ispell~
 =-l= означает =--list=, ~flyspell-buffer~ и ~flyspell-region~ страдают
+<<<<<<< HEAD
 от этой проблемы. 
+=======
+от этой проблемы.
+>>>>>>> svl
 
 Меняем словари. Для переключения между английским и русским можно
 использовать следующую функцию
@@ -236,3 +252,17 @@
 (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 #+end_src
+<<<<<<< HEAD
+=======
+
+25. Подключаем ~ido~
+#+begin_src emacs-lisp
+(require 'ido)
+(ido-mode t)
+#+end_src
+
+26. Отключение полосы прокрутки
+#+begin_src emacs-lisp
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+end_src
+>>>>>>> svl
