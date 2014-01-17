@@ -1,3 +1,4 @@
+
 #+TITLE: CEDET configurations
 Настройки =CEDET= сделаны на основе [[http://alexott.net/ru/writings/emacs-devenv/EmacsCedet.html][статьи Алекса Отта]] и его
 [[https://github.com/alexott/emacs-configs/blob/master/rc/emacs-rc-cedet.el][конфигурационного файла]]
@@ -231,3 +232,25 @@
 ;;(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
    #+end_src
 
+* Режим =cmake-mode=
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("CMakeLists\\.txt\\'" . cmake-mode))
+	   '(("\\.cmake\\'" . cmake-mode))
+	   auto-mode-alist))
+  #+end_src
+* Режим =python-mode= для ~ufl~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.ufl\\'" . python-mode))
+	   auto-mode-alist))
+  #+end_src
+* Режим =makefile-mode= для ~pro~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pro\\'" . makefile-mode))
+	   auto-mode-alist))
+  #+end_src

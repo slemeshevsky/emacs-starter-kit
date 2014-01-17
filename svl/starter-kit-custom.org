@@ -2,7 +2,7 @@
   Мне понравились:
 1. Classic
 #+begin_src emacs-lisp
-;;(color-theme-classic)
+;(color-theme-classic)
 #+end_src
 
 2. Euphoria
@@ -47,5 +47,5 @@
 
 10. Calm-forest
 #+begin_src emacs-lisp
-(color-theme-calm-forest)
+;(color-theme-calm-forest)
 #+end_src

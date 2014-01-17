@@ -11,13 +11,19 @@
 (setq compilation-scroll-output 1)
 (global-set-key (kbd "\e\em") 'save-and-make)
 (global-set-key (kbd "\e\eq") 'save-and-qmake)
+(global-set-key (kbd "\e\ec") 'save-and-cmake)
 (global-set-key (kbd "\e\ek") 'kill-compilation)
 (defun save-and-qmake ()
-  "save and call compile as qmake"
+  "save and call compile as in ../build directory"
   (interactive)
   (save-buffer)
-  (compile "qmake")
+  (compile "cd ../build && qmake ../src")
   (message "qmake executed!"))
+(defun save-and-cmake ()
+  "save and call compile as cmake-gui in ../build directory"
+  (interactive)
+  (save-buffer)
+  (compile "cd ../build && cmake-gui ../src"))
 (defun save-and-make ()
   "save and call compile as make"
   (interactive)
@@ -25,12 +31,39 @@
   (compile "make")
   (message "make executed!"))
    #+end_src
-* Проект 3DMathdent
-1. Определение проекта
+3. Настройка компиляции теневой сборки
    #+begin_src emacs-lisp
-(ede-cpp-root-project "MathDent"
-              :name "MathDentProject"
-              :file "~/Projects/mathdent/3dmathdent-src.pro"
-              :compile-command "qmake && make"
-)
+(defun svl/compile ()
+  "Saves all unsaved buffers, and runs 'compile'."
+  (interactive)
+  (save-some-buffers t)
+  (let* ((fname (or (buffer-file-name (current-buffer)) default-directory))
+         (current-dir (file-name-directory fname))
+         (prj (ede-current-project current-dir)))
+    (if prj
+        (project-compile-project prj)
+        (compile compile-command))))
+(global-set-key [f9] 'svl/compile)
    #+end_src
+* Проект tooth
+  #+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/tooth/src/all.pro")
+ (setq mathdent-project
+        (ede-cpp-root-project "tooth"
+                              :name "tooth"
+                              :file "~/Projects/tooth/src/all.pro"
+                              :compile-command "cd ../build && qmake ../src/all.pro && make"
+                              )))
+  #+end_src
+
+* Проект itksnap
+  #+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/itk-snap/src/CMakeLists.txt")
+ (setq itksnap-project
+        (ede-cpp-root-project "itksnap"
+                              :name "itksnap"
+                              :file "~/Projects/itk-snap/src/CMakeLists.txt"
+                              :system-include-path '("/usr/local/include/ITK-4.5")
+                              :compile-command "cd ../build && make"
+                              )))
+  #+end_src
