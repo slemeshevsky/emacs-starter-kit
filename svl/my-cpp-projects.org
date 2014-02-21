@@ -28,7 +28,7 @@
   "save and call compile as make"
   (interactive)
   (save-buffer)
-  (compile "make")
+  (compile "cd ../build && make")
   (message "make executed!"))
    #+end_src
 3. Настройка компиляции теневой сборки
