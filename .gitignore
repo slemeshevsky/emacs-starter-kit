@@ -1,14 +1,11 @@
 auto-save-list
 tmp
 *~
-starter-kit.el
 bookmarks
-ede-projects.el
-init.el.before_ecb_2.40
+init.el.before_*
 semanticdb
 ac-comphist.dat
 eshell
-init.el.before_ecb_2.40__1
 tramp
 *.el
 srecode-map.el

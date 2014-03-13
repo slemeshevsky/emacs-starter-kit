@@ -280,7 +280,7 @@
   #+end_src
 * =SRecode=
   #+begin_src emacs-lisp
-(global-srecode-minor-mode 1)
+;(global-srecode-minor-mode 1)
   #+end_src
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
