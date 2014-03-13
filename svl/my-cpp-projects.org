@@ -19,17 +19,17 @@
   (save-buffer)
   (compile "cd ../build && qmake ../src")
   (message "qmake executed!"))
-(defun save-and-cmake ()
-  "save and call compile as cmake-gui in ../build directory"
-  (interactive)
-  (save-buffer)
-  (compile "cd ../build && cmake-gui ../src"))
-(defun save-and-make ()
-  "save and call compile as make"
-  (interactive)
-  (save-buffer)
-  (compile "cd ../build && make")
-  (message "make executed!"))
+;;(defun save-and-cmake ()
+;;  "save and call compile as cmake-gui in ../build directory"
+;;  (interactive)
+;;  (save-buffer)
+;;  (compile "cd ../build && cmake-gui ../src"))
+;;(defun save-and-make ()
+;;  "save and call compile as make"
+;;  (interactive)
+;;  (save-buffer)
+;;  (compile "cd ../build && make")
+;;  (message "make executed!"))
    #+end_src
 3. Настройка компиляции теневой сборки
    #+begin_src emacs-lisp

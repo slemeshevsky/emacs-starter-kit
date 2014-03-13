@@ -1,6 +1,6 @@
 #+TITLE: Emacs Starter Kit
 
-1. Определение загрузочных файлов и установки загрузочных путей
+* Определение загрузочных файлов и установки загрузочных путей
 #+begin_src emacs-lisp  
 (setq dotfiles-dir (file-name-directory
                      (or load-file-name (buffer-file-name))))
@@ -9,7 +9,7 @@
 (setq package-user-dir (concat dotfiles-dir "elpa"))
 #+end_src
 
-2. Загружаем пакетный менеджер ELPA
+* Загружаем пакетный менеджер ELPA
 #+begin_src emacs-lisp  
 (require 'package)
 (package-initialize)
@@ -17,23 +17,33 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 #+end_src
 
-3. Установка пакетов из ELPA по списку.
+* Установка пакетов из ELPA по списку.
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(auctex reftex ess magit ido hideshow auto-complete)
+(defvar my-packages '(auctex 
+		      reftex 
+		      ess 
+		      magit 
+		      ido 
+		      hideshow 
+		      auto-complete 
+		      cmake-mode 
+		      cmake-project 
+		      sr-speedbar 
+		      yasnippet
+                      projectile)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 #+end_src
-Мои настройки для ~org-mode~, ~auctex~, а также файл для настройки
-кастомизации хранятся в каталоге =svl/= ветки =svl=
+  Мои настройки для ~org-mode~, ~auctex~, а также файл для настройки
+  кастомизации хранятся в каталоге =svl/= ветки =svl=
 
-
-4. Определение файлов настроек, специфичных для пользователя и машины.
+* Определение файлов настроек, специфичных для пользователя и машины.
 #+begin_src emacs-lisp  
 (setq system-specific-config (concat dotfiles-dir system-name ".el")
           system-specific-literate-config (concat dotfiles-dir system-name ".org")
@@ -42,16 +52,13 @@
           user-specific-dir (concat dotfiles-dir user-login-name))
     (add-to-list 'load-path user-specific-dir)
 #+end_src
-
-5. Пакеты emacs-lisp, загруженные из директории =src= замещают те, что установлены 
-   через ELPA. Это полезно если вы используете самые свежие версии пакетов или если 
-   их нет в ELPA.
+* Пакеты emacs-lisp, загруженные из директории =src= замещают те, что установлены через ELPA. 
+  Это полезно если вы используете самые свежие версии пакетов или если их нет в ELPA.
 #+begin_src emacs-lisp  
 (add-to-list 'load-path sitelisp-dir)
 #+end_src
 
-6. Чрезвычайно полезная функция — используйте её если вам нужно отредактировать 
-   системные файлы от имени суперпользователя.
+* Чрезвычайно полезная функция — используйте её если вам нужно отредактировать системные файлы от имени суперпользователя.
 #+begin_src emacs-lisp  
 (defun sudo-edit (&optional arg)
   (interactive "p")
@@ -60,16 +67,14 @@
      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 #+end_src
 
-7. Этот код загружает цветовые темы, тем самым делая их доступными
-   по-умолчанию.
+* Этот код загружает цветовые темы, тем самым делая их доступными по-умолчанию.
 #+begin_src emacs-lisp  
 (add-to-list 'load-path (expand-file-name "color-theme" sitelisp-dir))
 (require 'color-theme)
 (eval-after-load "color-theme"
-  '(progn (color-theme-initialize)))
+ '(progn (color-theme-initialize)))
 #+end_src
-
-8. Прикручиваем типографику к Emacs
+* Прикручиваем типографику к Emacs
 #+begin_src emacs-lisp  
 (require 'typopunct)
 (setq-default typopunct-buffer-language 'russian)
@@ -78,28 +83,29 @@
   (typopunct-mode t))
 #+end_src
 
-9. Браузер
+* Браузер
 #+begin_src emacs-lisp  
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "google-chrome")
 #+end_src
-
-10. Включить подсветку синтаксиса для старых эмаксов.
+  
+* Включить подсветку синтаксиса для старых эмаксов.
 #+begin_src emacs-lisp  
 (global-font-lock-mode t)
 #+end_src
 
-11. Подсвечитвать совпадающие скобки
+* Подсвечитвать совпадающие скобки
 #+begin_src emacs-lisp  
+(setq show-paren-style 'expression)
 (show-paren-mode 1)
 #+end_src
 
-12. Подключаем ESS
+* Подключаем ESS
 #+begin_src emacs-lisp  
 (require 'ess-site)
 #+end_src
 
-13. Печать кириллицы в postscript
+* Печать кириллицы в ~postscript~
 #+begin_src emacs-lisp  
 (load-library "ps-mule") 
 (setq bdf-directory-list '("/usr/share/emacs/fonts/bdf")) 
@@ -107,7 +113,7 @@
 (setq ps-multibyte-buffer 'bdf-font-except-latin)
 #+end_src
 
-14. Загрузка настроек конкретного пользователя и машины
+* Загрузка настроек конкретного пользователя и машины
 #+begin_src emacs-lisp  
 (if (file-exists-p sitelisp-dir)
   (let ((default-directory sitelisp-dir))
@@ -124,28 +130,27 @@
      (org-babel-load-file system-specific-literate-config))
 #+end_src
 
-15. Загрузка пакета =magit= при первом вызове команды ~magit-status~
+* Загрузка пакета =magit= при первом вызове команды ~magit-status~
 #+begin_src emacs-lisp
 (autoload 'magit-status "magit" nil t)
 #+end_src
 
-16. Отключение панели инструментов
+* Отключение панели инструментов
 #+begin_src emacs-lisp
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 #+end_src
 
-17. Отключение меню
+* Отключение меню
 #+begin_src emacs-lisp
 ;;(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 #+end_src
 
-18. Размещаем окно emacs в левом верхнем углу
+* Размещаем окно emacs в левом верхнем углу
 #+begin_src emacs-lisp
 (setq initial-frame-alist '((top . 0) (left . 0) ))
 #+end_src
 
-19. Функция, которая меняет размер окна (на всю левую половину экрана
-    в зависимости от разрешения) 
+* Функция, которая меняет размер окна (на всю левую половину экрана в зависимости от разрешения) 
 #+begin_src emacs-lisp
 (defun set-frame-size-according-to-resolution ()
 (interactive)
@@ -156,18 +161,18 @@
 (add-to-list 'default-frame-alist 
 (cons 'height (/ (- (x-display-pixel-height) 0) (frame-char-height)))))))
 #+end_src
-
-20. Вызываем функцию при загрузке
+  
+* Вызываем функцию при загрузке
 #+begin_src emacs-lisp
 ;; (set-frame-size-according-to-resolution)
 #+end_src
 
-21. Устанавливаем режим =auto-fill=
+* Устанавливаем режим =auto-fill=
 #+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-22. *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в
+* *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в
     режиме ~text-mode~ и отключаем его для режимов ~log-edit-mode~ и
     ~change-log-mode~
 #+begin_src emacs-lisp
@@ -205,7 +210,7 @@
 (global-set-key (kbd "<f8>")   'fd-switch-dictionary)
 #+end_src
 
-23. Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
+* Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook
   '(lambda ()
@@ -229,7 +234,7 @@
 )
 #+end_src
 
-24. Подключаем ~lambda-mode~ 
+* Подключаем ~lambda-mode~
 #+begin_src emacs-lisp
 (require 'lambda-mode)
 (add-hook 'org-mode-hook 'lambda-mode 1)
@@ -237,13 +242,60 @@
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 #+end_src
 
-25. Подключаем ~ido~
+* Подключаем ~ido~
 #+begin_src emacs-lisp
 (require 'ido)
 (ido-mode t)
+(setq ido-enable-flex-matchingido-enable-flex-matching 1)
 #+end_src
 
-26. Отключение полосы прокрутки
+* Отключение полосы прокрутки
 #+begin_src emacs-lisp
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 #+end_src
+
+* Не создавать backup, .saves и auto saving файлов
+#+begin_src emacs-lisp
+(setq make-backup-files nil)
+(setq auto-save-list-file-name nil)
+(setq auto-save-default nil)
+#+end_src
+
+* Включение режима ~bs~ для отображения буфера с открытыми файлами
+    (плагин buffer show)
+#+begin_src emacs-lisp
+(require 'bs)
+(setq bs-configurations
+      '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
+(global-set-key (kbd "<f2>") 'bs-show)
+#+end_src
+
+* Включение и настройка =yasnippet=
+#+begin_src emacs-lisp
+(require 'yasnippet)
+(yas-global-mode 1)
+#+end_src
+
+* Включение номеров строк
+** Определение функции
+#+begin_src emacs-lisp
+(require 'linum)
+(defun switch-linum-mode-hook ()
+  (linum-mode t))
+#+end_src
+** Включение номеров строк в режимах программирования на C/C++
+#+begin_src emacs-lisp
+(add-hook 'c-mode-hook 'switch-linum-mode-hook)
+(add-hook 'c++-mode-hook 'switch-linum-mode-hook)
+#+end_src
+** Включение номеров строк в режимах =cmake-mode=, =python-mode=, =makefile-mode=
+#+begin_src emacs-lisp
+(add-hook 'cmake-mode-hook 'switch-linum-mode-hook)
+(add-hook 'python-mode-hook 'switch-linum-mode-hook)
+(add-hook 'makefile-mode-hook 'switch-linum-mode-hook)
+#+end_src
+** Включение номеров строк в режимах =latex= и =ess=
+   #+begin_src emacs-lisp
+(add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
+(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
+   #+end_src

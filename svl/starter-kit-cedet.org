@@ -18,7 +18,7 @@
    3. Активация контекстного меню, привязанного к правой клавише мыши
       (у меня не сработало)
       #+begin_src emacs-lisp
-; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
       #+end_src
    4. Активация подстветки первой строки текущего тага (функции,
       класса и т.п.)
@@ -75,7 +75,7 @@
 #+begin_src emacs-lisp
 (require 'auto-complete-config)
 (ac-config-default)
-(setq ac-auto-start nil)
+(setq ac-auto-start 1)
 (define-key ac-mode-map [(meta return)] 'auto-complete)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
 #+end_src
@@ -350,3 +350,16 @@
 	   '(("\\.pro\\'" . makefile-mode))
 	   auto-mode-alist))
   #+end_src
+* Включение режима =cmake-project=
+#+begin_src emacs-lisp
+(require 'cmake-project)
+(defun maybe-cmake-project-hook ()
+  (if (file-exists-p "CMakeLists.txt") (cmake-project-mode)))
+(add-hook 'c-mode-hook 'maybe-cmake-project-hook)
+(add-hook 'c++-mode-hook 'maybe-cmake-project-hook)
+#+end_src
+* Включение =sr-speedbar=
+#+begin_src emacs-lisp
+(require 'sr-speedbar)
+(global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
+#+end_src
