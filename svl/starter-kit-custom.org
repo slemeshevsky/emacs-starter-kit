@@ -1,10 +1,31 @@
-* Включение понравившейся цветовой темы. 
+* Загрузка дополнительных цветовых (кастомных) тем
+** Тема ~tangotango~
+#+begin_src emacs-lisp 
+(require 'color-theme-tangotango)
+#+end_src
+** Тема ~zenburn~
+   #+begin_src emacs-lisp
+(require 'zenburn)
+   #+end_src
+** Тема ~tango~
+ #+begin_src emacs-lisp
+(require 'color-theme-tango)
+ #+end_src
+* Включение понравившейся цветовой темы 
   Мне понравились:
+** Tango
+#+begin_src emacs-lisp
+;(color-theme-tango)
+#+end_src
 ** Classic
 #+begin_src emacs-lisp
-(color-theme-classic)
+;(color-theme-classic)
 #+end_src
 
+** Zenburn
+#+begin_src emacs-lisp
+(color-theme-zenburn)
+#+end_src
 ** Euphoria
 #+begin_src emacs-lisp
 ;(color-theme-euphoria)
