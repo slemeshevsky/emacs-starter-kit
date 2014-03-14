@@ -350,14 +350,6 @@
 	   '(("\\.pro\\'" . makefile-mode))
 	   auto-mode-alist))
   #+end_src
-* Включение режима =cmake-project=
-#+begin_src emacs-lisp
-(require 'cmake-project)
-(defun maybe-cmake-project-hook ()
-  (if (file-exists-p "CMakeLists.txt") (cmake-project-mode)))
-(add-hook 'c-mode-hook 'maybe-cmake-project-hook)
-(add-hook 'c++-mode-hook 'maybe-cmake-project-hook)
-#+end_src
 * Включение =sr-speedbar=
 #+begin_src emacs-lisp
 (require 'sr-speedbar)
