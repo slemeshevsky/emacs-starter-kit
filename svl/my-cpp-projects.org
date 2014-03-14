@@ -1,12 +1,15 @@
 #+TITLE: My C++ projects by using EDE
 * Настройка EDE
-1. Для использования проектов необходимо включить соответствующий
-   режим, реализуемый пакетом ~EDE~
+** Для использования проектов необходимо включить соответствующий режим, реализуемый пакетом ~EDE~
    #+begin_src emacs-lisp
 (global-ede-mode 1)
 (ede-enable-generic-projects)
    #+end_src
-2. Настройка команды компиляции для qt проекта
+** Загрузка =ede-cmake=
+#+begin_src emacs-lisp
+(require 'ede-cmake)
+#+end_src
+** Настройка команды компиляции для qt проекта
    #+begin_src emacs-lisp
 (setq compilation-scroll-output 1)
 (global-set-key (kbd "\e\em") 'save-and-make)
@@ -31,7 +34,7 @@
 ;;  (compile "cd ../build && make")
 ;;  (message "make executed!"))
    #+end_src
-3. Настройка компиляции теневой сборки
+** Настройка компиляции теневой сборки
    #+begin_src emacs-lisp
 (defun svl/compile ()
   "Saves all unsaved buffers, and runs 'compile'."
@@ -45,7 +48,8 @@
         (compile compile-command))))
 (global-set-key [f9] 'svl/compile)
    #+end_src
-* Проект tooth
+* Проекты Qt
+** Проект ~tooth~
   #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/tooth/src/all.pro")
  (setq mathdent-project
@@ -56,7 +60,8 @@
                               )))
   #+end_src
 
-* Проект itksnap
+* Проекты CMake
+** Проект ~itksnap~
   #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/itk-snap/src/CMakeLists.txt")
  (setq itksnap-project
@@ -67,3 +72,40 @@
                               :compile-command "cd ../build && make"
                               )))
   #+end_src
+** Проект ~mathdent~
+#+begin_src emacs-lisp
+(defvar my-project-root-build-directories
+   '(("None" . "build")
+     ("Debug" . "build.dbg")
+     ("Release" . "build.rls"))
+;;   "Alist of build directories in the project root"
+)
+
+(defun my-project-root-build-locator (config root-dir)
+;;   "Locates a build directory in the project root, uses
+;; project-root-build-directories to look up the name."
+   (cdr (assoc config my-project-root-build-directories)))
+
+(defun my-load-project (dir)
+;;   "Load a project of type `ede-cmake-cpp-project' for the directory DIR.
+;;      Return nil if there isn't one."
+   (ede-cmake-cpp-project 
+    (file-name-nondirectory (directory-file-name dir))
+    :directory dir
+    :locate-build-directory 'my-project-root-build-locator
+    :build-tool (cmake-make-build-tool "Make" :additional-parameters "-j4 -kr")
+    :include-path '( "/" )
+    :system-include-path (list (expand-file-name "external" dir) )
+    ))
+
+ (ede-add-project-autoload
+  (ede-project-autoload "mathdent"
+                        :file 'ede-cmake
+                        :proj-file "CMakeLists.txt"
+                        :proj-root 'ede-cmake-cpp-project-root
+                        :proj-root-dirmatch ""
+                        :load-type 'my-load-project
+                        :class-sym 'ede-cmake-cpp-project)
+  'unique)
+#+end_src
+   
