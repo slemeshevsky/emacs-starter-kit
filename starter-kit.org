@@ -30,10 +30,9 @@
 		      hideshow 
 		      auto-complete 
 		      cmake-mode 
-		      cmake-project 
 		      sr-speedbar 
 		      yasnippet
-                      projectile)
+                      r-autoyas)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -103,6 +102,8 @@
 * Подключаем ESS
 #+begin_src emacs-lisp  
 (require 'ess-site)
+(require 'r-autoyas)
+(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 #+end_src
 
 * Печать кириллицы в ~postscript~
@@ -172,7 +173,7 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-* *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в
+* *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в 
     режиме ~text-mode~ и отключаем его для режимов ~log-edit-mode~ и
     ~change-log-mode~
 #+begin_src emacs-lisp
@@ -254,7 +255,7 @@
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 #+end_src
 
-* Не создавать backup, .saves и auto saving файлов
+* Не создавать ~backup~, ~.saves~ и ~auto saving~ файлов
 #+begin_src emacs-lisp
 (setq make-backup-files nil)
 (setq auto-save-list-file-name nil)
@@ -283,19 +284,27 @@
 (defun switch-linum-mode-hook ()
   (linum-mode t))
 #+end_src
+** Включение номеров строк в режимах программирования
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'switch-linum-mode-hook)
+#+end_src
 ** Включение номеров строк в режимах программирования на C/C++
 #+begin_src emacs-lisp
-(add-hook 'c-mode-hook 'switch-linum-mode-hook)
-(add-hook 'c++-mode-hook 'switch-linum-mode-hook)
+;;(add-hook 'c-mode-hook 'switch-linum-mode-hook)
+;;(add-hook 'c++-mode-hook 'switch-linum-mode-hook)
 #+end_src
 ** Включение номеров строк в режимах =cmake-mode=, =python-mode=, =makefile-mode=
 #+begin_src emacs-lisp
 (add-hook 'cmake-mode-hook 'switch-linum-mode-hook)
-(add-hook 'python-mode-hook 'switch-linum-mode-hook)
-(add-hook 'makefile-mode-hook 'switch-linum-mode-hook)
 #+end_src
 ** Включение номеров строк в режимах =latex= и =ess=
    #+begin_src emacs-lisp
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
 (add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
+* Включение режима ~ergoemacs~ для раскладки клавиатуры
+  #+begin_src emacs-lisp 
+;;(setq ergoemacs-theme nil)
+;;(setq ergoemacs-keyboard-layout "us")
+;;(setq ergoemacs-mode 1)
+  #+end_src
