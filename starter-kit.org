@@ -1,5 +1,9 @@
 #+TITLE: Emacs Starter Kit
 
+* Отключение переноса строк
+#+begin_src emacs-lisp
+(setq truncate-lines t)
+#+end_src
 * Определение загрузочных файлов и установки загрузочных путей
 #+begin_src emacs-lisp  
 (setq dotfiles-dir (file-name-directory
@@ -304,7 +308,7 @@
    #+end_src
 * Включение режима ~ergoemacs~ для раскладки клавиатуры
   #+begin_src emacs-lisp 
-;;(setq ergoemacs-theme nil)
-;;(setq ergoemacs-keyboard-layout "us")
-;;(setq ergoemacs-mode 1)
+(setq ergoemacs-theme nil)
+(setq ergoemacs-keyboard-layout "us")
+(ergoemacs-mode 1)
   #+end_src
