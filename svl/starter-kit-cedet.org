@@ -285,37 +285,37 @@
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
    от Алекса Отта
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (require 'ecb)
-   #+end_src
+#+end_src
 2. Версия ECB
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-options-version "2.40")
-   #+end_src
+#+end_src
 3. Настройки окна компиляции
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-compile-window-temporally-enlarge 'after-selection)
 (setq ecb-compile-window-width 'edit-window)
 (setq ecb-compile-window-height 8)
-   #+end_src
+#+end_src
 4. Отключение «подсказки дня»
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-tip-of-the-day nil)
-   #+end_src
+#+end_src
 5. Отключаем автоматическое определение пустых директорий
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-prescan-directories-for-emptyness 0)
-   #+end_src
+#+end_src
 6. Установка ширины окон.
-   #+begin_src emacs-lisp
-(setq ecb-windows-width 0.25)
-   #+end_src
+#+begin_src emacs-lisp
+(setq ecb-windows-width 0.2)
+#+end_src
 7. Комбинация клавиш для быстрой активации/деактивации ECB, 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (global-set-key (kbd "\e\eE") 'ecb-activate)
 (global-set-key (kbd "\e\eD") 'ecb-deactivate)
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
-   #+end_src
+#+end_src
 * Настройка дополнительных пакетов для редактирования кода
 1. Настройки модуля =hideshow= для свертывания кода
    #+begin_src emacs-lisp
