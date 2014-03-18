@@ -19,12 +19,12 @@
 #+end_src
 ** Classic
 #+begin_src emacs-lisp
-;(color-theme-classic)
+(color-theme-classic)
 #+end_src
 
 ** Zenburn
 #+begin_src emacs-lisp
-(color-theme-zenburn)
+;(color-theme-zenburn)
 #+end_src
 ** Euphoria
 #+begin_src emacs-lisp
