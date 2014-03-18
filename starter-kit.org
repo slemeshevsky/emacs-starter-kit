@@ -308,7 +308,14 @@
    #+end_src
 * Включение режима ~ergoemacs~ для раскладки клавиатуры
   #+begin_src emacs-lisp 
-(setq ergoemacs-theme nil)
-(setq ergoemacs-keyboard-layout "us")
-(ergoemacs-mode 1)
+;;(setq ergoemacs-theme nil)
+;;(setq ergoemacs-keyboard-layout "us")
+;;(ergoemacs-mode 1)
+(global-set-key (kbd "M-l") 'forward-char)
+(global-set-key (kbd "M-o") 'forward-word)
+(global-set-key (kbd "M-j") 'backward-char)
+(global-set-key (kbd "M-u") 'backward-word)
+(global-set-key (kbd "M-h") 'move-beginning-of-line)
+(global-set-key (kbd "M-k") 'next-line)
+(global-set-key (kbd "M-i") 'previous-line)
   #+end_src
