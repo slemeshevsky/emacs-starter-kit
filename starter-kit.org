@@ -318,4 +318,9 @@
 (global-set-key (kbd "M-h") 'move-beginning-of-line)
 (global-set-key (kbd "M-k") 'next-line)
 (global-set-key (kbd "M-i") 'previous-line)
+(global-set-key (kbd "M-e") 'backward-kill-word)
+(global-set-key (kbd "M-r") 'kill-word)
+(global-set-key (kbd "M-d") 'delete-backward-char)
+(global-set-key (kbd "C-M-o") 'forward-paragraph)
+(global-set-key (kbd "C-M-u") 'backward-paragraph)
   #+end_src
