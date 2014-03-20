@@ -310,7 +310,11 @@
 #+begin_src emacs-lisp
 (setq ecb-windows-width 0.2)
 #+end_src
-7. Комбинация клавиш для быстрой активации/деактивации ECB, 
+7. Установить ~layout~
+#+begin_src emacs-lisp
+(ecb-layout-switch "right1")
+#+end_src
+8. Комбинация клавиш для быстрой активации/деактивации ECB, 
 #+begin_src emacs-lisp
 (global-set-key (kbd "\e\eE") 'ecb-activate)
 (global-set-key (kbd "\e\eD") 'ecb-deactivate)
