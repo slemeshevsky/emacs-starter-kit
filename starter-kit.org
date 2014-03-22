@@ -306,15 +306,16 @@
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
 (add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
-* Включение режима ~ergoemacs~ для раскладки клавиатуры
+* Настройка клавиатурных сочетаний для перемещения по буферу (похожие на ~ergoemacs~)
   #+begin_src emacs-lisp 
 ;;(setq ergoemacs-theme nil)
 ;;(setq ergoemacs-keyboard-layout "us")
 ;;(ergoemacs-mode 1)
+(cua-mode 0)
 (global-set-key (kbd "M-l") 'forward-char)
-(global-set-key (kbd "M-o") 'forward-word)
+(global-set-key (kbd "M-C-l") 'forward-word)
 (global-set-key (kbd "M-j") 'backward-char)
-(global-set-key (kbd "M-u") 'backward-word)
+(global-set-key (kbd "M-C-j") 'backward-word)
 (global-set-key (kbd "M-h") 'move-beginning-of-line)
 (global-set-key (kbd "M-k") 'next-line)
 (global-set-key (kbd "M-i") 'previous-line)
@@ -323,4 +324,6 @@
 (global-set-key (kbd "M-d") 'delete-backward-char)
 (global-set-key (kbd "C-M-o") 'forward-paragraph)
 (global-set-key (kbd "C-M-u") 'backward-paragraph)
+(global-set-key (kbd "C-S-e") 'end-of-buffer)
+(global-set-key (kbd "C-S-a") 'beginning-of-buffer)
   #+end_src
