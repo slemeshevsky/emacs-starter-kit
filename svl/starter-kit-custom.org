@@ -17,9 +17,13 @@
 #+begin_src emacs-lisp
 ;(color-theme-tango)
 #+end_src
+** Tangotango
+#+begin_src emacs-lisp
+(color-theme-tangotango)
+#+end_src
 ** Classic
 #+begin_src emacs-lisp
-(color-theme-classic)
+;(color-theme-classic)
 #+end_src
 
 ** Zenburn
