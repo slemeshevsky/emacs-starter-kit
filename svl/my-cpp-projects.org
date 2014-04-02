@@ -50,7 +50,7 @@
    #+end_src
 * Проекты Qt
 ** Проект ~tooth~
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/tooth/src/all.pro")
  (setq mathdent-project
         (ede-cpp-root-project "tooth"
@@ -58,7 +58,7 @@
                               :file "~/Projects/tooth/src/all.pro"
                               :compile-command "cd ../build && qmake ../src/all.pro && make"
                               )))
-  #+end_src
+#+end_src
 
 * Проекты CMake
 ** Проект ~itksnap~
@@ -69,6 +69,27 @@
                               :name "itksnap"
                               :file "~/Projects/itk-snap/src/CMakeLists.txt"
                               :system-include-path '("/usr/local/include/ITK-4.5")
+			      :include-path '("/Common"
+					      "/Common/ITKExtras"
+					      "/GUI/Model"
+					      "/GUI/Qt/Components"
+					      "/GUI/Qt/Coupling"
+					      "/GUI/Qt/External/ColorWheel"
+					      "/GUI/Qt/ModelView"
+					      "/GUI/Qt/View"
+					      "/GUI/Qt/Windows"
+					      "/GUI/Qt/Windows/MeshExportWizard"
+					      "/GUI/Qt/Renderer"
+					      "/GUI/Qt/Renderer/OrientationWidget/Reorient"
+					      "/Logic/Common"
+					      "/Logic/FrameWork"
+					      "/Logic/ImageWrapper"
+					      "/Logic/LevelSet"
+					      "/Logic/Mesh"
+					      "/Logic/Preprocessing"
+					      "/Logic/Preprocessing/GMM"
+					      "/Logic/RandomForest"
+					      "/Logic/Slicing")
                               :compile-command "cd ../build && make"
                               )))
   #+end_src
