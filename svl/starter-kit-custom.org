@@ -5,7 +5,7 @@
 #+end_src
 ** Тема ~zenburn~
    #+begin_src emacs-lisp
-(require 'zenburn)
+(require 'zenburn-theme)
    #+end_src
 ** Тема ~tango~
  #+begin_src emacs-lisp
