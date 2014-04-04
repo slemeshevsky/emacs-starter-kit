@@ -10,3 +10,6 @@
 [submodule "src/color-theme-zenburn"]
 	path = src/color-theme-zenburn
 	url = https://github.com/bbatsov/zenburn-emacs.git
+[submodule "src/org-caldav"]
+	path = src/org-caldav
+	url = https://github.com/dengste/org-caldav.git
