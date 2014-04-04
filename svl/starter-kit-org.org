@@ -169,3 +169,13 @@
 (setq org-icalendar-use-scheduled '(todo-start event-if-todo))
 (setq org-icalendar-use-deadline '(todo-start event-if-todo))
 #+end_src
+* Настройка ~org-caldav~
+#+begin_src emacs-lisp
+(require 'org-caldav)
+(setq org-caldav-url "https://www.google.com/calendar/dav")
+(setq org-caldav-calendar-id "g23o82ju0h3dqcpsis6pcvuol4@group.calendar.google.com")
+(setq org-caldav-inbox "~/Dropbox/org/calendar.org")
+(setq org-caldav-files ("~/Dropbox/org/gtd.org"))
+(setq org-caldav-select-tags ("@КАЛЕНДАРЬ" "@ЗАДАЧИ"))
+(setq org-icalendar-timezone "Europe/Minsk")
+#+end_src
