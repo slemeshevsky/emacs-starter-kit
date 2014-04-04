@@ -180,3 +180,7 @@
 (setq org-icalendar-timezone "Europe/Minsk")
 (global-set-key (kbd "<f3>") 'org-caldav-sync)
 #+end_src
+* Добавляем шифрования файла с паролем для календаря
+#+begin_src emacs-lisp
+(require 'epa-file)  
+#+end_src
