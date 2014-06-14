@@ -92,7 +92,7 @@
    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
 (setq qwt-base-dir "/usr/include/qwt")
-(setq itk-base-dir "/usr/local/include/ITK-4.5")
+(setq itk-base-dir "/usr/local/include/ITK-4.3")
 (setq vtk-base-dir "/usr/local/include/vtk-5.8")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
 (semantic-add-system-include qt4-base-dir 'c-mode)

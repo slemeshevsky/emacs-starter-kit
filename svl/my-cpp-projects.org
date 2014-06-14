@@ -56,7 +56,7 @@
         (ede-cpp-root-project "tooth"
                               :name "tooth"
                               :file "~/Projects/tooth/src/all.pro"
-                              :compile-command "cd ../build && qmake ../src/all.pro && make"
+                              :compile-command "cd ../build && qmake-qt4 ../src/all.pro && make"
                               )))
 #+end_src
 
@@ -68,7 +68,7 @@
         (ede-cpp-root-project "itksnap"
                               :name "itksnap"
                               :file "~/Projects/itk-snap/src/CMakeLists.txt"
-                              :system-include-path '("/usr/local/include/ITK-4.5")
+                              :system-include-path '("/usr/local/include/ITK-4.3")
 			      :include-path '("/Common"
 					      "/Common/ITKExtras"
 					      "/GUI/Model"
@@ -93,40 +93,5 @@
                               :compile-command "cd ../build && make"
                               )))
   #+end_src
-** Проект ~mathdent~
-#+begin_src emacs-lisp
-(defvar my-project-root-build-directories
-   '(("None" . "build")
-     ("Debug" . "build.dbg")
-     ("Release" . "build.rls"))
-;;   "Alist of build directories in the project root"
-)
 
-(defun my-project-root-build-locator (config root-dir)
-;;   "Locates a build directory in the project root, uses
-;; project-root-build-directories to look up the name."
-   (cdr (assoc config my-project-root-build-directories)))
-
-(defun my-load-project (dir)
-;;   "Load a project of type `ede-cmake-cpp-project' for the directory DIR.
-;;      Return nil if there isn't one."
-   (ede-cmake-cpp-project 
-    (file-name-nondirectory (directory-file-name dir))
-    :directory dir
-    :locate-build-directory 'my-project-root-build-locator
-    :build-tool (cmake-make-build-tool "Make" :additional-parameters "-j4 -kr")
-    :include-path '( "/" )
-    :system-include-path (list (expand-file-name "external" dir) )
-    ))
-
- (ede-add-project-autoload
-  (ede-project-autoload "mathdent"
-                        :file 'ede-cmake
-                        :proj-file "CMakeLists.txt"
-                        :proj-root 'ede-cmake-cpp-project-root
-                        :proj-root-dirmatch ""
-                        :load-type 'my-load-project
-                        :class-sym 'ede-cmake-cpp-project)
-  'unique)
-#+end_src
    

@@ -16,6 +16,10 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-iswitchb)
 (global-set-key "\C-cr" 'org-remember)
+(defun open-org-journal-file ()
+  (interactive)
+  (find-file "~/Dropbox/org/journal.org"))
+(global-set-key "\C-cj" 'open-org-journal-file)
 #+end_src
 
 #+begin_src emacs-lisp
