@@ -13,3 +13,6 @@
 [submodule "src/org-caldav"]
 	path = src/org-caldav
 	url = https://github.com/dengste/org-caldav.git
+[submodule "src/color-theme-sanityinc-solarized"]
+	path = src/color-theme-sanityinc-solarized
+	url = https://github.com/purcell/color-theme-sanityinc-solarized.git
