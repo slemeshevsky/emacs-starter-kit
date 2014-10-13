@@ -16,3 +16,6 @@
 [submodule "src/color-theme-sanityinc-solarized"]
 	path = src/color-theme-sanityinc-solarized
 	url = https://github.com/purcell/color-theme-sanityinc-solarized.git
+[submodule "src/color-theme-solarized"]
+	path = src/color-theme-solarized
+	url = https://github.com/sellout/emacs-color-theme-solarized.git

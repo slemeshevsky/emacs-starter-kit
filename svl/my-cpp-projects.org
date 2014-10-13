@@ -7,7 +7,7 @@
    #+end_src
 ** Загрузка =ede-cmake=
 #+begin_src emacs-lisp
-(require 'ede-cmake)
+;;(require 'ede-cmake)
 #+end_src
 ** Настройка команды компиляции для qt проекта
    #+begin_src emacs-lisp
@@ -49,26 +49,37 @@
 (global-set-key [f9] 'svl/compile)
    #+end_src
 * Проекты Qt
-** Проект ~tooth~
+** Основной проект ~cds~
 #+begin_src emacs-lisp
-(when (file-exists-p "~/Projects/tooth/src/all.pro")
- (setq mathdent-project
-        (ede-cpp-root-project "tooth"
-                              :name "tooth"
-                              :file "~/Projects/tooth/src/all.pro"
-                              :compile-command "cd ../build && qmake-qt4 ../src/all.pro && make"
+(when (file-exists-p "~/Projects/cds/gui/cds.pro")
+ (setq cds-project
+        (ede-cpp-root-project "gui"
+                              :name "gui"
+                              :file "~/Projects/cds/gui/cds.pro"
+                              :include-path '( "/", "../interfaces")
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/gui/cds.pro && make"
                               )))
 #+end_src
-
+*** Проект ~segmentation~
+#+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/cds/segmentation/segmentation.pro")
+ (setq segmentation-project
+        (ede-cpp-root-project "segmentation"
+                              :name "segmentation"
+                              :file "~/Projects/cds/segmentation/segmentation.pro"
+                              :include-path '( "/", "../interfaces")
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/segmentation/segmentation.pro && make"
+                              )))
+#+end_src
+    
 * Проекты CMake
 ** Проект ~itksnap~
   #+begin_src emacs-lisp
-(when (file-exists-p "~/Projects/itk-snap/src/CMakeLists.txt")
+(when (file-exists-p "~/Projects/itk-snap-src/CMakeLists.txt")
  (setq itksnap-project
         (ede-cpp-root-project "itksnap"
                               :name "itksnap"
-                              :file "~/Projects/itk-snap/src/CMakeLists.txt"
-                              :system-include-path '("/usr/local/include/ITK-4.3")
+                              :file "~/Projects/itk-snap-src/CMakeLists.txt"
 			      :include-path '("/Common"
 					      "/Common/ITKExtras"
 					      "/GUI/Model"

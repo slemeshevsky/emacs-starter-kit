@@ -103,6 +103,12 @@
 (show-paren-mode 1)
 #+end_src
 
+
+* Подсвечивать текущую строку
+#+begin_src emacs-lisp
+(global-hl-line-mode 1)
+#+end_src
+
 * Подключаем ESS
 #+begin_src emacs-lisp  
 (require 'ess-site)
