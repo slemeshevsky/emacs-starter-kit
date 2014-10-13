@@ -1,36 +1,108 @@
 #+TITLE: My C++ projects by using EDE
 * Настройка EDE
-1. Для использования проектов необходимо включить соответствующий
-   режим, реализуемый пакетом ~EDE~
+** Для использования проектов необходимо включить соответствующий режим, реализуемый пакетом ~EDE~
    #+begin_src emacs-lisp
 (global-ede-mode 1)
 (ede-enable-generic-projects)
    #+end_src
-2. Настройка команды компиляции для qt проекта
+** Загрузка =ede-cmake=
+#+begin_src emacs-lisp
+;;(require 'ede-cmake)
+#+end_src
+** Настройка команды компиляции для qt проекта
    #+begin_src emacs-lisp
 (setq compilation-scroll-output 1)
 (global-set-key (kbd "\e\em") 'save-and-make)
 (global-set-key (kbd "\e\eq") 'save-and-qmake)
+(global-set-key (kbd "\e\ec") 'save-and-cmake)
 (global-set-key (kbd "\e\ek") 'kill-compilation)
 (defun save-and-qmake ()
-  "save and call compile as qmake"
+  "save and call compile as in ../build directory"
   (interactive)
   (save-buffer)
-  (compile "qmake")
+  (compile "cd ../build && qmake ../src")
   (message "qmake executed!"))
-(defun save-and-make ()
-  "save and call compile as make"
-  (interactive)
-  (save-buffer)
-  (compile "make")
-  (message "make executed!"))
+;;(defun save-and-cmake ()
+;;  "save and call compile as cmake-gui in ../build directory"
+;;  (interactive)
+;;  (save-buffer)
+;;  (compile "cd ../build && cmake-gui ../src"))
+;;(defun save-and-make ()
+;;  "save and call compile as make"
+;;  (interactive)
+;;  (save-buffer)
+;;  (compile "cd ../build && make")
+;;  (message "make executed!"))
    #+end_src
-* Проект 3DMathdent
-1. Определение проекта
+** Настройка компиляции теневой сборки
    #+begin_src emacs-lisp
-(ede-cpp-root-project "MathDent"
-              :name "MathDentProject"
-              :file "~/Projects/mathdent/3dmathdent-src.pro"
-              :compile-command "qmake && make"
-)
+(defun svl/compile ()
+  "Saves all unsaved buffers, and runs 'compile'."
+  (interactive)
+  (save-some-buffers t)
+  (let* ((fname (or (buffer-file-name (current-buffer)) default-directory))
+         (current-dir (file-name-directory fname))
+         (prj (ede-current-project current-dir)))
+    (if prj
+        (project-compile-project prj)
+        (compile compile-command))))
+(global-set-key [f9] 'svl/compile)
    #+end_src
+* Проекты Qt
+** Основной проект ~cds~
+#+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/cds/gui/cds.pro")
+ (setq cds-project
+        (ede-cpp-root-project "gui"
+                              :name "gui"
+                              :file "~/Projects/cds/gui/cds.pro"
+                              :include-path '( "/", "../interfaces")
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/gui/cds.pro && make"
+                              )))
+#+end_src
+*** Проект ~segmentation~
+#+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/cds/segmentation/segmentation.pro")
+ (setq segmentation-project
+        (ede-cpp-root-project "segmentation"
+                              :name "segmentation"
+                              :file "~/Projects/cds/segmentation/segmentation.pro"
+                              :include-path '( "/", "../interfaces")
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/segmentation/segmentation.pro && make"
+                              )))
+#+end_src
+    
+* Проекты CMake
+** Проект ~itksnap~
+  #+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/itk-snap-src/CMakeLists.txt")
+ (setq itksnap-project
+        (ede-cpp-root-project "itksnap"
+                              :name "itksnap"
+                              :file "~/Projects/itk-snap-src/CMakeLists.txt"
+			      :include-path '("/Common"
+					      "/Common/ITKExtras"
+					      "/GUI/Model"
+					      "/GUI/Qt/Components"
+					      "/GUI/Qt/Coupling"
+					      "/GUI/Qt/External/ColorWheel"
+					      "/GUI/Qt/ModelView"
+					      "/GUI/Qt/View"
+					      "/GUI/Qt/Windows"
+					      "/GUI/Qt/Windows/MeshExportWizard"
+					      "/GUI/Qt/Renderer"
+					      "/GUI/Qt/Renderer/OrientationWidget/Reorient"
+					      "/Logic/Common"
+					      "/Logic/FrameWork"
+					      "/Logic/ImageWrapper"
+					      "/Logic/LevelSet"
+					      "/Logic/Mesh"
+					      "/Logic/Preprocessing"
+					      "/Logic/Preprocessing/GMM"
+					      "/Logic/RandomForest"
+					      "/Logic/Slicing")
+                              :compile-command "cd ../build && make"
+                              )))
+  #+end_src
+
+   

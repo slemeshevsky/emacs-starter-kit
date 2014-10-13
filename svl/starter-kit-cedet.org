@@ -17,7 +17,7 @@
    3. Активация контекстного меню, привязанного к правой клавише мыши
       (у меня не сработало)
       #+begin_src emacs-lisp
-; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
       #+end_src
    4. Активация подстветки первой строки текущего тага (функции,
       класса и т.п.)
@@ -53,7 +53,7 @@
    #+begin_src emacs-lisp
 (require 'semantic/ia)
    #+end_src
-   
+
 * Системные подключаемые файлы
 1. Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет
    может автоматически получить данные о нахождении системных
@@ -74,7 +74,7 @@
 #+begin_src emacs-lisp
 (require 'auto-complete-config)
 (ac-config-default)
-(setq ac-auto-start nil)
+(setq ac-auto-start 1)
 (define-key ac-mode-map [(meta return)] 'auto-complete)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
 #+end_src
@@ -91,6 +91,8 @@
    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
 (setq qwt-base-dir "/usr/include/qwt")
+(setq itk-base-dir "/usr/local/include/ITK-4.3")
+(setq vtk-base-dir "/usr/local/include/vtk-5.8")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
 (semantic-add-system-include qt4-base-dir 'c-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c++-mode)
@@ -131,6 +133,100 @@
 (semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c-mode)
 (semantic-add-system-include qwt-base-dir 'c++-mode)
 (semantic-add-system-include qwt-base-dir 'c-mode)
+(semantic-add-system-include itk-base-dir 'c++-mode)
+(semantic-add-system-include itk-base-dir 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/blas") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/blas") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/datapac") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/datapac") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/egcs") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/egcs") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/eispac") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/eispac") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/emulation") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/emulation") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/gcc") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/gcc") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/gcc-libstdcxx-v3") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/gcc-libstdcxx-v3") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/gdcmjpeg") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/gdcmjpeg") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/generic") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/generic") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/internal") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/internal") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/iso") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/iso") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkfdstream") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkfdstream") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkhdf5") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkhdf5") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkjpeg") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkjpeg") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkpng") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkpng") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itksys") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itksys") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkzlib") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/itkzlib") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/lapack") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/lapack") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/laso") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/laso") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/linpack") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/linpack") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/mathews") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/mathews") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/minpack") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/minpack") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/mwerk") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/mwerk") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/napack") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/napack") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/opt") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/opt") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/sgi") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/sgi") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/saprse") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/sparse") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/stlport") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/stlport") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/sunpro") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/sunpro") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/temperton") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/temperton") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/vcl_sys") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/vcl_sys") 'c-mode)
+(semantic-add-system-include (concat itk-base-dir "/vnl") 'c++-mode)
+(semantic-add-system-include (concat itk-base-dir "/vnl") 'c-mode)
+(semantic-add-system-include vtk-base-dir 'c++-mode)
+(semantic-add-system-include vtk-base-dir 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/alglib") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/alglib") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/Cosmo") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/Cosmo") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/internal") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/internal") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/mrmpi") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/mrmpi") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/TclTk") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/TclTk") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/VPIC") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/VPIC") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkexpat") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkexpat") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtklibproj4") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtklibproj4") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkmetaio") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkmetaio") 'c-mode
+)(semantic-add-system-include (concat vtk-base-dir "/vtknetcfd") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtknetcfd") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtksqlite") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtksqlite") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkstd") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtkstd") 'c-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c++-mode)
+(semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c-mode)
 (add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
 (add-to-list 'auto-mode-alist (cons qt4-base-dir 'c-mode))
 (add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
@@ -183,42 +279,46 @@
   #+end_src
 * =SRecode=
   #+begin_src emacs-lisp
-(global-srecode-minor-mode 1)
+;(global-srecode-minor-mode 1)
   #+end_src
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
    от Алекса Отта
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (require 'ecb)
-   #+end_src
+#+end_src
 2. Версия ECB
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-options-version "2.40")
-   #+end_src
+#+end_src
 3. Настройки окна компиляции
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-compile-window-temporally-enlarge 'after-selection)
 (setq ecb-compile-window-width 'edit-window)
 (setq ecb-compile-window-height 8)
-   #+end_src
+#+end_src
 4. Отключение «подсказки дня»
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-tip-of-the-day nil)
-   #+end_src
+#+end_src
 5. Отключаем автоматическое определение пустых директорий
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq ecb-prescan-directories-for-emptyness 0)
-   #+end_src
+#+end_src
 6. Установка ширины окон.
-   #+begin_src emacs-lisp
-(setq ecb-windows-width 0.25)
-   #+end_src
-7. Комбинация клавиш для быстрой активации/деактивации ECB, 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
+(setq ecb-windows-width 0.2)
+#+end_src
+7. Установить ~layout~
+#+begin_src emacs-lisp
+(ecb-layout-switch "right1")
+#+end_src
+8. Комбинация клавиш для быстрой активации/деактивации ECB, 
+#+begin_src emacs-lisp
 (global-set-key (kbd "\e\eE") 'ecb-activate)
 (global-set-key (kbd "\e\eD") 'ecb-deactivate)
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
-   #+end_src
+#+end_src
 * Настройка дополнительных пакетов для редактирования кода
 1. Настройки модуля =hideshow= для свертывания кода
    #+begin_src emacs-lisp
@@ -231,3 +331,30 @@
 ;;(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
    #+end_src
 
+* Режим =cmake-mode=
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("CMakeLists\\.txt\\'" . cmake-mode))
+	   '(("\\.cmake\\'" . cmake-mode))
+	   auto-mode-alist))
+  #+end_src
+* Режим =python-mode= для ~ufl~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.ufl\\'" . python-mode))
+	   auto-mode-alist))
+  #+end_src
+* Режим =makefile-mode= для ~pro~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pro\\'" . makefile-mode))
+	   auto-mode-alist))
+  #+end_src
+* Включение =sr-speedbar=
+#+begin_src emacs-lisp
+(require 'sr-speedbar)
+(global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
+#+end_src

@@ -4,3 +4,18 @@
 [submodule "src/auto-complete"]
 	path = src/auto-complete
 	url = https://github.com/auto-complete/auto-complete.git
+[submodule "src/color-theme-tangotango"]
+	path = src/color-theme-tangotango
+	url = https://github.com/juba/color-theme-tangotango.git
+[submodule "src/color-theme-zenburn"]
+	path = src/color-theme-zenburn
+	url = https://github.com/bbatsov/zenburn-emacs.git
+[submodule "src/org-caldav"]
+	path = src/org-caldav
+	url = https://github.com/dengste/org-caldav.git
+[submodule "src/color-theme-sanityinc-solarized"]
+	path = src/color-theme-sanityinc-solarized
+	url = https://github.com/purcell/color-theme-sanityinc-solarized.git
+[submodule "src/color-theme-solarized"]
+	path = src/color-theme-solarized
+	url = https://github.com/sellout/emacs-color-theme-solarized.git
