@@ -49,37 +49,81 @@
 (global-set-key [f9] 'svl/compile)
    #+end_src
 * Проекты Qt
-** Основной проект ~cds~
+**  Проект ~cds~
+*** Проект ~gui~
 #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/cds/gui/cds.pro")
  (setq cds-project
         (ede-cpp-root-project "gui"
                               :name "gui"
                               :file "~/Projects/cds/gui/cds.pro"
-                              :include-path '( "/", "../interfaces")
-                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/gui/cds.pro && make"
+                              :include-path '( "/"
+					       "../interfaces"
+					       "../base")
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make"
                               )))
 #+end_src
 *** Проект ~segmentation~
 #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/cds/segmentation/segmentation.pro")
  (setq segmentation-project
-        (ede-cpp-root-project "segmentation"
-                              :name "segmentation"
+        (ede-cpp-root-project "libsegmentation"
+                              :name "libsegmentation"
                               :file "~/Projects/cds/segmentation/segmentation.pro"
-                              :include-path '( "/", "../interfaces")
-                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/segmentation/segmentation.pro && make"
+                              :include-path '( "/"
+					       "../interfaces"
+					       "../base")
+                              :compile-command "cd ~/Projects/build/cds/segmentation && qmake-qt4 'CONFIG += debug' ../../../cds/segmentation/segmentation.pro && make"
                               )))
 #+end_src
     
+** Проект для отработки сегментации
+#+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/segmentation/main.pro")
+ (setq segmentation-project
+        (ede-cpp-root-project "segmentation"
+                              :name "segmentation"
+                              :file "~/Projects/segmentation/main.pro"
+                              :include-path '( "/"
+                                               "/base"
+                                               "/mainapp"
+                                               "/segmentation"
+					       "/segemntation/ITKExtras"
+					       "/segmentation/Common"
+					       "/segmentation/Common/ITKExtras"
+					       "/segmentation/Components"
+					       "/segmentation/Coupling"
+					       "/segmentation/External"
+					       "/segmentation/External/ColorWheel"			      
+					       "/segmentation/Model"
+					       "/segmentation/ModelView"
+					       "/segmentation/Renderer"
+					       "/segmentation/Renderer/OrientationWidget"
+					       "/segmentation/Renderer/OrientationWidget/Reorient"
+					       "/segmentation/View"
+					       "/segmentation/Windows"
+					       "/segmentation/Windows/MeshExportWizard"
+					       "/segmentation/Logic"
+					       "/segmentation/Logic/Common"
+					       "/segmentation/Logic/FrameWork"
+					       "/segmentation/Logic/ImageWrapper"
+					       "/segmentation/Logic/LevelSet"
+					       "/segmentation/Logic/Mesh"
+					       "/segmentation/Logic/Preprocessing"
+					       "/segmentation/Logic/Preprocessing/GMM"
+					       "/segmentation/Logic/Slicing"
+                                             )
+                              :compile-command "cd ~/Projects/build/segmentation && qmake-qt4 'CONFIG += debug' ../../segmentation/main.pro && make"
+                              )))
+#+end_src
 * Проекты CMake
 ** Проект ~itksnap~
   #+begin_src emacs-lisp
-(when (file-exists-p "~/Projects/itk-snap-src/CMakeLists.txt")
+(when (file-exists-p "~/Projects/examples/itk-snap-src/CMakeLists.txt")
  (setq itksnap-project
         (ede-cpp-root-project "itksnap"
                               :name "itksnap"
-                              :file "~/Projects/itk-snap-src/CMakeLists.txt"
+                              :file "~/Projects/examples/itk-snap-src/CMakeLists.txt"
 			      :include-path '("/Common"
 					      "/Common/ITKExtras"
 					      "/GUI/Model"
@@ -101,7 +145,7 @@
 					      "/Logic/Preprocessing/GMM"
 					      "/Logic/RandomForest"
 					      "/Logic/Slicing")
-                              :compile-command "cd ../build && make"
+                              :compile-command "cd ../../build/itksnap && make"
                               )))
   #+end_src
 

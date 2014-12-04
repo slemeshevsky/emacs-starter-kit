@@ -92,8 +92,8 @@
    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
 (setq qwt-base-dir "/usr/include/qwt")
-(setq itk-base-dir "/usr/local/include/ITK-4.3")
-(setq vtk-base-dir "/usr/local/include/vtk-5.8")
+(setq itk-base-dir "/usr/include/ITK-4.5")
+(setq vtk-base-dir "/usr/include/vtk-5.8")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
 (semantic-add-system-include qt4-base-dir 'c-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c++-mode)
@@ -280,7 +280,7 @@
   #+end_src
 * =SRecode=
   #+begin_src emacs-lisp
-;(global-srecode-minor-mode 1)
+(global-srecode-minor-mode 1)
   #+end_src
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
@@ -347,12 +347,20 @@
 	   '(("\\.ufl\\'" . python-mode))
 	   auto-mode-alist))
   #+end_src
-* Режим =makefile-mode= для ~pro~
+* Режим =makefile-mode= для ~pro~ и ~pri~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
 	  (append
 	   '(("\\.pro\\'" . makefile-mode))
 	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pri\\'" . makefile-mode))
+	   auto-mode-alist))
+  #+end_src
+* Режим =c++-mode= для ~.h~
+  #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   #+end_src
 * Включение =sr-speedbar=
 #+begin_src emacs-lisp

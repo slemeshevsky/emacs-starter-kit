@@ -100,3 +100,8 @@
 #+begin_src emacs-lisp
 ;(color-theme-calm-forest)
 #+end_src
+* Установка =default= шрифта «Consolas»
+#+begin_src emacs_lisp
+(set-default-font "Consolas-12")
+#+end_src
+
