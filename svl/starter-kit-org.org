@@ -48,6 +48,7 @@
       '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
+	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
 	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
 

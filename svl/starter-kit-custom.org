@@ -11,12 +11,19 @@
  #+begin_src emacs-lisp
 ;;(require 'color-theme-tango)
  #+end_src
+
 ** Темы ~solarized~
  #+begin_src emacs-lisp
 (require 'sanityinc-solarized-dark-theme)
 (require 'sanityinc-solarized-light-theme)
 ;;(require 'color-theme-solarized)
  #+end_src 
+
+** Тема ~wombat~
+#+begin_src emacs-lisp
+(require 'color-theme-wombat)
+#+end_src
+
 * Включение понравившейся цветовой темы 
   Мне понравились:
 ** Tango
@@ -41,7 +48,10 @@
 #+begin_src emacs-lisp
 (color-theme-sanityinc-solarized-light)
 #+end_src
-
+** Wombat
+#+begin_src emacs-lisp
+;;(color-theme-wombat)
+#+end_src
 ** Еще одна Solarized-Light
 #+begin_src emacs-lisp
 ;;(color-theme-solarized-light)
