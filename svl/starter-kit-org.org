@@ -29,6 +29,7 @@
 * Мои org файлы для реализации GTD
 #+begin_src emacs-lisp
 (setq org-agenda-files (list "~/Dropbox/org/gtd.org"
+                             "~/Dropbox/org/tasks.org"
                              "~/Dropbox/org/calendar.org"
 			     "~/Dropbox/org/someday.org" 
 			     "~/Dropbox/org/journal.org"
@@ -37,20 +38,24 @@
 			     "~/Dropbox/org/bodybuilding.org"
 			     ))
 #+end_src
+
+* Настройка шаблонов ~remember~
+#+begin_src emacs-lisp
+(setq org-remember-templates
+      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
+	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
+#+end_src
+
 * Настройка показа буфера ~Agenda~
 #+begin_src emacs-lisp
 (setq org-deadline-warning-days 7)
 (setq org-mobile-directory "~/Dropbox/Public/MobileOrg/")
 (setq org-directory "~/Dropbox/org/")
 (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
-
-(setq org-remember-templates
-      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
-	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
 
 (setq org-agenda-custom-commands
       '(
@@ -94,10 +99,14 @@
 	  (ps-landscape-mode t))
 	 ("~/Dropbox/org/documents/A/agendas/agenda.ps")))
       )
-  
+#+end_src
+* Настройка рефайлинга
+#+begin_src emacs-lisp
 (setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
 				 ("someday.org" :level . 2))))
-
+#+end_src
+* Функция для =TODO= записи зависящей от нескольких вложенных
+#+begin_src emacs-lisp
 (defun org-summary-todo (n-done n-not-done)
   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   (let (org-log-done org-log-states)   ; turn off logging
