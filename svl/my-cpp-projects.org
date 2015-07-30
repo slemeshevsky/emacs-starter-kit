@@ -49,7 +49,7 @@
 (global-set-key [f9] 'svl/compile)
    #+end_src
 * Проекты Qt
-**  Проект CDS
+** Проект CDS
 *** Проект ~gui~
 #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/cds/gui/cds.pro")

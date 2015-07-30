@@ -31,12 +31,16 @@
 		      magit 
 		      ido 
 		      hideshow 
+              projectile
 		      auto-complete 
 		      cmake-mode 
 		      sr-speedbar 
 		      yasnippet
+              column-marker
               r-autoyas
-              smart-tabs-mode)
+              smart-tabs-mode
+              professional-theme 
+              alect-themes)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -99,7 +103,7 @@
 
 * Подсвечитвать совпадающие скобки
 #+begin_src emacs-lisp  
-(setq show-paren-style 'expression)
+;(setq show-paren-style 'expression)
 (show-paren-mode 1)
 #+end_src
 
@@ -251,7 +255,7 @@
 (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 #+end_src
-
+  
 * Подключаем ~ido~
 #+begin_src emacs-lisp
 (require 'ido)
@@ -311,6 +315,19 @@
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
 (add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
+* Отмечаем правую границу
+** Пакет =column-maker=
+#+begin_src emacs-lisp
+;(require 'column-marker)
+;(add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
+#+end_src
+** Пакет =fill-column-indicator=
+#+begin_src emacs-lisp
+(require 'fill-column-indicator)
+(setq fci-rule-width 2)
+(add-hook 'prog-mode-hook 'fci-mode)
+#+end_src
+
 * Настройка клавиатурных сочетаний для перемещения по буферу (похожие на ~ergoemacs~)
   #+begin_src emacs-lisp 
 ;;(setq ergoemacs-theme nil)
@@ -333,8 +350,21 @@
 (global-set-key (kbd "C-S-a") 'beginning-of-buffer)
   #+end_src
 * Включение режима =smart-tabs-mode=
-  #+begin_src emacs_lisp
-(smart-tabs-insinuate 'c 'c++ 'python 'nxml)
+#+begin_src emacs-lisp
+(smart-tabs-insinuate 'c 'c++ 'python)
 (setq-default tab-width 4)
-  #+end_src
+(add-hook 'prog-mode-hook
+          (lambda () (setq indent-tabs-mode t)))
+(add-hook 'c-mode-common-hook
+          (lambda () (setq indent-tabs-mode t)))
+(add-hook 'python-mode-hook
+          (lambda () (setq indent-tabs-mode t)))
+#+end_src
+
+* Замена «yes или no» на «y or n»
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+
+#+end_src
+
 

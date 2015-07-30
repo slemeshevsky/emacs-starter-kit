@@ -189,8 +189,8 @@
 (setq org-caldav-url "https://www.google.com/calendar/dav")
 (setq org-caldav-calendar-id "g23o82ju0h3dqcpsis6pcvuol4@group.calendar.google.com")
 (setq org-caldav-inbox "~/Dropbox/org/calendar.org")
-(setq org-caldav-files '("~/Dropbox/org/gtd.org"))
-(setq org-caldav-select-tags '("@КАЛЕНДАРЬ" "@ЗАДАЧИ"))
+(setq org-caldav-files '("~/Dropbox/org/gtd.org" "~/Dropbox/org/tasks.org" ))
+(setq org-caldav-select-tags '("@КАЛЕНДАРЬ"))
 (setq org-icalendar-timezone "Europe/Minsk")
 (global-set-key (kbd "<f3>") 'org-caldav-sync)
 #+end_src

@@ -35,8 +35,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (sanityinc-solarized-light)))
  '(ecb-layout-name "right1")
  '(ecb-options-version "2.40")
  '(ecb-prescan-directories-for-emptyness (quote unless-remote))
  '(org-agenda-todo-list-sublevels nil))
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)

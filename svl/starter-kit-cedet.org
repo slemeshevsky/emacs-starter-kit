@@ -242,7 +242,7 @@
   (local-set-key [(control return)] 'semantic-ia-complete-symbol-menu)
   (local-set-key "\C-c?" 'semantic-ia-complete-symbol)
 
-  (local-set-key "\C-c>" 'semantic-comsemantic-ia-complete-symbolplete-analyze-inline)
+  (local-set-key "\C-c>" 'semantic-ia-complete-symbol-analyze-inline)
   (local-set-key "\C-c=" 'semantic-decoration-include-visit)
 
   (local-set-key "\C-cj" 'semantic-ia-fast-jump)
@@ -253,8 +253,10 @@
   (local-set-key "\C-cu" 'senator-unfold-tag)
   (local-set-key "\C-c\C-t" 'senator-fold-tag-toggle)
 
+  (add-to-list 'ac-sources 'ac-source-gtags)
   (add-to-list 'ac-sources 'ac-source-semantic)
 )
+
 (defun svl/c-mode-cedet-hook ()
   (local-set-key "\C-ct" 'eassist-switch-h-cpp)
   (local-set-key "\C-xt" 'eassist-switch-h-cpp)
@@ -262,6 +264,7 @@
   (local-set-key "\C-c\C-r" 'semantic-symref)
 
   (add-to-list 'ac-sources 'ac-source-gtags)
+  (add-to-list 'ac-sources 'ac-source-semantic)
 )
 
 (add-hook 'c-mode-common-hook 'svl/cedet-hook)
@@ -297,6 +300,8 @@
 (setq ecb-compile-window-temporally-enlarge 'after-selection)
 (setq ecb-compile-window-width 'edit-window)
 (setq ecb-compile-window-height 8)
+(setq compilation-auto-jump-to-first-error)
+(setq compilation-skip-threshold 2)
 #+end_src
 4. Отключение «подсказки дня»
 #+begin_src emacs-lisp
@@ -357,6 +362,10 @@
 	  (append
 	   '(("\\.pri\\'" . makefile-mode))
 	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.geo\\'" . makefile-mode))
+	   auto-mode-alist))
   #+end_src
 * Режим =c++-mode= для ~.h~
   #+begin_src emacs-lisp
@@ -366,4 +375,8 @@
 #+begin_src emacs-lisp
 (require 'sr-speedbar)
 (global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
+#+end_src
+* Включение =projectile=
+#+begin_src emacs-lisp
+(require 'projectile)
 #+end_src
