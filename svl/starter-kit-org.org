@@ -30,13 +30,17 @@
 #+begin_src emacs-lisp
 (setq org-agenda-files (list "~/Dropbox/org/gtd.org"
                              "~/Dropbox/org/tasks.org"
-                             "~/Dropbox/org/calendar.org"
-			     "~/Dropbox/org/someday.org" 
-			     "~/Dropbox/org/journal.org"
-			     "~/Dropbox/org/weeklyreview.org" 
-			     "~/Dropbox/org/council010202.org" 
-			     "~/Dropbox/org/bodybuilding.org"
-			     ))
+                             "~/Dropbox/org/personalcalendar.org"
+                             "~/Dropbox/org/workcalendar.org"
+                             "~/Dropbox/org/bsucalendar.org"
+                             "~/Dropbox/org/financialcalendar.org"
+                             "~/Dropbox/org/appointments.org"
+       	        		     "~/Dropbox/org/someday.org" 
+			                 "~/Dropbox/org/journal.org"
+	               		     "~/Dropbox/org/weeklyreview.org" 
+            			     "~/Dropbox/org/council010202.org" 
+			                 "~/Dropbox/org/bodybuilding.org"
+			           ))
 #+end_src
 
 * Настройка шаблонов ~remember~
@@ -187,9 +191,16 @@
 #+begin_src emacs-lisp
 (require 'org-caldav)
 (setq org-caldav-url "https://www.google.com/calendar/dav")
-(setq org-caldav-calendar-id "g23o82ju0h3dqcpsis6pcvuol4@group.calendar.google.com")
-(setq org-caldav-inbox "~/Dropbox/org/calendar.org")
-(setq org-caldav-files '("~/Dropbox/org/gtd.org" "~/Dropbox/org/tasks.org" ))
+(setq org-caldav-files '("~/Dropbox/org/appointments.org"))
+(setq org-caldav-calendars
+  '((:calendar-id "g23o82ju0h3dqcpsis6pcvuol4@group.calendar.google.com" 
+     :inbox "~/Dropbox/org/workcalendar.org")
+    (:calendar-id "912e6vc5c0t8prbmg94gma4vrk@group.calendar.google.com"
+     :inbox "~/Dropbox/org/bsucalendar.org")
+    (:calendar-id "ubjmiual92h9b0t9vpb4av0kvs@group.calendar.google.com"
+     :inbox "~/Dropbox/org/financialcalendar.org") 
+    (:calendar-id "sergey.lemeshevsky@gmail.com"
+     :inbox "~/Dropbox/org/personalcalendar.org")) )
 (setq org-caldav-select-tags '("@КАЛЕНДАРЬ"))
 (setq org-icalendar-timezone "Europe/Minsk")
 (global-set-key (kbd "<f3>") 'org-caldav-sync)
