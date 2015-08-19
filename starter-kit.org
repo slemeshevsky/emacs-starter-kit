@@ -192,6 +192,8 @@
 #+begin_src emacs-lisp
 (dolist (hook '(text-mode-hook))
      (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(text-mode-hook))
+     (add-hook hook (lambda () (define-key flyspell-mode-map (kbd "C-M-i") 'backward-paragraph))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
      (add-hook hook (lambda () (flyspell-mode -1))))
 #+end_src
@@ -328,27 +330,6 @@
 (add-hook 'prog-mode-hook 'fci-mode)
 #+end_src
 
-* Настройка клавиатурных сочетаний для перемещения по буферу (похожие на ~ergoemacs~)
-  #+begin_src emacs-lisp 
-;;(setq ergoemacs-theme nil)
-;;(setq ergoemacs-keyboard-layout "us")
-;;(ergoemacs-mode 1)
-(cua-mode 0)
-(global-set-key (kbd "M-l") 'forward-char)
-(global-set-key (kbd "M-C-l") 'forward-word)
-(global-set-key (kbd "M-j") 'backward-char)
-(global-set-key (kbd "M-C-j") 'backward-word)
-(global-set-key (kbd "M-h") 'move-beginning-of-line)
-(global-set-key (kbd "M-k") 'next-line)
-(global-set-key (kbd "M-i") 'previous-line)
-(global-set-key (kbd "M-e") 'backward-kill-word)
-(global-set-key (kbd "M-r") 'kill-word)
-(global-set-key (kbd "M-d") 'delete-backward-char)
-(global-set-key (kbd "C-M-o") 'forward-paragraph)
-(global-set-key (kbd "C-M-u") 'backward-paragraph)
-(global-set-key (kbd "C-S-e") 'end-of-buffer)
-(global-set-key (kbd "C-S-a") 'beginning-of-buffer)
-  #+end_src
 * Включение режима =smart-tabs-mode=
 #+begin_src emacs-lisp
 (smart-tabs-insinuate 'c 'c++ 'python)

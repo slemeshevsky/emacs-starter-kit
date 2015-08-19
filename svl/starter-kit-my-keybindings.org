@@ -1,0 +1,230 @@
+#+TITLE: Мои клавиатурные сочетания
+* Настройка клавиатурных сочетаний для перемещения по буферу и редактирования
+  Многое взято из подкаста Дмитрия Бушенко [[https://www.youtube.com/watch?v%3Dmhr3Tu3C0-8&index%3D1&list%3DPLECBtie1W1tGDtEmTLtS6CqHlaL9ee32_][Изучаем Emacs 02x01: Перемещение по тексту]]
+  #+begin_src emacs-lisp 
+(cua-mode 0)
+  #+end_src
+** Перемещение
+  #+begin_src emacs-lisp 
+;; Вверх
+(global-unset-key (kbd "M-i"))
+(global-set-key (kbd "M-i") 'previous-line)
+
+;; Вниз
+(global-unset-key (kbd "M-k"))
+(global-set-key (kbd "M-k") 'next-line)
+
+;; Влево
+(global-unset-key (kbd "M-j"))
+(global-set-key (kbd "M-j") 'backward-char)
+(define-key c++-mode-map (kbd "M-j") 'backward-char)
+
+;; Вправо
+(global-unset-key (kbd "M-l"))
+(global-set-key (kbd "M-l") 'forward-char)
+
+;; Следующее слово
+(global-unset-key (kbd "M-o"))
+(global-set-key (kbd "M-o") 'forward-word)
+(global-unset-key (kbd "C-M-l"))
+(global-set-key (kbd "C-M-l") 'forward-word)
+
+;; Предыдущее слово
+(global-unset-key (kbd "M-u"))
+(global-set-key (kbd "M-u") 'backward-word)
+(global-unset-key (kbd "C-M-j"))
+(global-set-key (kbd "C-M-j") 'backward-word)
+(define-key c++-mode-map (kbd "C-M-j") 'backward-word)
+
+;; Следующий абзац
+(global-unset-key (kbd "C-M-o"))
+(global-set-key (kbd "C-M-o") 'forward-paragraph)
+(global-set-key (kbd "C-M-k") 'forward-paragraph)
+
+;; Предыдущий абзац
+(global-unset-key (kbd "C-M-u"))
+(global-set-key (kbd "C-M-u") 'backward-paragraph)
+;;(define-key flyspell-mode-map (kbd "C-M-i") 'backward-paragraph)
+
+;; Page Up
+(global-unset-key (kbd "M-I"))
+(global-set-key (kbd "M-I") 'scroll-down-command)
+
+;; Page Down
+(global-unset-key (kbd "M-K"))
+(global-set-key (kbd "M-K") 'scroll-up-command)
+
+;; Перейти в конец буфера
+(global-unset-key (kbd "M-L"))
+(global-set-key (kbd "M-L") 'end-of-buffer)
+
+;; Перейти в начало буфера
+(global-unset-key (kbd "M-J"))
+(global-set-key (kbd "M-J") 'beginning-of-buffer)
+  #+end_src
+
+** Редактирование
+  #+begin_src emacs-lisp
+;; Delete
+(global-unset-key (kbd "M-d"))
+(global-set-key (kbd "M-d") 'delete-forward-char)
+
+;; Backspace
+(global-unset-key (kbd "M-f"))
+(global-set-key (kbd "M-f") 'delete-backward-char)
+
+;; Enter
+(global-unset-key (kbd "M-n"))
+(global-set-key (kbd "M-n") 'reindent-then-newline-and-indent)
+(global-unset-key (kbd "M-m"))
+(global-set-key (kbd "M-m") 'reindent-then-newline-and-indent)
+
+;; Удалить слово слева
+(global-unset-key (kbd "C-M-f"))
+(global-set-key (kbd "C-M-f") 'backward-kill-word)
+
+;; Удалить слово справа
+(global-unset-key (kbd "C-M-d"))
+(global-set-key (kbd "C-M-d") 'kill-word)
+
+;; Выделение
+(global-unset-key (kbd "M-SPC"))
+(global-set-key (kbd "M-SPC") 'set-mark-command)
+
+;; Копировние 
+(global-unset-key (kbd "M-c"))
+(global-set-key (kbd "M-c") 'kill-ring-save) 
+
+;; Выразание
+(global-unset-key (kbd "M-x"))
+(global-set-key (kbd "M-x") 'kill-region) 
+
+;; Вставка
+(global-unset-key (kbd "M-v"))
+(global-set-key (kbd "M-v") 'yank)
+
+;; Отмена
+(global-unset-key (kbd "M-z"))
+(global-set-key (kbd "M-z") 'undo)
+
+;; Сохранение буфера
+(global-unset-key (kbd "M-s"))
+(global-set-key (kbd "M-s") 'save-buffer)
+
+;; Запуск команды
+(global-unset-key (kbd "<f6>"))
+(global-set-key (kbd "<f6>") 'execute-extended-command)
+  #+end_src
+
+* Настройка клавиатурных сочетаний для изменения ширины и высоты окон
+  Взято из подкаста Дмитрия Бушенко [[https://www.youtube.com/watch?v%3D1B4X_BBUUoQ&list%3DPLECBtie1W1tGDtEmTLtS6CqHlaL9ee32_&index%3D2][Изучаем Emacs 02x02: Перемещение по тексту]]
+
+** Изменение ширины и высоты на 2 единицы
+  #+begin_src emacs-lisp
+(defun my-enlarge-vert()
+  (interactive)
+  (enlarge-window 2))
+
+(defun my-shrink-vert()
+  (interactive)
+  (enlarge-window -2))
+
+(defun my-enlarge-horz ()
+  (interactive)
+  (enlarge-window-horizontally 2))
+
+(defun my-shrink-horz ()
+  (interactive)
+  (enlarge-window-horizontally -2))
+
+(global-unset-key (kbd "C-("))
+(global-set-key (kbd "C-(") 'my-shrink-vert)
+(global-unset-key (kbd "C-)"))
+(global-set-key (kbd "C-)") 'my-enlarge-vert)
+(global-unset-key (kbd "C-9"))
+(global-set-key (kbd "C-9") 'my-shrink-horz)
+(global-unset-key (kbd "C-0"))
+(global-set-key (kbd "C-0") 'my-enlarge-horz)
+  #+end_src
+** Разбиение окон или пополам, или 2:1
+   #+begin_src emacs-lisp
+(defun my-50%-horz ()
+  (interactive)
+  (let* ((width (round (* (frame-width) 0.5)))
+	 (cur-width (window-width))
+	 (delta (- width (+ cur-width 5))))
+    (enlarge-window-horizontally delta)))
+
+(defun my-50%-vert ()
+  (interactive)
+  (let* ((height (round (* (frame-height) 0.5)))
+	 (cur-height (window-height))
+	 (delta (- height (+ cur-height 5))))
+    (enlarge-window delta)))
+
+(defvar *larg-window-size-percent* 0.7)
+
+(defun my-50%-horz ()
+  (interactive)
+  (let* ((width (round (* (frame-width) 0.5)))
+	 (cur-width (window-width))
+	 (delta (- width (+ cur-width 5))))
+    (enlarge-window-horizontally delta)))
+
+(defun my-50%-vert ()
+  (interactive)
+  (let* ((height (round (* (frame-height) 0.5)))
+	 (cur-height (window-height))
+	 (delta (- height (+ cur-height 5))))
+    (enlarge-window delta)))
+
+(defun my-super-enlarge-horz ()
+  (interactive)
+  (let* ((width (round (* (frame-width) *larg-window-size-percent*)))
+	 (cur-width (window-width))
+	 (delta (- width cur-width)))
+    (enlarge-window-horizontally delta)))
+
+(defun my-super-enlarge-vert ()
+  (interactive)
+  (let* ((height (round (* (frame-height) *larg-window-size-percent*)))
+	 (cur-height (window-height))
+	 (delta (- height cur-height)))
+    (enlarge-window delta)))
+
+(defun my-super-shrink-horz ()
+  (interactive)
+  (let* ((width (round (* (frame-width) (- 1 *larg-window-size-percent*))))
+	 (cur-width (window-width))
+	 (delta (- width cur-width)))
+    (enlarge-window-horizontally delta)))
+
+(defun my-super-shrink-vert ()
+  (interactive)
+  (let* ((height (round (* (frame-height) (- 1 *larg-window-size-percent*))))
+	 (cur-height (window-height))
+	 (delta (- height cur-height)))
+    (enlarge-window delta)))
+
+
+(global-unset-key (kbd "M-("))
+(global-set-key (kbd "M-(") 'my-super-shrink-vert)
+(global-unset-key (kbd "M-)"))
+(global-set-key (kbd "M-)") 'my-super-enlarge-vert)
+(global-unset-key (kbd "M-9"))
+(global-set-key (kbd "M-9") 'my-super-shrink-horz)
+(global-unset-key (kbd "M-0"))
+(global-set-key (kbd "M-0") 'my-super-enlarge-horz)
+(global-unset-key (kbd "M-8"))
+(global-set-key (kbd "M-8") 'my-50%-horz)
+(global-unset-key (kbd "M-*"))
+(global-set-key (kbd "M-*") 'my-50%-vert)
+   #+end_src
+
+* Настройка клавиатурных сочетаний для работы с закладками
+  Взято из подкаста Дмитрия Бушенко [[https://www.youtube.com/watch?v%3Di6UNs2M58ys&index%3D3&list%3DPLECBtie1W1tGDtEmTLtS6CqHlaL9ee32_][Изучаем Emacs 02x03: Закладки]]
+  #+begin_src emacs-lisp
+(global-set-key (kbd "C-b") 'bookmark-set)
+(global-set-key (kbd "<f4>") 'bookmark-bmenu-list)
+  #+end_src
+
