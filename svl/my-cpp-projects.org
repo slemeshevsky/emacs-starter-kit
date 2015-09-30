@@ -5,10 +5,6 @@
 (global-ede-mode 1)
 (ede-enable-generic-projects)
    #+end_src
-** Загрузка =ede-cmake=
-#+begin_src emacs-lisp
-;;(require 'ede-cmake)
-#+end_src
 ** Настройка команды компиляции для qt проекта
    #+begin_src emacs-lisp
 (setq compilation-scroll-output 1)
@@ -49,60 +45,49 @@
 (global-set-key [f9] 'svl/compile)
    #+end_src
 * Проекты Qt
-** Основной проект ~cds~
+** Проект CDS
+*** Проект ~cds~
 #+begin_src emacs-lisp
 (when (file-exists-p "~/Projects/cds/gui/cds.pro")
  (setq cds-project
-        (ede-cpp-root-project "gui"
-                              :name "gui"
+        (ede-cpp-root-project "cds"
+                              :name "cds"
                               :file "~/Projects/cds/gui/cds.pro"
-                              :include-path '( "/", "../interfaces")
-                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/gui/cds.pro && make"
-                              )))
-#+end_src
-*** Проект ~segmentation~
-#+begin_src emacs-lisp
-(when (file-exists-p "~/Projects/cds/segmentation/segmentation.pro")
- (setq segmentation-project
-        (ede-cpp-root-project "segmentation"
-                              :name "segmentation"
-                              :file "~/Projects/cds/segmentation/segmentation.pro"
-                              :include-path '( "/", "../interfaces")
-                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 ../../cds/segmentation/segmentation.pro && make"
+                              :compile-command "cd ~/Projects/build/cds && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make"
                               )))
 #+end_src
     
-* Проекты CMake
-** Проект ~itksnap~
-  #+begin_src emacs-lisp
-(when (file-exists-p "~/Projects/itk-snap-src/CMakeLists.txt")
- (setq itksnap-project
-        (ede-cpp-root-project "itksnap"
-                              :name "itksnap"
-                              :file "~/Projects/itk-snap-src/CMakeLists.txt"
-			      :include-path '("/Common"
-					      "/Common/ITKExtras"
-					      "/GUI/Model"
-					      "/GUI/Qt/Components"
-					      "/GUI/Qt/Coupling"
-					      "/GUI/Qt/External/ColorWheel"
-					      "/GUI/Qt/ModelView"
-					      "/GUI/Qt/View"
-					      "/GUI/Qt/Windows"
-					      "/GUI/Qt/Windows/MeshExportWizard"
-					      "/GUI/Qt/Renderer"
-					      "/GUI/Qt/Renderer/OrientationWidget/Reorient"
-					      "/Logic/Common"
-					      "/Logic/FrameWork"
-					      "/Logic/ImageWrapper"
-					      "/Logic/LevelSet"
-					      "/Logic/Mesh"
-					      "/Logic/Preprocessing"
-					      "/Logic/Preprocessing/GMM"
-					      "/Logic/RandomForest"
-					      "/Logic/Slicing")
-                              :compile-command "cd ../build && make"
+** Проект для отработки сегментации
+#+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/segmentation/main.pro")
+ (setq segmentation-project
+        (ede-cpp-root-project "main-segmentation"
+                              :name "main-segmentation"
+                              :file "~/Projects/segmentation/main.pro"
+                              :include-path '( "/"
+                                               "/base"
+                                               "/mainapp"
+                                               "/segmentation"
+					       "/segemntation/ITKExtras"
+                                             )
+                              :compile-command "cd ~/Projects/build/segmentation && qmake-qt4 'CONFIG += debug' ../../segmentation/main.pro && make"
                               )))
-  #+end_src
+#+end_src
+*** Проект ~segmentation~
+   #+begin_src emacs-lisp
+(when (file-exists-p "~/Projects/segmentation/segmentation/segmentation.pro")
+ (setq segmentation-project
+        (ede-cpp-root-project "segmentation"
+                              :name "segmentation"
+                              :file "~/Projects/segmentation/segmentation/segmentation.pro"
+                              :include-path '( "/"
+                                               "../base"
+                                               "../mainapp"
+                                               "/ITKExtras"
+                                             )
+                              :compile-command "cd ~/Projects/build/segmentation && qmake-qt4 'CONFIG += debug' ../../segmentation/segmentation/segmentation.pro && make"
+                              )))
+#+end_src
+* Проекты CMake
 
    

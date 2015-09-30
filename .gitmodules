@@ -19,3 +19,6 @@
 [submodule "src/color-theme-solarized"]
 	path = src/color-theme-solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "src/color-theme-wombat"]
+	path = src/color-theme-wombat
+	url = https://github.com/jasonblewis/color-theme-wombat.git

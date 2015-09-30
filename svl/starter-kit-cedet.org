@@ -17,7 +17,7 @@
    3. Активация контекстного меню, привязанного к правой клавише мыши
       (у меня не сработало)
       #+begin_src emacs-lisp
-(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+;(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
       #+end_src
    4. Активация подстветки первой строки текущего тага (функции,
       класса и т.п.)
@@ -33,7 +33,7 @@
       ввода. Требует чтобы был включен
       ~global-semantic-idle-scheduler-mode~
       #+begin_src emacs-lisp
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-completions-mode)
+;(add-to-list 'semantic-default-submodes 'global-semantic-idle-completions-mode)
       #+end_src
    7. Активация показа информации о текущем таге во время ожидания
       ввода. Требует чтобы был включен 
@@ -53,7 +53,7 @@
    #+begin_src emacs-lisp
 (require 'semantic/ia)
    #+end_src
-
+   
 * Системные подключаемые файлы
 1. Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет
    может автоматически получить данные о нахождении системных
@@ -62,6 +62,7 @@
    #+begin_src emacs-lisp
 (require 'semantic/bovine/c)
 (require 'semantic/bovine/gcc)
+(require 'semantic/wisent/python)
 (require 'cedet-files)
    #+end_src
 
@@ -87,12 +88,10 @@
 ;;(require 'semantic-tag-folding)
 #+end_src
 * Настройка =Semanticdb=
-1. Настройка CEDET для работы с библиотекой Qt4.
+1. Настройка CEDET для работы с библиотекой Qt4
    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
 (setq qwt-base-dir "/usr/include/qwt")
-(setq itk-base-dir "/usr/local/include/ITK-4.3")
-(setq vtk-base-dir "/usr/local/include/vtk-5.8")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
 (semantic-add-system-include qt4-base-dir 'c-mode)
 (semantic-add-system-include (concat qt4-base-dir "/QtCore") 'c++-mode)
@@ -133,6 +132,15 @@
 (semantic-add-system-include (concat qt4-base-dir "/QtXmlPatterns") 'c-mode)
 (semantic-add-system-include qwt-base-dir 'c++-mode)
 (semantic-add-system-include qwt-base-dir 'c-mode)
+(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
+(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c-mode))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
+   #+end_src
+2. Настройка CEDET для работы с библиотекой ITK-4.5
+  #+begin_src emacs-lisp
+(setq itk-base-dir "/usr/include/ITK-4.5")
 (semantic-add-system-include itk-base-dir 'c++-mode)
 (semantic-add-system-include itk-base-dir 'c-mode)
 (semantic-add-system-include (concat itk-base-dir "/blas") 'c++-mode)
@@ -199,6 +207,10 @@
 (semantic-add-system-include (concat itk-base-dir "/vcl_sys") 'c-mode)
 (semantic-add-system-include (concat itk-base-dir "/vnl") 'c++-mode)
 (semantic-add-system-include (concat itk-base-dir "/vnl") 'c-mode)
+   #+end_src
+3. Настройка CEDET для работы с библиотекой VTK-5.8
+   #+begin_src emacs-lisp
+(setq vtk-base-dir "/usr/include/vtk-5.8")
 (semantic-add-system-include vtk-base-dir 'c++-mode)
 (semantic-add-system-include vtk-base-dir 'c-mode)
 (semantic-add-system-include (concat vtk-base-dir "/alglib") 'c++-mode)
@@ -227,21 +239,16 @@
 (semantic-add-system-include (concat vtk-base-dir "/vtkstd") 'c-mode)
 (semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c++-mode)
 (semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c-mode)
-(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
-(add-to-list 'auto-mode-alist (cons qt4-base-dir 'c-mode))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
-(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
    #+end_src
    
 * Настройка режимов
-  1. Привязка клавиш к командам =Semantic=
-  #+begin_src emacs-lisp
+1. Привязка клавиш к командам =Semantic=
+   #+begin_src emacs-lisp
 (defun svl/cedet-hook()
   (local-set-key [(control return)] 'semantic-ia-complete-symbol-menu)
   (local-set-key "\C-c?" 'semantic-ia-complete-symbol)
 
-  (local-set-key "\C-c>" 'semantic-comsemantic-ia-complete-symbolplete-analyze-inline)
+  (local-set-key "\C-c>" 'semantic-ia-complete-symbol-analyze-inline)
   (local-set-key "\C-c=" 'semantic-decoration-include-visit)
 
   (local-set-key "\C-cj" 'semantic-ia-fast-jump)
@@ -251,9 +258,11 @@
   (local-set-key "\C-cf" 'senator-fold-tag)
   (local-set-key "\C-cu" 'senator-unfold-tag)
   (local-set-key "\C-c\C-t" 'senator-fold-tag-toggle)
-
+ 
+  (add-to-list 'ac-sources 'ac-source-gtags)
   (add-to-list 'ac-sources 'ac-source-semantic)
 )
+
 (defun svl/c-mode-cedet-hook ()
   (local-set-key "\C-ct" 'eassist-switch-h-cpp)
   (local-set-key "\C-xt" 'eassist-switch-h-cpp)
@@ -261,64 +270,68 @@
   (local-set-key "\C-c\C-r" 'semantic-symref)
 
   (add-to-list 'ac-sources 'ac-source-gtags)
+  (add-to-list 'ac-sources 'ac-source-semantic)
 )
 
 (add-hook 'c-mode-common-hook 'svl/cedet-hook)
 (add-hook 'c-mode-common-hook 'svl/c-mode-cedet-hook)
   #+end_src
-  2. Включаем поддержку =gnu global=
-#+begin_src emacs-lisp
+2. Включаем поддержку =gnu global=
+   #+begin_src emacs-lisp
 (when (cedet-gnu-global-version-check t)
   (semanticdb-enable-gnu-global-databases 'c-mode t)
-  (semanticdb-enable-gnu-global-databases 'c++-mode t))
-#+end_src
-  3. Включаем поддержку =ectags= 
-#+begin_src emacs-lisp
+  (semanticdb-enable-gnu-global-databases 'c++-mode t)
+  (semanticdb-enable-gnu-global-databases 'python-mode t))
+   #+end_src
+3. Включаем поддержку =ectags= 
+   #+begin_src emacs-lisp
 (when (cedet-ectag-version-check t)
   (semantic-load-enable-primary-ectags-support))
-  #+end_src
+   #+end_src
 * =SRecode=
   #+begin_src emacs-lisp
-;(global-srecode-minor-mode 1)
+(global-srecode-minor-mode 1)
   #+end_src
 * Настройка ECB
 1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
    от Алекса Отта
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (require 'ecb)
-#+end_src
+   #+end_src
 2. Версия ECB
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (setq ecb-options-version "2.40")
-#+end_src
+   #+end_src
 3. Настройки окна компиляции
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (setq ecb-compile-window-temporally-enlarge 'after-selection)
 (setq ecb-compile-window-width 'edit-window)
 (setq ecb-compile-window-height 8)
-#+end_src
+(setq compilation-auto-jump-to-first-error)
+(setq compilation-skip-threshold 2)
+   #+end_src
 4. Отключение «подсказки дня»
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (setq ecb-tip-of-the-day nil)
-#+end_src
+   #+end_src
 5. Отключаем автоматическое определение пустых директорий
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (setq ecb-prescan-directories-for-emptyness 0)
-#+end_src
+   #+end_src
 6. Установка ширины окон.
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (setq ecb-windows-width 0.2)
-#+end_src
+   #+end_src
 7. Установить ~layout~
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (ecb-layout-switch "right1")
-#+end_src
+   #+end_src
 8. Комбинация клавиш для быстрой активации/деактивации ECB, 
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
 (global-set-key (kbd "\e\eE") 'ecb-activate)
 (global-set-key (kbd "\e\eD") 'ecb-deactivate)
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
-#+end_src
+   #+end_src
 * Настройка дополнительных пакетов для редактирования кода
 1. Настройки модуля =hideshow= для свертывания кода
    #+begin_src emacs-lisp
@@ -339,22 +352,73 @@
 	   '(("\\.cmake\\'" . cmake-mode))
 	   auto-mode-alist))
   #+end_src
-* Режим =python-mode= для ~ufl~
+* Режим =python-mode= для ~.ufl~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
 	  (append
 	   '(("\\.ufl\\'" . python-mode))
 	   auto-mode-alist))
   #+end_src
-* Режим =makefile-mode= для ~pro~
+* Режим =makefile-mode= для ~.pro~ и ~.pri~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
 	  (append
 	   '(("\\.pro\\'" . makefile-mode))
 	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pri\\'" . makefile-mode))
+	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.geo\\'" . makefile-mode))
+	   auto-mode-alist))
   #+end_src
-* Включение =sr-speedbar=
+* Режим =c++-mode= для ~.h~
+  #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  #+end_src
+* Включение =projectile=
 #+begin_src emacs-lisp
+(require 'projectile)
+(projectile-global-mode)
+
+(require 'projectile-speedbar)
+(global-set-key (kbd "M-<f3>") 'projectile-speedbar-open-current-buffer-in-tree)
+#+end_src
+* Навигация по коду с помощью =helm-gtags=
+** Включение и настройка ~helm-gtags~
+  #+begin_src emacs-lisp
+(require 'helm)
+(require 'helm-config)
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t)
+
+(require 'helm-gtags)
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+(define-key helm-gtags-mode-map (kbd "C-M-n") 'forward-sexp)
+(define-key helm-gtags-mode-map (kbd "C-M-b") 'backward-sexp)
+  #+end_src
+
+** Включение =sr-speedbar=
+  #+begin_src emacs-lisp
 (require 'sr-speedbar)
 (global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
-#+end_src
+  #+end_src
+

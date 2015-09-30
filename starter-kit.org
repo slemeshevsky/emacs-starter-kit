@@ -1,5 +1,4 @@
 #+TITLE: Emacs Starter Kit
-
 * Отключение переноса строк
 #+begin_src emacs-lisp
 (setq truncate-lines t)
@@ -32,11 +31,18 @@
 		      magit 
 		      ido 
 		      hideshow 
+              projectile
+              projectile-speedbar
+              ibuffer-projectile
 		      auto-complete 
 		      cmake-mode 
 		      sr-speedbar 
 		      yasnippet
-                      r-autoyas)
+              column-marker
+              r-autoyas
+              smart-tabs-mode
+              professional-theme 
+              alect-themes)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -59,15 +65,6 @@
   Это полезно если вы используете самые свежие версии пакетов или если их нет в ELPA.
 #+begin_src emacs-lisp  
 (add-to-list 'load-path sitelisp-dir)
-#+end_src
-
-* Чрезвычайно полезная функция — используйте её если вам нужно отредактировать системные файлы от имени суперпользователя.
-#+begin_src emacs-lisp  
-(defun sudo-edit (&optional arg)
-  (interactive "p")
-  (if arg
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 #+end_src
 
 * Этот код загружает цветовые темы, тем самым делая их доступными по-умолчанию.
@@ -99,9 +96,10 @@
 
 * Подсвечитвать совпадающие скобки
 #+begin_src emacs-lisp  
-(setq show-paren-style 'expression)
+;(setq show-paren-style 'expression)
 (show-paren-mode 1)
 #+end_src
+
 * Подсвечивать текущую строку
 #+begin_src emacs-lisp
 (global-hl-line-mode 1)
@@ -109,9 +107,9 @@
 
 * Подключаем ESS
 #+begin_src emacs-lisp  
-(require 'ess-site)
-(require 'r-autoyas)
-(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
+;(require 'ess-site)
+;(require 'r-autoyas)
+;(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 #+end_src
 
 * Печать кириллицы в ~postscript~
@@ -158,24 +156,7 @@
 #+begin_src emacs-lisp
 (setq initial-frame-alist '((top . 0) (left . 0) ))
 #+end_src
-
-* Функция, которая меняет размер окна (на всю левую половину экрана в зависимости от разрешения) 
-#+begin_src emacs-lisp
-(defun set-frame-size-according-to-resolution ()
-(interactive)
-(if window-system
-(progn
-(add-to-list 'default-frame-alist
-(cons 'width (/ (/ (x-display-pixel-width) 2) (frame-char-width))))
-(add-to-list 'default-frame-alist 
-(cons 'height (/ (- (x-display-pixel-height) 0) (frame-char-height)))))))
-#+end_src
   
-* Вызываем функцию при загрузке
-#+begin_src emacs-lisp
-;; (set-frame-size-according-to-resolution)
-#+end_src
-
 * Устанавливаем режим =auto-fill=
 #+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -219,30 +200,6 @@
 (global-set-key (kbd "<f8>")   'fd-switch-dictionary)
 #+end_src
 
-* Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook
-  '(lambda ()
-        (setq org-file-apps
-              (append '(
-                        ("\\.doc\\'" . default)
-                       ) org-file-apps
-              )
-        )
-   )
-)
-(add-hook 'org-mode-hook
-  '(lambda ()
-        (setq org-file-apps
-              (append '(
-                        ("\\.odt\\'" . default)
-                       ) org-file-apps
-              )
-        )
-   )
-)
-#+end_src
-
 * Подключаем ~lambda-mode~
 #+begin_src emacs-lisp
 (require 'lambda-mode)
@@ -250,7 +207,7 @@
 (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 #+end_src
-
+  
 * Подключаем ~ido~
 #+begin_src emacs-lisp
 (require 'ido)
@@ -276,8 +233,43 @@
 (require 'bs)
 (setq bs-configurations
       '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
-(global-set-key (kbd "<f2>") 'bs-show)
+(add-to-list 'bs-configurations
+                 '("C++" nil nil nil
+                   (lambda (buf)
+                      (with-current-buffer buf
+                         (not (memq major-mode
+                            '(sql-interactive-mode cc-mode))))) nil))
+(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
 #+end_src
+* Настройка ~ibuffer~
+  #+begin_src emacs-lisp
+(defun my/ibuffer-customization ()
+          ;; ibuffer-projectile setup
+          (ibuffer-projectile-set-filter-groups)
+          (unless (eq ibuffer-sorting-mode 'alphabetic)
+            (ibuffer-do-sort-by-alphabetic) ; first do alphabetic sort
+            (ibuffer-do-sort-by-major-mode)))
+(add-hook 'ibuffer-hook #'my/ibuffer-customization)
+(setq ibuffer-saved-filter-groups
+          (quote (("default"
+                   ("dired" (mode . dired-mode))
+                   ("planner" (or
+                               (name . "^\\*Calendar\\*$")
+                               (name . "^diary$")
+                               (mode . muse-mode)
+                               (name . "^\\.org")))
+                   ("emacs" (or
+                             (name . "^\\*scratch\\*$")
+                             (name . "^\\*Messages\\*$")))
+                   ("C++" (or
+                             (mode . cc-mode)))
+                   ("Python" (or
+                             (mode . python-mode)))
+))))
+(add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
+  #+end_src
 
 * Включение и настройка =yasnippet=
 #+begin_src emacs-lisp
@@ -308,26 +300,36 @@
 ** Включение номеров строк в режимах =latex= и =ess=
    #+begin_src emacs-lisp
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
-(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
+;(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
-* Настройка клавиатурных сочетаний для перемещения по буферу (похожие на ~ergoemacs~)
-  #+begin_src emacs-lisp 
-;;(setq ergoemacs-theme nil)
-;;(setq ergoemacs-keyboard-layout "us")
-;;(ergoemacs-mode 1)
-(cua-mode 0)
-(global-set-key (kbd "M-l") 'forward-char)
-(global-set-key (kbd "M-C-l") 'forward-word)
-(global-set-key (kbd "M-j") 'backward-char)
-(global-set-key (kbd "M-C-j") 'backward-word)
-(global-set-key (kbd "M-h") 'move-beginning-of-line)
-(global-set-key (kbd "M-k") 'next-line)
-(global-set-key (kbd "M-i") 'previous-line)
-(global-set-key (kbd "M-e") 'backward-kill-word)
-(global-set-key (kbd "M-r") 'kill-word)
-(global-set-key (kbd "M-d") 'delete-backward-char)
-(global-set-key (kbd "C-M-o") 'forward-paragraph)
-(global-set-key (kbd "C-M-u") 'backward-paragraph)
-(global-set-key (kbd "C-S-e") 'end-of-buffer)
-(global-set-key (kbd "C-S-a") 'beginning-of-buffer)
-  #+end_src
+* Отмечаем правую границу
+** Пакет =column-maker=
+#+begin_src emacs-lisp
+;(require 'column-marker)
+;(add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
+#+end_src
+** Пакет =fill-column-indicator=
+#+begin_src emacs-lisp
+(require 'fill-column-indicator)
+(setq fci-rule-width 2)
+(add-hook 'prog-mode-hook 'fci-mode)
+#+end_src
+
+* Включение режима =smart-tabs-mode=
+#+begin_src emacs-lisp
+(smart-tabs-insinuate 'c 'c++ 'python)
+(setq-default tab-width 4)
+(add-hook 'prog-mode-hook
+          (lambda () (setq indent-tabs-mode t)))
+(add-hook 'c-mode-common-hook
+          (lambda () (setq indent-tabs-mode t)))
+(add-hook 'python-mode-hook
+          (lambda () (setq indent-tabs-mode t)))
+#+end_src
+
+* Замена «yes или no» на «y or n»
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+

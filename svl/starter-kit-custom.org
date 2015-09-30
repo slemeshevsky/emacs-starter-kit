@@ -11,17 +11,32 @@
  #+begin_src emacs-lisp
 ;;(require 'color-theme-tango)
  #+end_src
+
 ** Темы ~solarized~
  #+begin_src emacs-lisp
 (require 'sanityinc-solarized-dark-theme)
 (require 'sanityinc-solarized-light-theme)
 ;;(require 'color-theme-solarized)
  #+end_src 
-* Включение понравившейся цветовой темы 
+
+** Тема ~wombat~
+#+begin_src emacs-lisp
+(require 'color-theme-wombat)
+#+end_src
+
+** Alect Themes
+#+begin_src emacs-lisp
+(require 'alect-themes)
+#+end_src
+** Sanityinc Tomorrow
+#+begin_src emacs-lisp
+(require 'color-theme-sanityinc-tomorrow)
+#+end_src
+* Включение понравившейся цветовой темы
   Мне понравились:
 ** Tango
 #+begin_src emacs-lisp
-;(color-theme-tango)   
+;(load-theme 'tango t)   
 #+end_src
 
 ** Tangotango
@@ -30,23 +45,16 @@
 #+end_src
 ** Solarized-Dark
 #+begin_src emacs-lisp
-;;(color-theme-sanityinc-solarized-dark)
+;(color-theme-sanityinc-solarized-dark)
 #+end_src
-** Еще одна Solarized-Dark
-#+begin_src emacs-lisp
-;;(color-theme-sanityinc-solarized-dark)
-#+end_src
-
 ** Solarized-Light
 #+begin_src emacs-lisp
-(color-theme-sanityinc-solarized-light)
+;(color-theme-sanityinc-solarized-light)
 #+end_src
-
-** Еще одна Solarized-Light
+** Wombat
 #+begin_src emacs-lisp
-;;(color-theme-solarized-light)
+;;(color-theme-wombat)
 #+end_src
-
 ** Classic
 #+begin_src emacs-lisp
 ;(color-theme-classic)
@@ -54,7 +62,7 @@
 
 ** Zenburn
 #+begin_src emacs-lisp
-;(color-theme-zenburn)
+(load-theme 'zenburn t)
 #+end_src
 ** Euphoria
 #+begin_src emacs-lisp
@@ -100,3 +108,29 @@
 #+begin_src emacs-lisp
 ;(color-theme-calm-forest)
 #+end_src
+** Professional Theme
+#+begin_src emacs-lisp
+;(load-theme 'professional t)
+#+end_src
+
+** Alect Theme Black
+#+begin_src emacs-lisp
+;(load-theme 'alect-black t)
+#+end_src
+** Alect Theme Dark
+#+begin_src emacs-lisp
+;(load-theme 'alect-dark t)
+#+end_src
+** Alect Theme Light
+#+begin_src emacs-lisp
+;(load-theme 'alect-light t)
+#+end_src
+** Tomorrow Day
+#+begin_src emacs-lisp
+;(color-theme-sanityinc-tomorrow-day)
+#+end_src
+* Установка =default= шрифта «Consolas»
+#+begin_src emacs_lisp
+(set-default-font "Consolas-12")
+#+end_src
+
