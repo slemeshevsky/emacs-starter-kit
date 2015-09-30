@@ -149,6 +149,29 @@
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-typopunct-mode)
 #+end_src
+* Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.doc\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+(add-hook 'org-mode-hook
+  '(lambda ()
+        (setq org-file-apps
+              (append '(
+                        ("\\.odt\\'" . default)
+                       ) org-file-apps
+              )
+        )
+   )
+)
+#+end_src
 
 * Настройка ~org-caldav~
 #+begin_src emacs-lisp

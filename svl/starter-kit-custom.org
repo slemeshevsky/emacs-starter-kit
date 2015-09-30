@@ -32,7 +32,7 @@
 #+begin_src emacs-lisp
 (require 'color-theme-sanityinc-tomorrow)
 #+end_src
-* Включение понравившейся цветовой темы 
+* Включение понравившейся цветовой темы
   Мне понравились:
 ** Tango
 #+begin_src emacs-lisp
@@ -47,11 +47,6 @@
 #+begin_src emacs-lisp
 ;(color-theme-sanityinc-solarized-dark)
 #+end_src
-** Еще одна Solarized-Dark
-#+begin_src emacs-lisp
-(color-theme-sanityinc-solarized-dark)
-#+end_src
-
 ** Solarized-Light
 #+begin_src emacs-lisp
 ;(color-theme-sanityinc-solarized-light)
@@ -60,11 +55,6 @@
 #+begin_src emacs-lisp
 ;;(color-theme-wombat)
 #+end_src
-** Еще одна Solarized-Light
-#+begin_src emacs-lisp
-;(color-theme-solarized-light)
-#+end_src
-
 ** Classic
 #+begin_src emacs-lisp
 ;(color-theme-classic)
@@ -72,7 +62,7 @@
 
 ** Zenburn
 #+begin_src emacs-lisp
-;(load-theme 'zenburn t)
+(load-theme 'zenburn t)
 #+end_src
 ** Euphoria
 #+begin_src emacs-lisp

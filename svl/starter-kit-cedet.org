@@ -53,7 +53,7 @@
    #+begin_src emacs-lisp
 (require 'semantic/ia)
    #+end_src
-
+   
 * Системные подключаемые файлы
 1. Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет
    может автоматически получить данные о нахождении системных
@@ -62,6 +62,7 @@
    #+begin_src emacs-lisp
 (require 'semantic/bovine/c)
 (require 'semantic/bovine/gcc)
+(require 'semantic/wisent/python)
 (require 'cedet-files)
    #+end_src
 
@@ -279,7 +280,8 @@
    #+begin_src emacs-lisp
 (when (cedet-gnu-global-version-check t)
   (semanticdb-enable-gnu-global-databases 'c-mode t)
-  (semanticdb-enable-gnu-global-databases 'c++-mode t))
+  (semanticdb-enable-gnu-global-databases 'c++-mode t)
+  (semanticdb-enable-gnu-global-databases 'python-mode t))
    #+end_src
 3. Включаем поддержку =ectags= 
    #+begin_src emacs-lisp
@@ -350,14 +352,14 @@
 	   '(("\\.cmake\\'" . cmake-mode))
 	   auto-mode-alist))
   #+end_src
-* Режим =python-mode= для ~ufl~
+* Режим =python-mode= для ~.ufl~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
 	  (append
 	   '(("\\.ufl\\'" . python-mode))
 	   auto-mode-alist))
   #+end_src
-* Режим =makefile-mode= для ~pro~ и ~pri~
+* Режим =makefile-mode= для ~.pro~ и ~.pri~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
 	  (append
@@ -376,13 +378,47 @@
   #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   #+end_src
-* Включение =sr-speedbar=
+* Включение =projectile=
+#+begin_src emacs-lisp
+(require 'projectile)
+(projectile-global-mode)
+
+(require 'projectile-speedbar)
+(global-set-key (kbd "M-<f3>") 'projectile-speedbar-open-current-buffer-in-tree)
+#+end_src
+* Навигация по коду с помощью =helm-gtags=
+** Включение и настройка ~helm-gtags~
+  #+begin_src emacs-lisp
+(require 'helm)
+(require 'helm-config)
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t)
+
+(require 'helm-gtags)
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+(define-key helm-gtags-mode-map (kbd "C-M-n") 'forward-sexp)
+(define-key helm-gtags-mode-map (kbd "C-M-b") 'backward-sexp)
+  #+end_src
+
+** Включение =sr-speedbar=
   #+begin_src emacs-lisp
 (require 'sr-speedbar)
 (global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
   #+end_src
-* Включение =projectile=
-#+begin_src emacs-lisp
-(require 'projectile)
-(add-hook 'c-mode-common-hook 'projectile-mode)
-#+end_src
+

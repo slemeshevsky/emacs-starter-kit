@@ -44,7 +44,7 @@
 ;; Предыдущий абзац
 (global-unset-key (kbd "C-M-u"))
 (global-set-key (kbd "C-M-u") 'backward-paragraph)
-;;(define-key flyspell-mode-map (kbd "C-M-i") 'backward-paragraph)
+;(define-key flyspell-mode-map (kbd "C-M-i") 'backward-paragraph)
 
 ;; Page Up
 (global-unset-key (kbd "M-I"))

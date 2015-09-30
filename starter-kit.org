@@ -32,6 +32,8 @@
 		      ido 
 		      hideshow 
               projectile
+              projectile-speedbar
+              ibuffer-projectile
 		      auto-complete 
 		      cmake-mode 
 		      sr-speedbar 
@@ -65,15 +67,6 @@
 (add-to-list 'load-path sitelisp-dir)
 #+end_src
 
-* Чрезвычайно полезная функция — используйте её если вам нужно отредактировать системные файлы от имени суперпользователя.
-#+begin_src emacs-lisp  
-(defun sudo-edit (&optional arg)
-  (interactive "p")
-  (if arg
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-#+end_src
-
 * Этот код загружает цветовые темы, тем самым делая их доступными по-умолчанию.
 #+begin_src emacs-lisp  
 (add-to-list 'load-path (expand-file-name "color-theme" sitelisp-dir))
@@ -93,7 +86,7 @@
 * Браузер
 #+begin_src emacs-lisp  
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
+      browse-url-generic-program "google-chrome")
 #+end_src
   
 * Включить подсветку синтаксиса для старых эмаксов.
@@ -114,9 +107,9 @@
 
 * Подключаем ESS
 #+begin_src emacs-lisp  
-(require 'ess-site)
-(require 'r-autoyas)
-(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
+;(require 'ess-site)
+;(require 'r-autoyas)
+;(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 #+end_src
 
 * Печать кириллицы в ~postscript~
@@ -163,24 +156,7 @@
 #+begin_src emacs-lisp
 (setq initial-frame-alist '((top . 0) (left . 0) ))
 #+end_src
-
-* Функция, которая меняет размер окна (на всю левую половину экрана в зависимости от разрешения) 
-#+begin_src emacs-lisp
-(defun set-frame-size-according-to-resolution ()
-(interactive)
-(if window-system
-(progn
-(add-to-list 'default-frame-alist
-(cons 'width (/ (/ (x-display-pixel-width) 2) (frame-char-width))))
-(add-to-list 'default-frame-alist 
-(cons 'height (/ (- (x-display-pixel-height) 0) (frame-char-height)))))))
-#+end_src
   
-* Вызываем функцию при загрузке
-#+begin_src emacs-lisp
-;; (set-frame-size-according-to-resolution)
-#+end_src
-
 * Устанавливаем режим =auto-fill=
 #+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -192,8 +168,6 @@
 #+begin_src emacs-lisp
 (dolist (hook '(text-mode-hook))
      (add-hook hook (lambda () (flyspell-mode 1))))
-(dolist (hook '(text-mode-hook))
-     (add-hook hook (lambda () (define-key flyspell-mode-map (kbd "C-M-i") 'backward-paragraph))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
      (add-hook hook (lambda () (flyspell-mode -1))))
 #+end_src
@@ -224,30 +198,6 @@
 ))
     
 (global-set-key (kbd "<f8>")   'fd-switch-dictionary)
-#+end_src
-
-* Открываем doc файлы в режиме ~org-mode~ во внешних приложениях
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook
-  '(lambda ()
-        (setq org-file-apps
-              (append '(
-                        ("\\.doc\\'" . default)
-                       ) org-file-apps
-              )
-        )
-   )
-)
-(add-hook 'org-mode-hook
-  '(lambda ()
-        (setq org-file-apps
-              (append '(
-                        ("\\.odt\\'" . default)
-                       ) org-file-apps
-              )
-        )
-   )
-)
 #+end_src
 
 * Подключаем ~lambda-mode~
@@ -283,8 +233,43 @@
 (require 'bs)
 (setq bs-configurations
       '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
-(global-set-key (kbd "<f2>") 'bs-show)
+(add-to-list 'bs-configurations
+                 '("C++" nil nil nil
+                   (lambda (buf)
+                      (with-current-buffer buf
+                         (not (memq major-mode
+                            '(sql-interactive-mode cc-mode))))) nil))
+(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
 #+end_src
+* Настройка ~ibuffer~
+  #+begin_src emacs-lisp
+(defun my/ibuffer-customization ()
+          ;; ibuffer-projectile setup
+          (ibuffer-projectile-set-filter-groups)
+          (unless (eq ibuffer-sorting-mode 'alphabetic)
+            (ibuffer-do-sort-by-alphabetic) ; first do alphabetic sort
+            (ibuffer-do-sort-by-major-mode)))
+(add-hook 'ibuffer-hook #'my/ibuffer-customization)
+(setq ibuffer-saved-filter-groups
+          (quote (("default"
+                   ("dired" (mode . dired-mode))
+                   ("planner" (or
+                               (name . "^\\*Calendar\\*$")
+                               (name . "^diary$")
+                               (mode . muse-mode)
+                               (name . "^\\.org")))
+                   ("emacs" (or
+                             (name . "^\\*scratch\\*$")
+                             (name . "^\\*Messages\\*$")))
+                   ("C++" (or
+                             (mode . cc-mode)))
+                   ("Python" (or
+                             (mode . python-mode)))
+))))
+(add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
+  #+end_src
 
 * Включение и настройка =yasnippet=
 #+begin_src emacs-lisp
@@ -315,7 +300,7 @@
 ** Включение номеров строк в режимах =latex= и =ess=
    #+begin_src emacs-lisp
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
-(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
+;(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
 * Отмечаем правую границу
 ** Пакет =column-maker=
@@ -345,7 +330,6 @@
 * Замена «yes или no» на «y or n»
 #+begin_src emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
-
 #+end_src
 
 
