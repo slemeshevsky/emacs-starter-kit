@@ -396,7 +396,7 @@
  helm-gtags-auto-update t
  helm-gtags-use-input-at-cursor t
  helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "\C-cg"
+ helm-gtags-prefix-key "\C-t"
  helm-gtags-suggested-key-mapping t)
 
 (require 'helm-gtags)
@@ -421,4 +421,26 @@
 (require 'sr-speedbar)
 (global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
   #+end_src
+
+* Настройка окна компиляции
+  1. Размер окна компиляции в 10 строк
+     #+begin_src emacs-lisp
+(setq compilation-window-height 10)
+     #+end_src
+  2. Автоматически закрывать окно компиляции, если компиляция прошла
+     без ошибок
+	 #+begin_src emacs-lisp
+ ;; Close the compilation window if there was no error at all.
+(setq compilation-exit-message-function
+      (lambda (status code msg)
+        ;; If M-x compile exists with a 0
+        (when (and (eq status 'exit) (zerop code))
+          ;; then bury the *compilation* buffer, so that C-x b doesn't go there
+    	(bury-buffer "*compilation*")
+	    ;; and return to whatever were looking at before
+        (replace-buffer-in-windows "*compilation*"))
+        ;; Always return the anticipated result of compilation-exit-message-function
+	  (cons msg code)))
+	 #+end_src
+
 
