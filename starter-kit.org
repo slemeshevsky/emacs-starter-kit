@@ -34,6 +34,12 @@
               projectile
               projectile-speedbar
               ibuffer-projectile
+              helm
+              helm-core
+              helm-bibtex
+              helm-gtags
+              helm-projectile
+              ipython
 		      auto-complete 
 		      cmake-mode 
 		      sr-speedbar 

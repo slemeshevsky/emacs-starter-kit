@@ -17,7 +17,6 @@
 ;; Влево
 (global-unset-key (kbd "M-j"))
 (global-set-key (kbd "M-j") 'backward-char)
-(define-key c++-mode-map (kbd "M-j") 'backward-char)
 
 ;; Вправо
 (global-unset-key (kbd "M-l"))
@@ -34,7 +33,6 @@
 (global-set-key (kbd "M-u") 'backward-word)
 (global-unset-key (kbd "C-M-j"))
 (global-set-key (kbd "C-M-j") 'backward-word)
-(define-key c++-mode-map (kbd "C-M-j") 'backward-word)
 
 ;; Следующий абзац
 (global-unset-key (kbd "C-M-o"))

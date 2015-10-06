@@ -261,6 +261,8 @@
  
   (add-to-list 'ac-sources 'ac-source-gtags)
   (add-to-list 'ac-sources 'ac-source-semantic)
+  (define-key c++-mode-map (kbd "M-j") 'backward-char)
+  (define-key c++-mode-map (kbd "C-M-j") 'backward-word)
 )
 
 (defun svl/c-mode-cedet-hook ()
@@ -285,8 +287,8 @@
    #+end_src
 3. Включаем поддержку =ectags= 
    #+begin_src emacs-lisp
-(when (cedet-ectag-version-check t)
-  (semantic-load-enable-primary-ectags-support))
+;(when (cedet-ectag-version-check t)
+;  (semantic-load-enable-primary-ectags-support))
    #+end_src
 * =SRecode=
   #+begin_src emacs-lisp
@@ -391,13 +393,13 @@
   #+begin_src emacs-lisp
 (require 'helm)
 (require 'helm-config)
-(setq
- helm-gtags-ignore-case t
- helm-gtags-auto-update t
- helm-gtags-use-input-at-cursor t
- helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "\C-t"
- helm-gtags-suggested-key-mapping t)
+(custom-set-variables
+'(helm-gtags-ignore-case t)
+'(helm-gtags-auto-update t)
+'(helm-gtags-use-input-at-cursor t)
+'(helm-gtags-pulse-at-cursor t)
+'(helm-gtags-prefix-key "C-c g")
+'(helm-gtags-suggested-key-mapping t))
 
 (require 'helm-gtags)
 (add-hook 'dired-mode-hook 'helm-gtags-mode)
