@@ -1,15 +1,35 @@
 #+TITLE: Emacs as IDE for Python
-* Настройки для работы с python
-** Подключение автодополнения
+* Включение пакета =python-mode=
+   #+begin_src emacs-lisp
+(autoload 'python-mode "python-mode" "Python Mode." t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(require 'python-mode)
+   #+end_src
+* Подключение автодополнения
   #+begin_src emacs-lisp
-(add-hook 'python-mode-hook 'auto-complete-mode)
+;(add-hook 'python-mode-hook 'auto-complete-mode)
   #+end_src
-** Использование =ipython=
+* Использование =ipython=
   Для того, чтобы использовать =ipython= как оболочку по-умолчанию,
   добавляем строчки:
-#+begin_src emacs-lisp
+  #+begin_src emacs-lisp
+(setq
+  python-shell-inperpreter "ipython"
+  python-shell-interpreter-args ""
+)
 (setq-default py-shell-name "ipython")
 (setq-default py-which-bufname "IPython")
 #+end_src
-
+* Включение режима =smart-tabs=
+#+begin_src emacs-lisp
+(add-hook 'python-mode-hook
+        (lambda () (setq indent-tabs-mode t)))
+#+end_src
+* Подключение =helm-pydoc=
+#+begin_src emacs-lisp
+(eval-after-load "python"
+  '(progn
+     (define-key python-mode-map (kbd "C-c C-d") 'helm-pydoc)))
+#+end_src
 

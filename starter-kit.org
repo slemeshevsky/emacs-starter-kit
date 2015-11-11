@@ -8,7 +8,7 @@
 (setq dotfiles-dir (file-name-directory
                      (or load-file-name (buffer-file-name))))
   
-(add-to-list 'load-path dotfiles-dir)
+;(add-to-list 'load-path dotfiles-dir)
 (setq package-user-dir (concat dotfiles-dir "elpa"))
 #+end_src
 
@@ -17,6 +17,8 @@
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("elpa" . "http://tromey.com/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 #+end_src
 
@@ -24,31 +26,12 @@
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
-
-(defvar my-packages '(auctex 
-		      reftex 
-		      ess 
-		      magit 
-		      ido 
-		      hideshow 
-              projectile
-              projectile-speedbar
-              ibuffer-projectile
-              helm
-              helm-core
-              helm-bibtex
-              helm-gtags
-              helm-projectile
-              ipython
-		      auto-complete 
-		      cmake-mode 
-		      sr-speedbar 
-		      yasnippet
-              column-marker
-              r-autoyas
-              smart-tabs-mode
-              professional-theme 
-              alect-themes)
+(defvar my-packages '(auctex reftex company company-auctex company-c-headers company-cmake
+                             magit ido hideshow perspective projectile projectile-speedbar
+                             persp-projectile ibuffer-projectile helm helm-core helm-bibtex
+                             helm-gtags helm-projectile python-mode pydoc ipython
+                             auto-complete cmake-mode sr-speedbar yasnippet column-marker
+                             smart-tabs-mode professional-theme alect-themes fill-column-indicator)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -245,7 +228,7 @@
                       (with-current-buffer buf
                          (not (memq major-mode
                             '(sql-interactive-mode cc-mode))))) nil))
-(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
+;(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
 #+end_src
 * Настройка ~ibuffer~
   #+begin_src emacs-lisp
@@ -255,7 +238,7 @@
           (unless (eq ibuffer-sorting-mode 'alphabetic)
             (ibuffer-do-sort-by-alphabetic) ; first do alphabetic sort
             (ibuffer-do-sort-by-major-mode)))
-(add-hook 'ibuffer-hook #'my/ibuffer-customization)
+(add-hook 'ibuffer-hook 'my/ibuffer-customization)
 (setq ibuffer-saved-filter-groups
           (quote (("default"
                    ("dired" (mode . dired-mode))
@@ -272,12 +255,12 @@
                    ("Python" (or
                              (mode . python-mode)))
 ))))
-(add-hook 'ibuffer-mode-hook
-              (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
+;;(add-hook 'ibuffer-mode-hook
+;;              (lambda ()
+;;                (ibuffer-switch-to-saved-filter-groups "default")))
   #+end_src
 
-* Включение и настройка =yasnippet=
+* Включение и настройка ~yasnippet~
 #+begin_src emacs-lisp
 (require 'yasnippet)
 (yas-global-mode 1)
@@ -293,13 +276,14 @@
 ** Включение номеров строк в режимах программирования
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook 'switch-linum-mode-hook)
+(add-hook 'python-mode-hook 'switch-linum-mode-hook)
 #+end_src
 ** Включение номеров строк в режимах программирования на C/C++
 #+begin_src emacs-lisp
 ;;(add-hook 'c-mode-hook 'switch-linum-mode-hook)
 ;;(add-hook 'c++-mode-hook 'switch-linum-mode-hook)
 #+end_src
-** Включение номеров строк в режимах =cmake-mode=, =python-mode=, =makefile-mode=
+** Включение номеров строк в режимах =cmake-mode=, =makefile-mode=
 #+begin_src emacs-lisp
 (add-hook 'cmake-mode-hook 'switch-linum-mode-hook)
 #+end_src
@@ -319,10 +303,11 @@
 (require 'fill-column-indicator)
 (setq fci-rule-width 2)
 (add-hook 'prog-mode-hook 'fci-mode)
+(add-hook 'python-mode-hook 'fci-mode)
 #+end_src
 
-* Включение режима =smart-tabs-mode=
-#+begin_src emacs-lisp
+* Включение режима ~smart-tabs-mode~
+  #+begin_src emacs-lisp
 (smart-tabs-insinuate 'c 'c++ 'python)
 (setq-default tab-width 4)
 (add-hook 'prog-mode-hook
@@ -338,4 +323,11 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-
+* Убрать предупреждение =ad-redefinition-action=
+#+begin_src emacs-lisp
+(setq ad-redefinition-action 'accept)
+#+end_src
+* Подключаем ~doconce-mode~
+#+begin_src emacs-lisp
+(load-file "~/.emacs.d/src/doconce-mode.el")
+#+end_src

@@ -1,95 +1,203 @@
-#+TITLE: CEDET configurations
-Настройки =CEDET= сделаны на основе [[http://alexott.net/ru/writings/emacs-devenv/EmacsCedet.html][статьи Алекса Отта]] и его
-[[https://github.com/alexott/emacs-configs/blob/master/rc/emacs-rc-cedet.el][конфигурационного файла]]
-* Включение =Semantic=
-1. Перед включением ~Semantic~ необходимо заполнить список
-   ~semsntic-default-submodes~
-   1. Включение глобальной поддержки ~Semanticmdb~
-      #+begin_src emacs-lisp 
+#+TITLE: Emacs IDE configuration
+* Включение режимов подсветки
+** Режим =cmake-mode=
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("CMakeLists\\.txt\\'" . cmake-mode))
+	   '(("\\.cmake\\'" . cmake-mode))
+	   auto-mode-alist))
+  #+end_src
+** Режим =python-mode= для ~.ufl~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.ufl\\'" . python-mode))
+	   auto-mode-alist))
+  #+end_src
+** Режим =makefile-mode= для ~.pro~ и ~.pri~
+  #+begin_src emacs-lisp
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pro\\'" . makefile-mode))
+	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.pri\\'" . makefile-mode))
+	   auto-mode-alist))
+(setq auto-mode-alist
+	  (append
+	   '(("\\.geo\\'" . makefile-mode))
+	   auto-mode-alist))
+  #+end_src
+** Режим =c++-mode= для ~.h~
+  #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  #+end_src
+
+* Включение =Eassist=
+  #+begin_src emacs-lisp
+(require 'eassist)
+  #+end_src
+* Настройка =helm=
+** Подключение =helm=
+#+begin_src emacs-lisp
+(require 'helm)
+(require 'helm-config)
+#+end_src
+** Меняем префикс
+#+begin_src emacs-lisp
+(global-unset-key (kbd "C-c h"))
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+#+end_src
+** Другие настройки =helm=
+#+begin_src emacs-lisp
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
+(global-set-key (kbd "<f2>") 'helm-buffers-list)
+
+(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t)
+(helm-autoresize-mode t)
+(helm-mode 1)
+#+end_src
+* Настройка =helm-gtags=
+#+begin_src emacs-lisp
+(require 'helm-gtags)
+(custom-set-variables
+ '(helm-gtags-ignore-case t)
+ '(helm-gtags-auto-update t)
+ '(helm-gtags-use-input-at-cursor t)
+ '(helm-gtags-pulse-at-cursor t)
+ '(helm-gtags-prefix-key (kbd "C-c g"))
+ '(helm-gtags-suggested-key-mapping 1)
+)
+#+end_src
+** Включение режима =helm-gtags=
+#+begin_src emacs-lisp
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+#+end_src
+** Настройка клавиш
+#+begin_src emacs-lisp
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+#+end_src
+* Настройка =projectile=
+** Включение =projectile=
+#+begin_src emacs-lisp
+(require 'projectile)
+(require 'helm-projectile)
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+#+end_src
+** Интеграция с =perspective=
+#+begin_src emacs-lisp
+(persp-mode)
+(require 'persp-projectile)
+(define-key projectile-mode-map (kbd "C-s-p") 'projectile-persp-switch-project)
+#+end_src
+* Настройка режима компиляции
+** Клавиша для компиляции
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f9>") (lambda ()
+                              (interactive)
+                              (setq-local compilation-read-command nil)
+                              (call-interactively 'projectile-compile-project)))
+#+end_src
+** Навигация только по ошибкам, пропуская предупреждения
+#+begin_src emacs-lisp
+(setq compilation-skip-threshold 2)
+#+end_src
+** Размер окна компиляции в 8 строк
+     #+begin_src emacs-lisp
+(setq compilation-window-height 8)
+     #+end_src
+** Автоматический скроллинг окна компиляции
+#+begin_src emacs-lisp
+(setq compilation-scroll-output t)
+#+end_src
+** Автоматически закрывать окно компиляции, если компиляция прошла без ошибок
+	 #+begin_src emacs-lisp
+ ;; Close the compilation window if there was no error at all.
+(setq compilation-exit-message-function
+      (lambda (status code msg)
+        ;; If M-x compile exists with a 0
+        (when (and (eq status 'exit) (zerop code))
+          ;; then bury the *compilation* buffer, so that C-x b doesn't go there
+    	(bury-buffer "*compilation*")
+	    ;; and return to whatever were looking at before
+        (replace-buffer-in-windows "*compilation*"))
+;        (delete-other-windows))
+        ;; Always return the anticipated result of compilation-exit-message-function
+	  (cons msg code)))
+	 #+end_src
+
+* Включение =sr-speedbar=
+  #+begin_src emacs-lisp
+(require 'sr-speedbar)
+(global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
+  #+end_src
+* Настройка =cedet=
+** Включение =Semantic=
+*** Перед включением ~Semantic~ необходимо заполнить список ~semsntic-default-submodes~
+**** Включение глобальной поддержки ~Semanticmdb~
+#+begin_src emacs-lisp 
 (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-      #+end_src
-   2. Включение режима автоматического запоминания информации о
-      редактируемых тагах, так что можно перейти к ним позднее с
-      помощью команды ~semantic-mrub-switch-tags~
-      #+begin_src emacs-lisp
+#+end_src
+**** Включение режима автоматического запоминания информации о редактируемых тагах
+     Перейти к ним можно будет позднее с помощью команды ~semantic-mrub-switch-tags~
+     #+begin_src emacs-lisp
 (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
       #+end_src
-   3. Активация контекстного меню, привязанного к правой клавише мыши
-      (у меня не сработало)
-      #+begin_src emacs-lisp
-;(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
-      #+end_src
-   4. Активация подстветки первой строки текущего тага (функции,
-      класса и т.п.)
-      #+begin_src emacs-lisp
+**** Активация подстветки первой строки текущего тага (функции, класса и т.п.)
+     #+begin_src emacs-lisp
 (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
-      #+end_src
-   5. Активация автоматического анализа кода в буферах когда Emacs
-      «свободен» и ожидает ввода данных от пользователя (idle time) 
-      #+begin_src emacs-lisp
+     #+end_src
+**** Активация автоматического анализа кода в буферах когда Emacs «свободен» и ожидает ввода данных от пользователя (idle time) 
+     #+begin_src emacs-lisp
 (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
-      #+end_src
-   6. Активация показа возможных дополнений имен во время ожидания
-      ввода. Требует чтобы был включен
-      ~global-semantic-idle-scheduler-mode~
-      #+begin_src emacs-lisp
+     #+end_src
+**** Активация показа возможных дополнений имен во время ожидания ввода
+     Требует чтобы был включен ~global-semantic-idle-scheduler-mode~
+     #+begin_src emacs-lisp
 ;(add-to-list 'semantic-default-submodes 'global-semantic-idle-completions-mode)
-      #+end_src
-   7. Активация показа информации о текущем таге во время ожидания
-      ввода. Требует чтобы был включен 
-      ~global-semantic-idle-scheduler-mode~ 
-      #+begin_src emacs-lisp
+     #+end_src
+**** Активация показа информации о текущем таге во время ожидания ввода
+     Требует чтобы был включен ~global-semantic-idle-scheduler-mode~ 
+     #+begin_src emacs-lisp
 (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
-      #+end_src
-2. Включаем ~Semantic~ 
-   #+begin_src emacs-lisp
-   (semantic-mode 1) 
-   (semantic-load-enable-excessive-code-helpers)
-   (global-semantic-tag-folding-mode 1)
-   #+end_src
-3. Для использования  возможности по дополнению имен и показу
-   информации о функциях и классах необходимо загрузить пакет
-   ~semantic/ia~
-   #+begin_src emacs-lisp
+     #+end_src
+*** Для использования  возможности по дополнению имен и показу информации о функциях и классах необходимо загрузить пакет ~semantic/ia~
+    #+begin_src emacs-lisp
 (require 'semantic/ia)
-   #+end_src
-   
-* Системные подключаемые файлы
-1. Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет
-   может автоматически получить данные о нахождении системных
+    #+end_src
+*** Включаем ~Semantic~
+    #+begin_src emacs-lisp
+(semantic-mode 1)
+(semantic-load-enable-excessive-code-helpers)
+(global-semantic-tag-folding-mode 1)
+    #+end_src
+** Загрузка системных пакетов
+   Если вы используете ~GCC~ для программирования на ~C~ & ~C++~, то пакет может автоматически получить данные о нахождении системных
    подключаемых файлов. Для этого вам необходимо загрузить пакет
    ~semantic/bovine/gcc~:
    #+begin_src emacs-lisp
 (require 'semantic/bovine/c)
 (require 'semantic/bovine/gcc)
 (require 'semantic/wisent/python)
-(require 'cedet-files)
    #+end_src
-
-* Загрузка дополнительных пакетов
-  1. =Eassist=
-#+begin_src emacs-lisp
-(require 'eassist)
-#+end_src
-  2. =Autocomplete=
-#+begin_src emacs-lisp
-(require 'auto-complete-config)
-(ac-config-default)
-(setq ac-auto-start 1)
-(define-key ac-mode-map [(meta return)] 'auto-complete)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
-#+end_src
-  3. =Hideshow=
-#+begin_src emacs-lisp
-;;(load-library "hideshow")
-#+end_src
-  4. =Semantic-tag-folding=
-#+begin_src emacs-lisp
-;;(require 'semantic-tag-folding)
-#+end_src
-* Настройка =Semanticdb=
-1. Настройка CEDET для работы с библиотекой Qt4
-   #+begin_src emacs-lisp
+** Настройка =Semanticdb=
+*** Настройка CEDET для работы с библиотекой Qt4
+    #+begin_src emacs-lisp
 (setq qt4-base-dir "/usr/include/qt4")
 (setq qwt-base-dir "/usr/include/qwt")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
@@ -137,9 +245,9 @@
 (add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig.h"))
 (add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qconfig-dist.h"))
 (add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt4-base-dir "/Qt/qglobal.h"))
-   #+end_src
-2. Настройка CEDET для работы с библиотекой ITK-4.5
-  #+begin_src emacs-lisp
+    #+end_src
+*** Настройка CEDET для работы с библиотекой ITK-4.5
+    #+begin_src emacs-lisp
 (setq itk-base-dir "/usr/include/ITK-4.5")
 (semantic-add-system-include itk-base-dir 'c++-mode)
 (semantic-add-system-include itk-base-dir 'c-mode)
@@ -207,9 +315,9 @@
 (semantic-add-system-include (concat itk-base-dir "/vcl_sys") 'c-mode)
 (semantic-add-system-include (concat itk-base-dir "/vnl") 'c++-mode)
 (semantic-add-system-include (concat itk-base-dir "/vnl") 'c-mode)
-   #+end_src
-3. Настройка CEDET для работы с библиотекой VTK-5.8
-   #+begin_src emacs-lisp
+    #+end_src
+*** Настройка CEDET для работы с библиотекой VTK-5.8
+    #+begin_src emacs-lisp
 (setq vtk-base-dir "/usr/include/vtk-5.8")
 (semantic-add-system-include vtk-base-dir 'c++-mode)
 (semantic-add-system-include vtk-base-dir 'c-mode)
@@ -239,10 +347,15 @@
 (semantic-add-system-include (concat vtk-base-dir "/vtkstd") 'c-mode)
 (semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c++-mode)
 (semantic-add-system-include (concat vtk-base-dir "/vtksys") 'c-mode)
-   #+end_src
-   
-* Настройка режимов
-1. Привязка клавиш к командам =Semantic=
+    #+end_src
+*** Настройка CEDET для работы с библиотекой CGAL
+    #+begin_src emacs-lisp
+(setq cgal-base-dir "/usr/include/CGAL")
+(semantic-add-system-include cgal-base-dir 'c++-mode)
+(semantic-add-system-include cgal-base-dir 'c-mode)   
+    #+end_src
+
+** Привязка клавиш к командам =Semantic=
    #+begin_src emacs-lisp
 (defun svl/cedet-hook()
   (local-set-key [(control return)] 'semantic-ia-complete-symbol-menu)
@@ -259,8 +372,6 @@
   (local-set-key "\C-cu" 'senator-unfold-tag)
   (local-set-key "\C-c\C-t" 'senator-fold-tag-toggle)
  
-  (add-to-list 'ac-sources 'ac-source-gtags)
-  (add-to-list 'ac-sources 'ac-source-semantic)
   (define-key c++-mode-map (kbd "M-j") 'backward-char)
   (define-key c++-mode-map (kbd "C-M-j") 'backward-word)
 )
@@ -270,179 +381,41 @@
   (local-set-key "\C-xt" 'eassist-switch-h-cpp)
   (local-set-key "\C-ce" 'eassist-list-methods)
   (local-set-key "\C-c\C-r" 'semantic-symref)
-
-  (add-to-list 'ac-sources 'ac-source-gtags)
-  (add-to-list 'ac-sources 'ac-source-semantic)
 )
 
 (add-hook 'c-mode-common-hook 'svl/cedet-hook)
 (add-hook 'c-mode-common-hook 'svl/c-mode-cedet-hook)
   #+end_src
-2. Включаем поддержку =gnu global=
+** Включаем поддержку =gnu global=
    #+begin_src emacs-lisp
 (when (cedet-gnu-global-version-check t)
   (semanticdb-enable-gnu-global-databases 'c-mode t)
   (semanticdb-enable-gnu-global-databases 'c++-mode t)
   (semanticdb-enable-gnu-global-databases 'python-mode t))
    #+end_src
-3. Включаем поддержку =ectags= 
-   #+begin_src emacs-lisp
-;(when (cedet-ectag-version-check t)
-;  (semantic-load-enable-primary-ectags-support))
-   #+end_src
-* =SRecode=
-  #+begin_src emacs-lisp
-(global-srecode-minor-mode 1)
-  #+end_src
-* Настройка ECB
-1. Включаем Emacs Code Browsing (ECB). У меня используется форк ECB
-   от Алекса Отта
-   #+begin_src emacs-lisp
-(require 'ecb)
-   #+end_src
-2. Версия ECB
-   #+begin_src emacs-lisp
-(setq ecb-options-version "2.40")
-   #+end_src
-3. Настройки окна компиляции
-   #+begin_src emacs-lisp
-(setq ecb-compile-window-temporally-enlarge 'after-selection)
-(setq ecb-compile-window-width 'edit-window)
-(setq ecb-compile-window-height 8)
-(setq compilation-auto-jump-to-first-error)
-(setq compilation-skip-threshold 2)
-   #+end_src
-4. Отключение «подсказки дня»
-   #+begin_src emacs-lisp
-(setq ecb-tip-of-the-day nil)
-   #+end_src
-5. Отключаем автоматическое определение пустых директорий
-   #+begin_src emacs-lisp
-(setq ecb-prescan-directories-for-emptyness 0)
-   #+end_src
-6. Установка ширины окон.
-   #+begin_src emacs-lisp
-(setq ecb-windows-width 0.2)
-   #+end_src
-7. Установить ~layout~
-   #+begin_src emacs-lisp
-(ecb-layout-switch "right1")
-   #+end_src
-8. Комбинация клавиш для быстрой активации/деактивации ECB, 
-   #+begin_src emacs-lisp
-(global-set-key (kbd "\e\eE") 'ecb-activate)
-(global-set-key (kbd "\e\eD") 'ecb-deactivate)
-(global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
-   #+end_src
-* Настройка дополнительных пакетов для редактирования кода
-1. Настройки модуля =hideshow= для свертывания кода
-   #+begin_src emacs-lisp
-;;(add-hook 'c++-mode-hook  ; other modes similarly
-;;           (lambda () (hs-minor-mode 1)))
-;;(add-hook 'c-mode-common-hook  ; other modes similarly
-;;           (lambda () (hs-minor-mode 1)))
-;;(global-set-key (kbd "C-c @ h") 'hs-hide-block)
-;;(global-set-key (kbd "C-c @ s") 'hs-show-block)
-;;(global-set-key (kbd "C-c @ SPC") 'hs-toggle-hiding)
-   #+end_src
-
-* Режим =cmake-mode=
-  #+begin_src emacs-lisp
-(setq auto-mode-alist
-	  (append
-	   '(("CMakeLists\\.txt\\'" . cmake-mode))
-	   '(("\\.cmake\\'" . cmake-mode))
-	   auto-mode-alist))
-  #+end_src
-* Режим =python-mode= для ~.ufl~
-  #+begin_src emacs-lisp
-(setq auto-mode-alist
-	  (append
-	   '(("\\.ufl\\'" . python-mode))
-	   auto-mode-alist))
-  #+end_src
-* Режим =makefile-mode= для ~.pro~ и ~.pri~
-  #+begin_src emacs-lisp
-(setq auto-mode-alist
-	  (append
-	   '(("\\.pro\\'" . makefile-mode))
-	   auto-mode-alist))
-(setq auto-mode-alist
-	  (append
-	   '(("\\.pri\\'" . makefile-mode))
-	   auto-mode-alist))
-(setq auto-mode-alist
-	  (append
-	   '(("\\.geo\\'" . makefile-mode))
-	   auto-mode-alist))
-  #+end_src
-* Режим =c++-mode= для ~.h~
-  #+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-  #+end_src
-* Включение =projectile=
+* Настройка =company-mode=
+** Активация режима
 #+begin_src emacs-lisp
-(require 'projectile)
-(projectile-global-mode)
-
-(require 'projectile-speedbar)
-(global-set-key (kbd "M-<f3>") 'projectile-speedbar-open-current-buffer-in-tree)
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(add-to-list 'company-backends 'company-semantic)
+(add-to-list 'company-backends 'company-gtags)
+(define-key c-mode-map  [(control tab)] 'company-complete)
+(define-key c++-mode-map  [(control tab)] 'company-complete)
 #+end_src
-* Навигация по коду с помощью =helm-gtags=
-** Включение и настройка ~helm-gtags~
-  #+begin_src emacs-lisp
-(require 'helm)
-(require 'helm-config)
-(custom-set-variables
-'(helm-gtags-ignore-case t)
-'(helm-gtags-auto-update t)
-'(helm-gtags-use-input-at-cursor t)
-'(helm-gtags-pulse-at-cursor t)
-'(helm-gtags-prefix-key "C-c g")
-'(helm-gtags-suggested-key-mapping t))
-
-(require 'helm-gtags)
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-(define-key helm-gtags-mode-map (kbd "C-M-n") 'forward-sexp)
-(define-key helm-gtags-mode-map (kbd "C-M-b") 'backward-sexp)
-  #+end_src
-
-** Включение =sr-speedbar=
-  #+begin_src emacs-lisp
-(require 'sr-speedbar)
-(global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
-  #+end_src
-
-* Настройка окна компиляции
-  1. Размер окна компиляции в 10 строк
-     #+begin_src emacs-lisp
-(setq compilation-window-height 10)
-     #+end_src
-  2. Автоматически закрывать окно компиляции, если компиляция прошла
-     без ошибок
-	 #+begin_src emacs-lisp
- ;; Close the compilation window if there was no error at all.
-(setq compilation-exit-message-function
-      (lambda (status code msg)
-        ;; If M-x compile exists with a 0
-        (when (and (eq status 'exit) (zerop code))
-          ;; then bury the *compilation* buffer, so that C-x b doesn't go there
-    	(bury-buffer "*compilation*")
-	    ;; and return to whatever were looking at before
-        (replace-buffer-in-windows "*compilation*"))
-        ;; Always return the anticipated result of compilation-exit-message-function
-	  (cons msg code)))
-	 #+end_src
-
-
+** Включение =company-c-headers=
+#+begin_src emacs-lisp
+(add-to-list 'company-backends 'company-c-headers)
+#+end_src
+** Изменение цветовой темы =company=
+#+begin_src emacs-lisp
+(require 'color)
+  
+(let ((bg (face-attribute 'default :background)))
+  (custom-set-faces
+   `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
+   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
+   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
+   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+   `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+#+end_src

@@ -5,8 +5,9 @@
 #+end_src
 
 * Активация ~remember-mode~
-#+begin_src emacs-lisp
-(org-remember-insinuate)
+  #+begin_src emacs-lisp
+(require 'remember)
+;(org-remember-insinuate)
 #+end_src
 
 * Установка комбинаций клавиш
@@ -15,7 +16,7 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-iswitchb)
-(global-set-key "\C-cr" 'org-remember)
+(global-set-key "\C-cr" 'org-capture)
 (defun open-org-journal-file ()
   (interactive)
   (find-file "~/Dropbox/org/journal.org"))
@@ -44,14 +45,29 @@
 #+end_src
 
 * Настройка шаблонов ~remember~
-#+begin_src emacs-lisp
-(setq org-remember-templates
-      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
-	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
+# #+begin_src emacs-lisp
+# (setq org-remember-templates
+#       '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+# 	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+# 	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+# 	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+# 	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
+# 	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
+# #+end_src
+  #+begin_src emacs-lisp
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ") 
+		 "** TODO %^{Brief Description} %^g\n%?\nAdded: %U" )
+		("c" "Call" entry (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+		 "** CALL %^{Brief Description} %^g\n%?\nAdded: %U" )
+		("o" "Outside"  (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+		 "** %^{Brief Description} %^g\n%?\nAdded: %U" )
+		("h" "Check" entry (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+		 "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U")
+		("j" "Journal" entry (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+		 "** %^{Head Line} %U %^g\n%i%?" )
+		("s" "Someday" entry (file+headline "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
+		 "** %^{Someday Heading} %U\n%?\n" )))
 #+end_src
 
 * Настройка показа буфера ~Agenda~
