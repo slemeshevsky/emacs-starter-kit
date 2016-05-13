@@ -266,7 +266,7 @@
 (yas-global-mode 1)
 #+end_src
 
-* Включение номеров строк
+* Включение номеров строк слева и показ номера колонки
 ** Определение функции
 #+begin_src emacs-lisp
 (require 'linum)
@@ -292,16 +292,22 @@
 (add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
 ;(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
    #+end_src
+** Показ номера колонки
+#+begin_src emacs-lisp
+(column-number-mode t)
+#+end_src
 * Отмечаем правую границу
 ** Пакет =column-maker=
-#+begin_src emacs-lisp
-;(require 'column-marker)
-;(add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
-#+end_src
+# #+begin_src emacs-lisp
+# (require 'column-marker)
+# (add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
+# (add-hook 'python-mode-hook (lambda () (interactive) (column-marker-1 80)))
+# #+end_src
 ** Пакет =fill-column-indicator=
 #+begin_src emacs-lisp
 (require 'fill-column-indicator)
 (setq fci-rule-width 2)
+(setq fci-rule-column 80)
 (add-hook 'prog-mode-hook 'fci-mode)
 (add-hook 'python-mode-hook 'fci-mode)
 #+end_src
@@ -316,6 +322,8 @@
           (lambda () (setq indent-tabs-mode t)))
 (add-hook 'python-mode-hook
           (lambda () (setq indent-tabs-mode t)))
+(add-hook 'python-mode-hook
+          (lambda () (setq tab-width 4)))
 #+end_src
 
 * Замена «yes или no» на «y or n»
@@ -330,4 +338,6 @@
 * Подключаем ~doconce-mode~
 #+begin_src emacs-lisp
 (load-file "~/.emacs.d/src/doconce-mode.el")
+(require 'poly-doconce-mode)
+(add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
 #+end_src

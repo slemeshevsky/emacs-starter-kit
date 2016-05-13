@@ -20,11 +20,11 @@
   Мне понравились:
 ** Solarized-Dark
 #+begin_src emacs-lisp
-;;(load-theme 'sanityinc-solarized-dark t)
+(load-theme 'sanityinc-solarized-dark t)
 #+end_src
 ** Solarized-Light
 #+begin_src emacs-lisp
-(load-theme 'sanityinc-solarized-light t)
+;;(load-theme 'sanityinc-solarized-light t)
 #+end_src
 ** Wombat
 #+begin_src emacs-lisp

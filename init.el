@@ -1,6 +1,6 @@
 ;;; init.el --- Where all the magic begins
 ;;
-;; Part of the Emacs Starter Kit
+;; part of the Emacs Starter Kit
 ;;
 ;; This is the first thing to get loaded.
 ;;
@@ -27,6 +27,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-scrollbar-bg ((t (:background "#191919"))))
+ '(company-scrollbar-fg ((t (:background "#0c0c0c"))))
+ '(company-tooltip ((t (:inherit default :background "#050505"))))
+ '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
+ '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
  '(org-agenda-done ((t (:foreground "ForestGreen" :strike-through t))))
  '(org-done ((t (:foreground "ForestGreen" :strike-through t :weight bold))))
  '(org-level-2 ((t (:foreground "#8C5353")))))
@@ -45,6 +50,13 @@
  '(helm-gtags-suggested-key-mapping t)
  '(helm-gtags-use-input-at-cursor t)
  '(org-agenda-todo-list-sublevels nil)
- '(safe-local-variable-values (quote ((projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make") (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/cds.pro && make")))))
+ '(safe-local-variable-values
+   (quote
+	((projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
+	 (projectile-project-compilation-cmd . "cd .. && make html")
+	 (projectile-project-run-cmd . "~/Projects/build/cds/cds")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro && make")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/cds.pro && make")))))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)

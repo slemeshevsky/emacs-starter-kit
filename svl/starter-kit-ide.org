@@ -141,10 +141,12 @@
 	  (cons msg code)))
 	 #+end_src
 
-* Включение =sr-speedbar=
+* Включение =projectile-speedbar=
   #+begin_src emacs-lisp
+;(require 'projectile-speedbar)
 (require 'sr-speedbar)
 (global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
+;(setq speedbar-show-unknown-files t)
   #+end_src
 * Настройка =cedet=
 ** Включение =Semantic=
@@ -418,4 +420,8 @@
    `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
    `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
    `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+#+end_src
+* Настройка =smart-tabs=
+#+begin_src emacs-lisp
+  (smart-tabs-insinuate 'c 'python)
 #+end_src
