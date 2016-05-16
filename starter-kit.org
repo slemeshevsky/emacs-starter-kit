@@ -31,7 +31,8 @@
                              persp-projectile ibuffer-projectile helm helm-core helm-bibtex
                              helm-gtags helm-projectile python-mode pydoc ipython
                              auto-complete cmake-mode sr-speedbar yasnippet column-marker
-                             smart-tabs-mode professional-theme alect-themes fill-column-indicator)
+                             smart-tabs-mode professional-theme alect-themes material-theme 
+                             aurora-theme fill-column-indicator)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)

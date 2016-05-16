@@ -20,7 +20,7 @@
   Мне понравились:
 ** Solarized-Dark
 #+begin_src emacs-lisp
-(load-theme 'sanityinc-solarized-dark t)
+;(load-theme 'sanityinc-solarized-dark t)
 #+end_src
 ** Solarized-Light
 #+begin_src emacs-lisp
@@ -69,6 +69,18 @@
 ** FaltUI
 #+begin_src emacs-lisp
 ;(load-theme 'flatui t)
+#+end_src
+** Material
+#+begin_src emacs-lisp
+(load-theme 'material t)
+#+end_src
+** Material Light
+#+begin_src emacs-lisp
+;(load-theme 'material-light t)
+#+end_src
+** Aurora
+#+begin_src emacs-lisp
+;(load-theme 'aurora t)
 #+end_src
 * Установка =default= шрифта «Consolas»
 #+begin_src emacs_lisp
