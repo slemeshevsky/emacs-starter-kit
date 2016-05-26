@@ -94,12 +94,11 @@
 #+begin_src emacs-lisp
 (setq powerline-color1 "#073642")
 (setq powerline-color2 "#002b36")
-
+(powerline-default-theme)
 (set-face-attribute 'mode-line nil
                     :foreground "#fdf6e3"
                     :background "#2aa198"
                     :box nil)
 (set-face-attribute 'mode-line-inactive nil
                     :box nil)
-
 #+end_src
