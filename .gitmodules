@@ -22,3 +22,6 @@
 [submodule "src/color-theme-wombat"]
 	path = src/color-theme-wombat
 	url = https://github.com/jasonblewis/color-theme-wombat.git
+[submodule "powerline"]
+	path = powerline
+	url = https://github.com/milkypostman/powerline.git
