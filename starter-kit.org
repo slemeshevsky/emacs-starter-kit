@@ -74,10 +74,10 @@
 #+end_src
 
 * Браузер
-#+begin_src emacs-lisp  
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
-#+end_src
+# #+begin_src emacs-lisp  
+# (setq browse-url-browser-function 'browse-url-generic
+#       browse-url-generic-program "google-chrome")
+# #+end_src
   
 * Включить подсветку синтаксиса для старых эмаксов.
 #+begin_src emacs-lisp  
@@ -337,8 +337,8 @@
 (setq ad-redefinition-action 'accept)
 #+end_src
 * Подключаем ~doconce-mode~
-#+begin_src emacs-lisp
-(load-file "~/.emacs.d/src/doconce-mode.el")
-(require 'poly-doconce-mode)
-(add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
-#+end_src
+# #+begin_src emacs-lisp
+# (load-file "~/.emacs.d/src/doconce-mode.el")
+# (require 'poly-doconce-mode)
+# (add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
+# #+end_src

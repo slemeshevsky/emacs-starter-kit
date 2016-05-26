@@ -20,7 +20,7 @@
   Мне понравились:
 ** Solarized-Dark
 #+begin_src emacs-lisp
-;(load-theme 'sanityinc-solarized-dark t)
+(load-theme 'sanityinc-solarized-dark t)
 #+end_src
 ** Solarized-Light
 #+begin_src emacs-lisp
@@ -72,7 +72,7 @@
 #+end_src
 ** Material
 #+begin_src emacs-lisp
-(load-theme 'material t)
+;(load-theme 'material t)
 #+end_src
 ** Material Light
 #+begin_src emacs-lisp
@@ -86,4 +86,20 @@
 #+begin_src emacs_lisp
 (set-default-font "Consolas-12")
 #+end_src
+* Установка =powerline=
+#+begin_src emacs-lisp
+(require 'powerline)
+#+end_src
+** Цвета splarized для powerline
+#+begin_src emacs-lisp
+(setq powerline-color1 "#073642")
+(setq powerline-color2 "#002b36")
 
+(set-face-attribute 'mode-line nil
+                    :foreground "#fdf6e3"
+                    :background "#2aa198"
+                    :box nil)
+(set-face-attribute 'mode-line-inactive nil
+                    :box nil)
+
+#+end_src

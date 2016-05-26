@@ -30,12 +30,6 @@
 * Мои org файлы для реализации *GTD*
 #+begin_src emacs-lisp
 (setq org-agenda-files (list "~/Dropbox/org/gtd.org"
-                             "~/Dropbox/org/tasks.org"
-                             "~/Dropbox/org/personalcalendar.org"
-                             "~/Dropbox/org/workcalendar.org"
-                             "~/Dropbox/org/bsucalendar.org"
-                             "~/Dropbox/org/financialcalendar.org"
-                             "~/Dropbox/org/appointments.org"
        	        		     "~/Dropbox/org/someday.org" 
 			                 "~/Dropbox/org/journal.org"
 	               		     "~/Dropbox/org/weeklyreview.org" 

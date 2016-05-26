@@ -14,7 +14,7 @@
 #+begin_src emacs-lisp
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
 (add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
-(add-to-list 'reftex-default-label-alist-entries 'AMSTeX)
+;(add-to-list 'reftex-default-label-alist-entries 'AMSTeX)
 #+end_src
 
 3. Включение сервера и synctex для прямого/обратного поиска
