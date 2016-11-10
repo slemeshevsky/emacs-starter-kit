@@ -22,3 +22,6 @@
 [submodule "src/color-theme-wombat"]
 	path = src/color-theme-wombat
 	url = https://github.com/jasonblewis/color-theme-wombat.git
+[submodule "src/emacs-powerline"]
+	path = src/emacs-powerline
+	url = https://github.com/jonathanchu/emacs-powerline.git

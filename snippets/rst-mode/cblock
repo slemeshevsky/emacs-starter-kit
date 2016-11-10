@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cblock
+# key: cblock
+# --
+.. code-block:: ${1:python}
+
+   $0

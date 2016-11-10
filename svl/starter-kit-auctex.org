@@ -29,7 +29,13 @@
 (setq TeX-PDF-mode t)
 #+end_src
 
-5. Прямой/обратный поиск с evence с использованием D-bus.
+5. Кавычки-ёлочки
+#+begin_src emacs-lisp
+(setq TeX-open-quote "<<")
+(setq TeX-close-quote ">>")
+#+end_src
+
+6. Прямой/обратный поиск с evence с использованием D-bus.
 #+begin_src emacs-lisp
 (setq TeX-view-program-list (quote (("Okular" "okular --unique %o#src:%n'pwd'/./%b"))))
 (setq TeX-view-program-selection (quote ((output-pdf "Okular") ((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "xpdf") (output-html "xdg-open"))))

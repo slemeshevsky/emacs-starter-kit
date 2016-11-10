@@ -323,8 +323,8 @@
           (lambda () (setq indent-tabs-mode t)))
 (add-hook 'python-mode-hook
           (lambda () (setq indent-tabs-mode t)))
-(add-hook 'python-mode-hook
-          (lambda () (setq tab-width 4)))
+; (add-hook 'python-mode-hook
+;           (lambda () (setq tab-width 4)))
 #+end_src
 
 * Замена «yes или no» на «y or n»

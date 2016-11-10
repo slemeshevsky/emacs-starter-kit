@@ -423,5 +423,5 @@
 #+end_src
 * Настройка =smart-tabs=
 #+begin_src emacs-lisp
-  (smart-tabs-insinuate 'c 'python)
+;  (smart-tabs-insinuate 'c 'python)
 #+end_src

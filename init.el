@@ -27,9 +27,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-scrollbar-bg ((t (:background "#191919"))))
- '(company-scrollbar-fg ((t (:background "#0c0c0c"))))
- '(company-tooltip ((t (:inherit default :background "#050505"))))
+ '(company-scrollbar-bg ((t (:background "#ffffff"))))
+ '(company-scrollbar-fg ((t (:background "#ffffff"))))
+ '(company-tooltip ((t (:inherit default :background "#ffffff"))))
  '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
  '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
  '(org-agenda-done ((t (:foreground "ForestGreen" :strike-through t))))
@@ -52,7 +52,13 @@
  '(org-agenda-todo-list-sublevels nil)
  '(safe-local-variable-values
    (quote
-	((projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
+	((projectile-project-compilation-cmd . "ablog build && cp -rp _website/* ../slemeshevsky.github.io")
+	 (projectile-project-compilation-cmd . "ablog build && cp _website/* ../slemeshevsky.github.io")
+	 (projectile-project-compilation-run . "ablog serv -r")
+	 (projectile-project-compilation-cmd . "ablog build")
+	 (projectile-project-run-cmd . "~/Projects/Cpp/build/cds/cds")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/Cpp/build/cds && qmake-qt4 ~/Projects/Cpp/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
 	 (projectile-project-compilation-cmd . "cd .. && make html")
 	 (projectile-project-run-cmd . "~/Projects/build/cds/cds")
 	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro && make")

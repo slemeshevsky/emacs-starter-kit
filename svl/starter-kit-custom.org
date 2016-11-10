@@ -20,11 +20,11 @@
   Мне понравились:
 ** Solarized-Dark
 #+begin_src emacs-lisp
-(load-theme 'sanityinc-solarized-dark t)
+;(load-theme 'sanityinc-solarized-dark t)
 #+end_src
 ** Solarized-Light
 #+begin_src emacs-lisp
-;;(load-theme 'sanityinc-solarized-light t)
+;(load-theme 'sanityinc-solarized-light t)
 #+end_src
 ** Wombat
 #+begin_src emacs-lisp
@@ -82,6 +82,10 @@
 #+begin_src emacs-lisp
 ;(load-theme 'aurora t)
 #+end_src
+** Anti-Zenburn
+#+begin_src emacs-lisp
+(load-theme 'anti-zenburn t)
+#+end_src
 * Установка =default= шрифта «Consolas»
 #+begin_src emacs_lisp
 (set-default-font "Consolas-12")
@@ -89,16 +93,28 @@
 * Установка =powerline=
 #+begin_src emacs-lisp
 (require 'powerline)
+(setq powerline-arrow-shape 'arrow)
 #+end_src
 ** Цвета splarized для powerline
-#+begin_src emacs-lisp
-(setq powerline-color1 "#073642")
-(setq powerline-color2 "#002b36")
-(powerline-default-theme)
-(set-face-attribute 'mode-line nil
-                    :foreground "#fdf6e3"
-                    :background "#2aa198"
-                    :box nil)
-(set-face-attribute 'mode-line-inactive nil
-                    :box nil)
-#+end_src
+# #+begin_src emacs-lisp
+# (setq powerline-color1 "#073642")
+# (setq powerline-color2 "#002b36")
+# (set-face-attribute 'mode-line nil
+#                     :foreground "#fdf6e3"
+#                     :background "#2aa198"
+#                     :box nil)
+# (set-face-attribute 'mode-line-inactive nil
+#                     :box nil)
+# #+end_src
+** Еще один вариант цветов solarized
+# #+begin_src emacs-lisp
+# (setq powerline-color1 "#657b83")
+# (setq powerline-color2 "#839496")
+
+# (set-face-attribute 'mode-line nil
+#                     :foreground "#fdf6e3"
+#                     :background "#073642"
+#                     :box nil)
+# (set-face-attribute 'mode-line-inactive nil
+#                     :box nil)
+# #+end_src
