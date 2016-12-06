@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: admonition
+# key: adm
+# --
+
+!b${1:$$(yas-choose-value '("notice" "warning" "summary" "question"))}
+	$0
+!e$1

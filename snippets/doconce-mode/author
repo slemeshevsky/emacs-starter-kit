@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: author
+# key: au
+# group: title page
+# --
+
+AUTHOR: ${1:} ${2:Email: ${3:username@}${4:domain.com}} ${5: at ${6:}}
+
+$0

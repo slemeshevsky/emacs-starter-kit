@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: paragraph
+# key: par
+# group: sectioning
+# --
+
+__$1.__
+
+$0

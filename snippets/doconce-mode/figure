@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: figure or movie
+# key: fig
+# --
+
+${1:$$(yas-choose-value '("FIGURE" "MOVIE"))}: [${2:path}${3:, width=${4:400}}${5: frac=${6:1.0}}] ${7:caption on one line.} ${8:label{${9:fig:}}}
+
+$0

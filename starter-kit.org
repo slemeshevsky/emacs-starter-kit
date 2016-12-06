@@ -323,8 +323,8 @@
           (lambda () (setq indent-tabs-mode t)))
 (add-hook 'python-mode-hook
           (lambda () (setq indent-tabs-mode t)))
-; (add-hook 'python-mode-hook
-;           (lambda () (setq tab-width 4)))
+(add-hook 'python-mode-hook
+		  (lambda () (setq tab-width 4)))
 #+end_src
 
 * Замена «yes или no» на «y or n»
@@ -337,8 +337,13 @@
 (setq ad-redefinition-action 'accept)
 #+end_src
 * Подключаем ~doconce-mode~
-# #+begin_src emacs-lisp
-# (load-file "~/.emacs.d/src/doconce-mode.el")
-# (require 'poly-doconce-mode)
-# (add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
-# #+end_src
+#+begin_src emacs-lisp
+  (defun switch-paragraph-indent-mode-hook ()
+	(interactive)
+	(paragraph-indent-minor-mode t))
+										;  (require 'poly-doconce)
+  (require 'doconce-mode)
+;  (add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
+  (add-hook 'doconce-mode-hook 'switch-linum-mode-hook)
+;  (add-hook 'doconce-mode-hook 'switch-paragraph-indent-mode-hook)
+#+end_src

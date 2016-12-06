@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: include
+# key: inc
+# --
+
+# #include "$1.do.txt"
+
+$0

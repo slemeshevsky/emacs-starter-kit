@@ -8,6 +8,11 @@
 	   '(("\\.cmake\\'" . cmake-mode))
 	   auto-mode-alist))
   #+end_src
+** Режим =python-mode= для ~mako~
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("mako?" . python-mode))
+#+end_src
+
 ** Режим =python-mode= для ~.ufl~
   #+begin_src emacs-lisp
 (setq auto-mode-alist
@@ -98,6 +103,7 @@
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
+(define-key projectile-mode-map (kbd "<f7>") 'projectile-grep)
 #+end_src
 ** Интеграция с =perspective=
 #+begin_src emacs-lisp
@@ -423,5 +429,5 @@
 #+end_src
 * Настройка =smart-tabs=
 #+begin_src emacs-lisp
-;  (smart-tabs-insinuate 'c 'python)
+(smart-tabs-insinuate 'c 'python)
 #+end_src

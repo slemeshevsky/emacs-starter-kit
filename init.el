@@ -52,7 +52,22 @@
  '(org-agenda-todo-list-sublevels nil)
  '(safe-local-variable-values
    (quote
-	((projectile-project-compilation-cmd . "ablog build && cp -rp _website/* ../slemeshevsky.github.io")
+	((eval progn
+		   (setq dir
+				 (projectile-project-root))
+		   (setq doconce-project-path dir))
+	 (doconce-project-path quote
+						   (projectile-project-root))
+	 (doconce-project-path directory-file-name
+						   (projectile-project-root))
+	 (doconce-project-path projectile-project-root)
+	 (doconce-project-path)
+	 (doconce-project-path expand-file-name "")
+	 (doconce-project-path expand-file-name "" "chapters")
+	 (doconce-author-name . "С.В. Лемешевский")
+	 (doconce-author-name . "С.В.Л.")
+	 (doconce-author . "С.В.Л.")
+	 (projectile-project-compilation-cmd . "ablog build && cp -rp _website/* ../slemeshevsky.github.io")
 	 (projectile-project-compilation-cmd . "ablog build && cp _website/* ../slemeshevsky.github.io")
 	 (projectile-project-compilation-run . "ablog serv -r")
 	 (projectile-project-compilation-cmd . "ablog build")

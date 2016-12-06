@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: chapter
+# key: ch
+# group: sectioning
+# --
+
+========= $1 =========
+label{ch:$2}
+
+$0

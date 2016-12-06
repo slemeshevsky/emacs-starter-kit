@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: page
+# key: tp
+# group: title page
+# --
+
+TITLE: $1
+AUTHOR: ${2:С. Лемешевский} ${3:Email: ${4:sergey.lemeshevsky@gmail.com}} ${5: at ${6:Институт математики НАН Беларуси}}
+${7:DATE: ${8:today}}
+${9:__Abstract.__ $10}
+${11:TOC: ${12:on}}
+
+$0
