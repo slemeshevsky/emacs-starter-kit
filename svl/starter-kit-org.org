@@ -1,13 +1,14 @@
 #+TITLE: Orgmod configuration
-* Включение режима Org для файлов с расширением =.org=
+* Включение режима Org для файлов с расширением =.org= и =.pub=
 #+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(require 'poly-org)
-(add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+  (add-to-list 'auto-mode-alist '("\\.org$\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.pub$\\'" . org-mode))
+  (require 'poly-org)
+  (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
 #+end_src
 
 * Активация ~remember-mode~
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (require 'remember)
 ;(org-remember-insinuate)
 #+end_src
@@ -29,7 +30,7 @@
 (setq org-log-done 'time)
 #+end_src
 
-* Мои org файлы для реализации *GTD*
+* Мои =.org= файлы для реализации *GTD*
 #+begin_src emacs-lisp
 (setq org-agenda-files (list "~/Dropbox/org/gtd.org"
        	        		     "~/Dropbox/org/someday.org" 
@@ -41,16 +42,7 @@
 #+end_src
 
 * Настройка шаблонов ~remember~
-# #+begin_src emacs-lisp
-# (setq org-remember-templates
-#       '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-# 	("Call" ?c "* CALL %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-# 	("Outside" ?o "** %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-# 	("Check" ?h "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/tasks.org" "ЗАДАЧИ")
-# 	("Journal" ?j "** %^{Head Line} %U %^g\n%i%?" "~/Dropbox/org/journal.org" "Заметки")
-# 	("Someday" ?s "** %^{Someday Heading} %U\n%?\n" "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")))
-# #+end_src
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
 		 "** TODO %^{Brief Description} %^g\n%?\nAdded: %U" )
@@ -85,7 +77,7 @@
 	("w" "Список дел, которые можно сделать на работе"
 	 ((agenda)
 	  (tags-todo "@ИНСТИТУТ")
-          (tags-todo "@БГУ")
+	  (tags-todo "@БГУ")
 	  (tags-todo "@КОМПЬЮТЕР")
 	  (tags-todo "@ВЫЕЗДЫ")))
 	
@@ -181,12 +173,6 @@
 
 ; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
 (run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
-
-; (3) ... When TODO.txt is saved
-(add-hook 'after-save-hook
-          '(lambda ()
-             (if (string= (buffer-file-name) (concat (getenv "HOME") "/ideas/TODO.txt"))
-                 (my-org-agenda-to-appt))))
 
 ; Display appointments as a window manager notification
 (setq appt-disp-window-function 'my-appt-display)

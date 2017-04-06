@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: include code
+# key: fcode
+# --
+@@@CODE `(concat "src-" doconce-chapter-nickname "/")`${1:file} fromto: $2@$3
+$0

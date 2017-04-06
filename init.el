@@ -52,7 +52,21 @@
  '(org-agenda-todo-list-sublevels nil)
  '(safe-local-variable-values
    (quote
-	((eval progn
+	((doconce-project-path expand-file-name)
+	 (doconce-section-nickname . "fdd")
+	 (doconce-chapter-nickname . "fdm-for-ode")
+	 (projectile-project-name . "python-num")
+	 (projectile-project-name . "project")
+	 (projectile-project-name . "porject")
+	 (doconce-section-nickname . "tree")
+	 (doconce-section-nickname . "three")
+	 (doconce-section-nickname . "two")
+	 (doconce-chapter-nickname . "intro")
+	 (doconce-section-nickname quote two)
+	 (doconce-chapter-nickname quote intro)
+	 (doconce-author-institute . "Институт математики НАН Беларуси")
+	 (doconce-author-email . "sergey.lemeshevsky@gmail.com")
+	 (eval progn
 		   (setq dir
 				 (projectile-project-root))
 		   (setq doconce-project-path dir))

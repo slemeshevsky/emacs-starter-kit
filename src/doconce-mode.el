@@ -99,7 +99,7 @@ The hook for `text-mode' is run before this one."
 	("\\(^#.*\\)" 1 'doconce-comment-face)
 	("\\(\\*\\)" 1 'doconce-bold-face)
 	("\\(\to \\)" 1 'doconce-bold-face)
-	("\\(:.+\n\\)" 1 'doconce-func-prm-face)
+	("\\(.+[^fromto]:.+\n\\)" 1 'doconce-func-prm-face)
 	("\\(|.+|\\)" 1 'doconce-table-face)
 	("\\(^.+CODE .+\\)" 1 'doconce-code-face)))
 
@@ -137,7 +137,7 @@ The hook for `text-mode' is run before this one."
 		 (lines (split-string txt "\n")))
 	(kill-region (mark) (point))
 	(insert
-	 (mapconcat '(lambda (s) (concat "\t* " s))
+	 (mapconcat '(lambda (s) (concat "* " s))
 				lines
 				"\n"))))
 
@@ -147,7 +147,7 @@ The hook for `text-mode' is run before this one."
 		 (lines (split-string txt "\n")))
 	(kill-region (mark) (point))
 	(insert
-	 (mapconcat '(lambda (s) (concat "\to " s))
+	 (mapconcat '(lambda (s) (concat "o " s))
 				lines
 				"\n"))))
 
@@ -157,29 +157,17 @@ The hook for `text-mode' is run before this one."
   :group 'doconce
   :type '(string))
 
-(defcustom doconce-project-chapters-path
-  (directory-file-name (concat (file-name-as-directory doconce-project-path) "chapters"))
-  "Doconce chapters directory"
-  :group 'doconce
-  :type '(string))
+(defun doconce-project-chapters-path ()
+  (directory-file-name (concat (file-name-as-directory doconce-project-path) "chapters")))
 
-(defcustom doconce-mako-file-path
-  (concat (file-name-as-directory doconce-project-chapters-path) "mako_code.txt")
-  "Doconce project mako file"
-  :group 'doconce
-  :type '(string))
+(defun doconce-mako-file-path ()
+  (concat (file-name-as-directory (doconce-project-chapters-path)) "mako_code.txt"))
 
-(defcustom doconce-project-book-path
-  (directory-file-name (concat (file-name-as-directory doconce-project-path) "book"))
-  "Doconce main author institution"
-  :group 'doconce
-  :type '(string))
+(defun doconce-project-book-path ()
+  (directory-file-name (concat (file-name-as-directory doconce-project-path) "book")))
 
-(defcustom doconce-book-file-path
-  (concat (file-name-as-directory doconce-project-book-path) "book.do.txt")
-  "Doconce project book file"
-  :group 'doconce
-  :type '(string))
+(defun doconce-book-file-path ()
+  (concat (file-name-as-directory (doconce-project-book-path)) "book.do.txt"))
 
 (defcustom doconce-author-name  "С.В. Лемешевский"
   "Doconce main author name"
@@ -196,31 +184,43 @@ The hook for `text-mode' is run before this one."
   :group 'doconce
   :type '(string))
 
+(defcustom doconce-chapter-nickname "chapter"
+  "Doconce chapter nickname"
+  :group 'doconce
+  :type '(string))
+
+(defcustom doconce-section-nickname "section"
+  "Doconce chapter nickname"
+  :group 'doconce
+  :type '(string))
+
 (defun doconce-create-mako-code-file ()
-  (let ((mako-file-content (concat "## Mako variables and functions common to a lot of files\n"
-								   "## (this file is included in, e.g., flow/main_flow.do.txt).\n\n"
+  (let ((mako-file-content (concat "# -*- coding: utf-8 -*-"
+								   "## Mako variables and functions common to a lot of files"
+								   "## (this file is included in, e.g., flow/main_flow.do.txt)."
 								   "<%\n"
 								   "# Note that goo.gl and bitly URLs cannot have slashes and continuation,\n"
 								   "# therefore we use tinyurl.\n\n"
-								   "src_path = 'http://tinyurl.com/kukz8pt'\n\n"
-								   "doc_path = 'http://tinyurl.com/oul3xhn'\n\n"
+								   "src_path = 'http://tinyurl.com/zfwmann'\n"
+								   "doc_path = 'http://tinyurl.com/hgqc9he'\n\n"
 								   "#doc_index = doc_path + '/index.html'\n\n"
 								   "# All chapters: nickname -> title dict\n"
 								   "chapters = {\n"
 								   "}\n\n"
 								   "%>\n")))
-	(write-region mako-file-content "" doconce-mako-file-path)))
+	(write-region mako-file-content "" (doconce-mako-file-path))))
 
 (defun doconce-add-chapter-to-mako-code-file (chapter-nickname chapter-title)
   (interactive "sChapter nickname: \n sTitle: ")
   (let* ((appended-text (concat " '" chapter-nickname "': u'" chapter-title "',\n")))
-	(if (file-exists-p doconce-mako-file-path)
+	(if (file-exists-p (doconce-mako-file-path))
 		()
 	  (doconce-create-mako-code-file))
 	(progn  
-	  (find-file doconce-mako-file-path)
+	  (find-file (doconce-mako-file-path))
 	  (goto-char (- (re-search-forward "\\(chapters = {\\(.*\n\\)+}\\)") 1))
-	  (insert appended-text))))
+	  (insert appended-text)
+	  (save-buffer))))
 
 (defun doconce-main-chapter-file-content (chapter-nickname chapter-title)
   (concat "TITLE: " chapter-title "\n"
@@ -229,8 +229,8 @@ The hook for `text-mode' is run before this one."
 		  " at " doconce-author-institute "\n"
 		  "DATE: today\n\n\n"
 		  "# Common Mako variable and functions\n"
-		  "# #include ../mako_code.txt\n\n"
-		  "# #include " chapter-nickname ".do.txt"))
+		  "# #include \"../mako_code.txt\"\n\n"
+		  "# #include \"" chapter-nickname ".do.txt\""))
 
 (defun doconce-create-book-file (book-title)
   (interactive "sBook titile: ")
@@ -240,28 +240,27 @@ The hook for `text-mode' is run before this one."
 								   " at " doconce-author-institute "\n"
 								   "DATE: today\n\n"
 								   "## Handy mako variables and functions for the preprocessing step\n"
-								   "# #include ../chapters/mako_code.txt\n\n")))
-	  (if (file-exists-p doconce-project-book-path)
-		  ((write-region book-file-content "" doconce-book-file-path))
+								   "# #include \"../chapters/mako_code.txt\"\n\n")))
 		(progn
-		   (make-directory doconce-project-book-path)
-		   (write-region book-file-content "" doconce-book-file-path)))))
+		   (make-directory (doconce-project-book-path))
+		   (write-region book-file-content "" (doconce-book-file-path)))))
 
 (defun doconce-add-chapter-to-book (chapter-nickname chapter-title)
-  (if (file-exists-p doconce-book-file-path)
+  (if (file-exists-p (doconce-book-file-path))
 	  ()
-	(doconce-create-book-file))
+	(doconce-create-book-file "Название книги"))
   (progn
-		(find-file doconce-book-file-path)
+		(find-file (doconce-book-file-path))
 		(end-of-buffer)
 		(insert (concat "!split\n"
 						"========= " chapter-title " =========\n"
 						"label{ch:" chapter-nickname "}\n\n"
-						"# #include ../chapters/" chapter-nickname "/" chapter-nickname ".do.txt\n\n"))))
+						"# #include \"../chapters/" chapter-nickname "/" chapter-nickname ".do.txt\"\n\n"))
+		(save-buffer)))
 
 (defun doconce-new-chapter (chapter-nickname chapter-title)
   (interactive "sChapter nickname: \nsTitle: ")
-  (let* ((chapter-path (concat (file-name-as-directory doconce-project-chapters-path) chapter-nickname))
+  (let* ((chapter-path (concat (file-name-as-directory (doconce-project-chapters-path)) chapter-nickname))
 		 (file-path (concat (file-name-as-directory chapter-path) chapter-nickname ".do.txt"))
 		 (main-file-path (concat  (file-name-as-directory chapter-path) "main_" chapter-nickname ".do.txt")))
 	(progn
@@ -269,17 +268,44 @@ The hook for `text-mode' is run before this one."
 	  (make-directory (concat (file-name-as-directory chapter-path) "fig-" chapter-nickname))
 	  (make-directory (concat (file-name-as-directory chapter-path) "slides-" chapter-nickname))
 	  (make-directory (concat (file-name-as-directory chapter-path) "src-" chapter-nickname))
-	  (write-region "" "" file-path)
+	  	  (make-directory (concat (file-name-as-directory chapter-path) "mov-" chapter-nickname))
+	  (write-region (concat "# Local Variables:\n"
+							"# doconce-chapter-nickname: \"" chapter-nickname "\"\n"
+							"# End:") "" file-path)
+	  (write-region (concat
+					 "# Use a common ../make.sh file or do customized build here.\n"
+					 "bash -x ../make.sh main_" chapter-nickname) "" (concat (file-name-as-directory chapter-path) "make.sh"))
 	  (write-region (doconce-main-chapter-file-content chapter-nickname chapter-title) "" main-file-path t)
 	  (doconce-add-chapter-to-mako-code-file chapter-nickname chapter-title)
 	  (doconce-add-chapter-to-book chapter-nickname chapter-title)
-	  (find-file main-file-path))))
+	  (find-file main-file-path)
+	  (setq doconce-chapter-nickname chapter-nickname))))
+
+(defun doconce-create-section-file (chapter-nickname section-nickname section-title)
+  (interactive "sChapter nickname: \nsSection nickname: \nsSection title: ")
+  (progn
+	(write-region (concat "======= " section-title " =======\n"
+						  "label{" chapter-nickname ":" section-nickname "}\n\n\n"
+						  "# Local Variables:\n"
+						  "# doconce-chapter-nickname: \"" chapter-nickname "\"\n"
+						  "# doconce-section-nickname: \"" section-nickname "\"\n"
+						  "# End:\n")
+				  ""
+				  (concat section-nickname ".do.txt"))))
+
+(defun doconce-new-section (section-nickname section-title)
+  (interactive "sSection nickname: \nsSection title: ")
+  (progn
+	(doconce-create-section-file doconce-chapter-nickname section-nickname section-title)
+	(insert (concat "# #include \"" section-nickname ".do.txt\"\n"))
+	(save-buffer)))
 
 (defun doconce-open-file ()
   (interactive)
   (copy-region-as-kill (line-beginning-position) (line-end-position))
-  (let ((file-name (car (last (split-string
-							   (substring-no-properties (car kill-ring)))))))
+  (let ((file-name
+		 (car (last (split-string
+					 (substring-no-properties (car kill-ring)))))))
 	(find-file (expand-file-name file-name))))
 
 (defvar doconce-mode-map
@@ -288,7 +314,8 @@ The hook for `text-mode' is run before this one."
 	(define-key map (kbd "C-c d i") 'doconce-item-list)
 	(define-key map (kbd "C-c d e") 'doconce-enum-list)
 	(define-key map (kbd "C-c d o") 'doconce-open-file)
-	(define-key map (kbd "C-c d c") 'doconce-new-chapter)	
+	(define-key map (kbd "C-c d a c") 'doconce-new-chapter)
+	(define-key map (kbd "C-c d a s") 'doconce-new-section)	
 	map)
   "Key map for `doconce'.")
 
@@ -322,15 +349,15 @@ and `doconce-mode-hook'. This mode also support font-lock highlighting.
 (add-to-list 'auto-mode-alist (cons "\\.do.txt\\'" 'doconce-mode))
 
 (defvar doconce-keyword-list
-  '("ref" "label" "cite" "idx" "begin" "end" "split"))
+  '("ref" "label" "cite" "idx" "begin" "end" "if" "endif" "split" "fromto" "at"))
 
 (defvar doconce-funcname-list
-  '("FIGURE" "MOVIE" "AUTHOR" "TITLE" "BIBFILE" "TOC" "DATE"))
+  '("FIGURE" "MOVIE" "AUTHOR" "TITLE" "BIBFILE" "TOC" "DATE" "@@@CODE"))
 
 (defun doconce-add-keywords (keyword-list facename)
   (let* ((keyword-regexp (concat "\\("
 								  (regexp-opt keyword-list)
-								  "\\){")))
+								  "\\)")))
 	(font-lock-add-keywords 'doconce-mode
 							`((,keyword-regexp 1 ',facename )))))
 
@@ -343,7 +370,7 @@ and `doconce-mode-hook'. This mode also support font-lock highlighting.
 (defun doconce-add-funcnames (keyword-list facename)
   (let* ((keyword-regexp (concat "^\\("
 								 (regexp-opt keyword-list)
-								 "\\):")))
+								 "\\)")))
 	(font-lock-add-keywords 'doconce-mode
 							`((,keyword-regexp 1 ',facename)))))
 

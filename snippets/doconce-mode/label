@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: label
+# key: lab
+# --
+label{`(concat doconce-chapter-nickname ":" doconce-section-nickname":")`$1}
+$0
