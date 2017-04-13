@@ -15,8 +15,8 @@
   добавляем строчки (у меня это плохо работает):
   #+begin_src emacs-lisp
 (require 'python)
-(setq python-shell-interpreter "/usr/bin/ipython")
-(setq python-shell-interpreter-args "")
+(setq python-shell-interpreter "ipython")
+(setq python-shell-interpreter-args "--simple-prompt -i")
   #+end_src
 #   Попробуем так
 #   #+begin_src emacs-lisp

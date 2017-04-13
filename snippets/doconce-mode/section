@@ -5,6 +5,6 @@
 # --
 
 ======= $1 =======
-label{`(concat doconce-chapter-nickname ":" doconce-section-nickname ":")`}
+label{`(concat doconce-chapter-nickname ":" doconce-section-nickname":")}
 
 $0

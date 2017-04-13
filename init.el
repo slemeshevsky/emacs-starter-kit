@@ -40,6 +40,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bmkp-auto-light-when-set (quote all-in-buffer))
+ '(bmkp-last-as-first-bookmark-file "~/Projects/Doconce/python-num/src/python-num.bmk")
  '(ecb-layout-name "right1")
  '(ecb-options-version "2.40")
  '(ecb-prescan-directories-for-emptyness (quote unless-remote))
@@ -52,7 +54,13 @@
  '(org-agenda-todo-list-sublevels nil)
  '(safe-local-variable-values
    (quote
-	((doconce-project-path expand-file-name)
+	((eval progn
+		   (setq dir
+				 (projectile-project-root))
+		   (setq doconce-project-path dir)
+		   (setq bookmark-default-file
+				 (concat dir projectile-project-name ".bmk")))
+	 (doconce-project-path expand-file-name)
 	 (doconce-section-nickname . "fdd")
 	 (doconce-chapter-nickname . "fdm-for-ode")
 	 (projectile-project-name . "python-num")
@@ -92,6 +100,7 @@
 	 (projectile-project-run-cmd . "~/Projects/build/cds/cds")
 	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro && make")
 	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/cds.pro && make")))))
+	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/cds.pro && make"))))
+ '(truncate-lines t))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)

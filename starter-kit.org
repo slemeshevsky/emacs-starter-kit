@@ -26,14 +26,12 @@
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
-(defvar my-packages '(auctex reftex company company-auctex company-c-headers company-cmake
-                             magit ido hideshow perspective projectile projectile-speedbar
-                             persp-projectile ibuffer-projectile helm helm-core helm-bibtex
-                             helm-gtags helm-projectile python-mode pydoc ipython
-                             auto-complete cmake-mode sr-speedbar yasnippet column-marker
-                             smart-tabs-mode professional-theme alect-themes material-theme 
-                             aurora-theme fill-column-indicator)
-  "A list of packages to ensure are installed at launch.")
+(defvar my-packages '(auctex reftex company company-auctex company-c-headers company-cmake 
+magit ido hideshow perspective projectile projectile-speedbar persp-projectile 
+ibuffer-projectile helm helm-core helm-bibtex helm-gtags helm-projectile python-mode 
+pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet bookmark+
+column-marker smart-tabs-mode professional-theme alect-themes material-theme anti-zenburn-theme)
+"A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -84,7 +82,7 @@
 (global-font-lock-mode t)
 #+end_src
 
-* Подсвечитвать совпадающие скобки
+* Подсвечивать совпадающие скобки
 #+begin_src emacs-lisp  
 ;(setq show-paren-style 'expression)
 (show-paren-mode 1)
@@ -341,9 +339,10 @@
   (defun switch-paragraph-indent-mode-hook ()
 	(interactive)
 	(paragraph-indent-minor-mode t))
-										;  (require 'poly-doconce)
   (require 'doconce-mode)
-;  (add-to-list 'auto-mode-alist '("\\.do.txt" . poly-doconce-mode))
   (add-hook 'doconce-mode-hook 'switch-linum-mode-hook)
-;  (add-hook 'doconce-mode-hook 'switch-paragraph-indent-mode-hook)
+#+end_src
+* Подключаем ~bookmark+~
+#+begin_src emacs-lisp
+ (require 'bookmark+)
 #+end_src

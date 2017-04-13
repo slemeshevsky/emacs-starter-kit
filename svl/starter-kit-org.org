@@ -3,8 +3,8 @@
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.org$\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("\\.pub$\\'" . org-mode))
-  (require 'poly-org)
-  (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+;  (require 'poly-org)
+;  (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
 #+end_src
 
 * Активация ~remember-mode~

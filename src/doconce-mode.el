@@ -86,6 +86,14 @@ The hook for `text-mode' is run before this one."
   "Used in `doconce-mode'"
   :group 'doconce-faces)
 
+(defface doconce-link-face
+  '((t :inherit font-lock-reference-face
+	   :foreground "DodgerBlue4"
+	   :background "LightGrey"
+	   :underline t))
+  "Used in `doconce-mode'"
+  :group 'doconce-faces)
+
 (defvar doconce-font-lock-keywords
   '(("\\(`.+?`\\)" 1 'doconce-code-face)
 	("\\\\[\\($+\\)\\\\]" 1 'doconce-math-face)
@@ -99,37 +107,10 @@ The hook for `text-mode' is run before this one."
 	("\\(^#.*\\)" 1 'doconce-comment-face)
 	("\\(\\*\\)" 1 'doconce-bold-face)
 	("\\(\to \\)" 1 'doconce-bold-face)
-	("\\(.+[^fromto]:.+\n\\)" 1 'doconce-func-prm-face)
+	("\\(\".+\":\".+\"\\)" 1 'doconce-link-face)
+	("\\(URL:\".+\"\\)" 1 'doconce-link-face)
 	("\\(|.+|\\)" 1 'doconce-table-face)
 	("\\(^.+CODE .+\\)" 1 'doconce-code-face)))
-
-(defun doconce-section (level)
-  (interactive "nSection level: ")
-  (setq a 7)
-  (cond
-   ((= level 1) (setq a 7))
-   ((= level 2) (setq a 5))
-   ((= level 3) (setq a 3)))
-  (setq s "")
-  (setq b (+ (point) 1))
-  (dotimes (i a)
-	(setq s (concat s  "=")))
-  (if (= level 4)
-	  (progn
-		(setq s "")
-		(setq s (concat s "__"))))
-  
-  (if (region-active-p)
-	  (progn
-		(kill-region (region-beginning) (region-end))
-		(insert (concat s " "))
-		(yank))
-	(progn
-	  (beginning-of-line)
-	  (insert (concat s " "))))
-  (end-of-line)
-  (insert (concat " " s))
-  (goto-char (+ b a)))
 
 (defun doconce-item-list ()
   (interactive)
@@ -258,6 +239,15 @@ The hook for `text-mode' is run before this one."
 						"# #include \"../chapters/" chapter-nickname "/" chapter-nickname ".do.txt\"\n\n"))
 		(save-buffer)))
 
+
+(defun doconce-set-bookmark (level)
+  (interactive "nLevel:")
+  (setq s "+")
+  (dotimes (i level)
+	(setq s (concat s  "-")))
+  (copy-region-as-kill (line-beginning-position) (line-end-position))
+  (bookmark-set  (concat s (car (cdr (split-string (substring-no-properties (car kill-ring)) "=+"))))))
+
 (defun doconce-new-chapter (chapter-nickname chapter-title)
   (interactive "sChapter nickname: \nsTitle: ")
   (let* ((chapter-path (concat (file-name-as-directory (doconce-project-chapters-path)) chapter-nickname))
@@ -291,7 +281,8 @@ The hook for `text-mode' is run before this one."
 						  "# doconce-section-nickname: \"" section-nickname "\"\n"
 						  "# End:\n")
 				  ""
-				  (concat section-nickname ".do.txt"))))
+				  (concat section-nickname ".do.txt"))
+	))
 
 (defun doconce-new-section (section-nickname section-title)
   (interactive "sSection nickname: \nsSection title: ")
@@ -304,18 +295,18 @@ The hook for `text-mode' is run before this one."
   (interactive)
   (copy-region-as-kill (line-beginning-position) (line-end-position))
   (let ((file-name
-		 (car (last (split-string
-					 (substring-no-properties (car kill-ring)))))))
+		 (car (cdr (split-string
+					 (substring-no-properties (car kill-ring)) "\"")))))
 	(find-file (expand-file-name file-name))))
 
 (defvar doconce-mode-map
   (let ((map (make-sparse-keymap)))
-	(define-key map (kbd "C-c d s") 'doconce-section)
 	(define-key map (kbd "C-c d i") 'doconce-item-list)
 	(define-key map (kbd "C-c d e") 'doconce-enum-list)
 	(define-key map (kbd "C-c d o") 'doconce-open-file)
 	(define-key map (kbd "C-c d a c") 'doconce-new-chapter)
-	(define-key map (kbd "C-c d a s") 'doconce-new-section)	
+	(define-key map (kbd "C-c d a s") 'doconce-new-section)
+	(define-key map (kbd "C-c d s b") 'doconce-set-bookmark)
 	map)
   "Key map for `doconce'.")
 
@@ -349,10 +340,10 @@ and `doconce-mode-hook'. This mode also support font-lock highlighting.
 (add-to-list 'auto-mode-alist (cons "\\.do.txt\\'" 'doconce-mode))
 
 (defvar doconce-keyword-list
-  '("ref" "label" "cite" "idx" "begin" "end" "if" "endif" "split" "fromto" "at"))
+  '("ref" "label" "cite" "idx" "\\begin" "\\end" "# #if" "# #endif" "!split" "fromto:" "from-to:" " at "))
 
 (defvar doconce-funcname-list
-  '("FIGURE" "MOVIE" "AUTHOR" "TITLE" "BIBFILE" "TOC" "DATE" "@@@CODE"))
+  '("FIGURE" "MOVIE" "AUTHOR:" "TITLE:" "BIBFILE" "TOC:" "DATE:" "@@@CODE"))
 
 (defun doconce-add-keywords (keyword-list facename)
   (let* ((keyword-regexp (concat "\\("
