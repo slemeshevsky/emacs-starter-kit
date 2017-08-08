@@ -25,3 +25,6 @@ projectile-bookmarks.eld
 /.#session.1099a62ae931bae779144648760018779600000022990073
 /ido.last
 /recentf
+*.data
+/org-caldav-7fd9b90.el
+/org-caldav-c815429.el

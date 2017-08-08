@@ -7,6 +7,13 @@
 ;;Так как я использую автономную версию ~CEDET~, то необходимо выполнить 
 ;; загрузку пакета с помощью команды
 ;; #+begin_src emacs-lisp
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (add-to-list 'load-path "~/bin/cedet/contrib/")
 (load-file "~/bin/emacs/cedet/cedet-devel-load.el")
 (load-file "~/bin/emacs/cedet/contrib/cedet-contrib-load.el")
@@ -27,9 +34,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-scrollbar-bg ((t (:background "#ffffff"))))
- '(company-scrollbar-fg ((t (:background "#ffffff"))))
- '(company-tooltip ((t (:inherit default :background "#ffffff"))))
+ '(company-scrollbar-bg ((t (:background "#d9d9d9"))))
+ '(company-scrollbar-fg ((t (:background "#cccccc"))))
+ '(company-tooltip ((t (:inherit default :background "#c5c5c5"))))
  '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
  '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
  '(org-agenda-done ((t (:foreground "ForestGreen" :strike-through t))))
@@ -52,9 +59,18 @@
  '(helm-gtags-suggested-key-mapping t)
  '(helm-gtags-use-input-at-cursor t)
  '(org-agenda-todo-list-sublevels nil)
+ '(package-selected-packages
+   (quote
+	(org-super-agenda web-mode smart-tabs-mode python-mode pydoc projectile-speedbar professional-theme persp-projectile org-pomodoro org-bullets org-beautify-theme material-theme magit ipython ibuffer-projectile helm-projectile helm-gtags helm-bibtex helm-ag fill-column-indicator company-cmake company-c-headers company-auctex column-marker coffee-mode cmake-mode bookmark+ auto-complete anti-zenburn-theme alect-themes)))
  '(safe-local-variable-values
    (quote
-	((eval progn
+	((projectile-project-compilation-cmd . "ablog build && cp -rp _website/* 
+
+../slemeshevsky.github.io")
+	 (projectile-project-run-cmd . "~/Projects/C++/build/cds/cds")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/C++/build/cds && qmake ../../cds/gui/cds.pro -spec linux-g++-64 CONFIG+=debug CONFIG+=qml_debug && make")
+	 (projectile-project-name . "cds")
+	 (eval progn
 		   (setq dir
 				 (projectile-project-root))
 		   (setq doconce-project-path dir)
@@ -93,14 +109,7 @@
 	 (projectile-project-compilation-cmd . "ablog build && cp _website/* ../slemeshevsky.github.io")
 	 (projectile-project-compilation-run . "ablog serv -r")
 	 (projectile-project-compilation-cmd . "ablog build")
-	 (projectile-project-run-cmd . "~/Projects/Cpp/build/cds/cds")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/Cpp/build/cds && qmake-qt4 ~/Projects/Cpp/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro -r -spec linux-g++ CONFIG+=debug && make")
-	 (projectile-project-compilation-cmd . "cd .. && make html")
-	 (projectile-project-run-cmd . "~/Projects/build/cds/cds")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds && qmake-qt4 ~/Projects/cds/gui/cds.pro && make")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/gui/cds.pro && make")
-	 (projectile-project-compilation-cmd . "cd ~/Projects/build/cds/ && qmake-qt4 'CONFIG += debug' ../../cds/cds.pro && make"))))
+	 (projectile-project-compilation-cmd . "cd .. && make html"))))
  '(truncate-lines t))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)

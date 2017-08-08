@@ -225,4 +225,7 @@
 (global-set-key (kbd "C-b") 'bookmark-set)
 (global-set-key (kbd "<f4>") 'bookmark-bmenu-list)
   #+end_src
-
+* Настройка сочетания для запуска/остановки помидора
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-P") 'org-pomodoro)
+#+end_src
