@@ -44,6 +44,10 @@
   #+begin_src emacs-lisp
 (require 'eassist)
   #+end_src
+* Настройка =function-args=
+  #+begin_src emacs-lisp
+  (fa-config-default)
+  #+end_src
 * Настройка =helm=
 ** Подключение =helm=
 #+begin_src emacs-lisp
@@ -71,29 +75,52 @@
 #+end_src
 * Настройка =helm-gtags=
 #+begin_src emacs-lisp
-(require 'helm-gtags)
-(custom-set-variables
- '(helm-gtags-ignore-case t)
- '(helm-gtags-auto-update t)
- '(helm-gtags-use-input-at-cursor t)
- '(helm-gtags-pulse-at-cursor t)
- '(helm-gtags-prefix-key (kbd "C-c g"))
- '(helm-gtags-suggested-key-mapping 1)
-)
+;(require 'helm-gtags)
+;(custom-set-variables
+; '(helm-gtags-ignore-case t)
+; '(helm-gtags-auto-update t)
+; '(helm-gtags-use-input-at-cursor t)
+; '(helm-gtags-pulse-at-cursor t)
+; '(helm-gtags-prefix-key (kbd "C-c g"))
+; '(helm-gtags-suggested-key-mapping 1)
+;)
 #+end_src
 ** Включение режима =helm-gtags=
 #+begin_src emacs-lisp
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+;(add-hook 'c-mode-hook 'helm-gtags-mode)
+;(add-hook 'c++-mode-hook 'helm-gtags-mode)
+;(add-hook 'eshell-mode-hook 'helm-gtags-mode)
 #+end_src
 ** Настройка клавиш
 #+begin_src emacs-lisp
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+;(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+;(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+;(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+;(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+#+end_src
+* Настройка =ggtags=
+#+begin_src emacs-lisp
+(require 'ggtags)
+#+end_src
+** Включение режима =ggtags=
+#+begin_src emacs-lisp
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+(setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+#+end_src
+** Настройка клавиш
+#+begin_src emacs-lisp
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
 #+end_src
 * Настройка =projectile=
 ** Включение =projectile=
@@ -109,7 +136,7 @@
 #+begin_src emacs-lisp
 (persp-mode)
 (require 'persp-projectile)
-(define-key projectile-mode-map (kbd "C-s-p") 'projectile-persp-switch-project)
+(define-key projectile-mode-map (kbd "M-<f9>") 'projectile-persp-switch-project)
 #+end_src
 * Настройка режима компиляции
 ** Клавиша для компиляции
@@ -147,13 +174,48 @@
 	  (cons msg code)))
 	 #+end_src
 
-* Включение =projectile-speedbar=
+* Настройка =projectile-speedbar=
   #+begin_src emacs-lisp
+;(require 'sr-speedbar)
 ;(require 'projectile-speedbar)
-(require 'sr-speedbar)
-(global-set-key (kbd "<f5>") 'sr-speedbar-toggle)
-;(setq speedbar-show-unknown-files t)
+(global-set-key (kbd "<f5>") 'speedbar)
+(setq speedbar-show-unknown-files t)
+(setq sr-speedbar-auto-refresh t)
   #+end_src
+
+* Установка ~treemacs~
+#+begin_src emacs-lisp
+(require 'treemacs)
+(setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+          treemacs-deferred-git-apply-delay   0.5
+          treemacs-display-in-side-window     t
+          treemacs-file-event-delay           5000
+          treemacs-file-follow-delay          0.2
+          treemacs-follow-after-init          t
+          treemacs-follow-recenter-distance   0.1
+          treemacs-goto-tag-strategy          'refetch-index
+          treemacs-indentation                2
+          treemacs-indentation-string         " "
+          treemacs-is-never-other-window      nil
+          treemacs-no-png-images              nil
+          treemacs-project-follow-cleanup     nil
+          treemacs-persist-file               (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-after-file-follow nil
+          treemacs-recenter-after-tag-follow  nil
+          treemacs-show-hidden-files          t
+          treemacs-silent-filewatch           nil
+          treemacs-silent-refresh             nil
+          treemacs-sorting                    'alphabetic-desc
+          treemacs-space-between-root-nodes   t
+          treemacs-tag-follow-cleanup         t
+          treemacs-tag-follow-delay           1.5
+          treemacs-width                      35)
+(treemacs-follow-mode t)
+(treemacs-filewatch-mode t)
+(treemacs-fringe-indicator-mode t)
+(global-set-key (kbd "S-<f5>") 'treemacs)
+(require 'treemacs-projectile)
+#+end_src
 * Настройка =cedet=
 ** Включение =Semantic=
 *** Перед включением ~Semantic~ необходимо заполнить список ~semsntic-default-submodes~
@@ -362,7 +424,249 @@
 (semantic-add-system-include cgal-base-dir 'c++-mode)
 (semantic-add-system-include cgal-base-dir 'c-mode)   
     #+end_src
-
+*** Настройка CEDET для работы с библиотекой Qt5.6.3
+    #+begin_src emacs-lisp
+(setq qt563-base-dir "/opt/Qt5.6.3/5.6.3/gcc_64/include")
+(semantic-add-system-include qt563-base-dir 'c++-mode)
+(semantic-add-system-include qt563-base-dir 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtCore") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtCore") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/Qt3Support") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/Qt3Support") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDBus") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDBus") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDeclarative") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDeclarative") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDesiner") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtDesiner") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtGui") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtGui") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtHelp") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtHelp") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtNetwork") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtNetwork") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtOpenGL") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtOpenGL") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtScript") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtScript") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtScriptTools") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtScriptTools") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtSql") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtSql") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtSvg") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtSvg") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtTest") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtTest") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtUiTools") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtUiTools") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtWebKit") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtWebKit") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtXml") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtXml") 'c-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtXmlPatterns") 'c++-mode)
+(semantic-add-system-include (concat qt563-base-dir "/QtXmlPatterns") 'c-mode)
+(add-to-list 'auto-mode-alist (cons qt563-base-dir 'c++-mode))
+(add-to-list 'auto-mode-alist (cons qt563-base-dir 'c-mode))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt563-base-dir "/QtCore/qconfig.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt563-base-dir "/QtCore/qconfig-dist.h"))
+(add-to-list 'semantic-lex-c-preprocessor-symbol-file (concat qt563-base-dir "/QtCore/qglobal.h"))
+    #+end_src
+*** Настройка CEDET для работы с используемыми в MITK библиотеками
+#+begin_src emacs-lisp
+(setq mitk-ep-base-dir "~/Projects/Cxx/MITK-superbuild/ep/include")
+(semantic-add-system-include (concat mitk-ep-base-dir "/ANN") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ANN") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/config") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/config") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/extensions") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/extensions") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/plugin") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/plugin") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/portability") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/portability") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/tools") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/tools") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/ui") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/cppunit/ui") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/config") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/config") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmdata") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmdata") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmfg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmfg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmimage") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmimage") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmimgle") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmimgle") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmiod") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmiod") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmjpeg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmjpeg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmjpls") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmjpls") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmnet") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmnet") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmmap") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmmap") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmstat") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmstat") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmqrdb") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmqrdb") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmrt") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmrt") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmseg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmseg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmsign") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmsign") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmsr") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmsr") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmtls") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmtls") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmtract") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmtract") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmwlm") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/dcmwlm") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/oflog") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/oflog") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/ofstd") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/dcmtk/ofstd") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmcharls") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmcharls") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/12") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/12") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/16") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/16") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/8") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmjpeg/8") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmopenjpeg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/gdcmopenjpeg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/socketxx") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/gdcm-2.6/socketxx") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/GL") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/GL") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Qwt") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Qwt") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/DOM") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/DOM") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Dynamic") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Dynamic") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/JSON") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/JSON") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Net") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Net") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/SAX") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/SAX") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Util") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Util") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/XML") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/XML") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Zip") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/Poco/Zip") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/tinyxml") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/tinyxml") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/GL") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/GL") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/alglib") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/alglib") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkexpat") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkexpat") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkfreetype") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkfreetype") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkgl2ps") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkgl2ps") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkhdf5") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkhdf5") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkjpeg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkjpeg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkjsopcpp") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkjsopcpp") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtklibproj4") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtklibproj4") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtklibxml2") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtklibxml2") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkmetaio") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkmetaio") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtknetcfd") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtknetcfd") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkoggtheora") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkoggtheora") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkpng") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkpng") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtksqlite") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtksqlite") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtksys") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtksys") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtktiff") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtktiff") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkverdict") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkverdict") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkzlib") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/vtk-7.0/vtkzlib") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/arpack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/arpack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/blas") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/blas") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/compilers") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/compilers") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/core") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/core") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/datapac") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/datapac") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/eispack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/eispack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/internal") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/internal") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkfdstream") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkfdstream") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkjpeg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkjpeg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkkwiml") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkkwiml") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkpng") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkpng") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itksys") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itksys") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkzlib") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/itkzlib") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/lapack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/lapack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/laso") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/laso") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/linalg") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/linalg") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/linpack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/linpack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/mathews") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/mathews") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/minpack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/minpack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/napack") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/napack") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/opt") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/opt") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/sparse") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/sparse") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/temperton") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/temperton") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/toms") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/toms") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/vcl_sys") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/vcl_sys") 'c-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/vnl") 'c++-mode)
+(semantic-add-system-include (concat mitk-ep-base-dir "/ITK-4.11/vnl") 'c-mode)
+#+end_src
 ** Привязка клавиш к командам =Semantic=
    #+begin_src emacs-lisp
 (defun svl/cedet-hook()
@@ -430,4 +734,68 @@
 * Настройка =smart-tabs=
 #+begin_src emacs-lisp
 (smart-tabs-insinuate 'c 'python)
+#+end_src
+* Настройка =gdb-many-window=
+#+begin_src emacs-lisp
+(setq
+ ;; use gdb-many-windows by default
+;; gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+;; gdb-show-main t
+ )
+#+end_src
+#+begin_src emacs-lisp
+(setq gdb-many-windows nil)
+
+(defun set-gdb-layout(&optional c-buffer)
+  (if (not c-buffer)
+      (setq c-buffer (window-buffer (selected-window)))) ;; save current buffer
+
+  ;; from http://stackoverflow.com/q/39762833/846686
+  (set-window-dedicated-p (selected-window) nil) ;; unset dedicate state if needed
+  (switch-to-buffer gud-comint-buffer)
+  (delete-other-windows) ;; clean all
+
+  (let* (
+         (w-source (selected-window)) ;; left top
+         (w-gdb (split-window w-source nil 'right)) ;; right bottom
+         (w-locals (split-window w-gdb nil 'above)) ;; right middle bottom
+         (w-stack (split-window w-locals nil 'above)) ;; right middle top
+         (w-breakpoints (split-window w-stack nil 'above)) ;; right top
+         (w-io (split-window w-source (floor(* 0.9 (window-body-height)))
+                             'below)) ;; left bottom
+         )
+    (set-window-buffer w-io (gdb-get-buffer-create 'gdb-inferior-io))
+    (set-window-dedicated-p w-io t)
+    (set-window-buffer w-breakpoints (gdb-get-buffer-create 'gdb-breakpoints-buffer))
+    (set-window-dedicated-p w-breakpoints t)
+    (set-window-buffer w-locals (gdb-get-buffer-create 'gdb-locals-buffer))
+    (set-window-dedicated-p w-locals t)
+    (set-window-buffer w-stack (gdb-get-buffer-create 'gdb-stack-buffer))
+    (set-window-dedicated-p w-stack t)
+
+    (set-window-buffer w-gdb gud-comint-buffer)
+
+    (select-window w-source)
+    (set-window-buffer w-source c-buffer)
+    ))
+(defadvice gdb (around args activate)
+  "Change the way to gdb works."
+  (setq global-config-editing (current-window-configuration)) ;; to restore: (set-window-configuration c-editing)
+  (let (
+        (c-buffer (window-buffer (selected-window))) ;; save current buffer
+        )
+    ad-do-it
+    (set-gdb-layout c-buffer))
+  )
+(defadvice gdb-reset (around args activate)
+  "Change the way to gdb exit."
+  ad-do-it
+  (set-window-configuration global-config-editing))
+#+end_src
+* Настройка =smartparens=
+#+begin_src emacs-lisp
+(require 'smartparens-config)
+(add-hook 'prog-mode-hook #'smartparens-strict-mode)
 #+end_src

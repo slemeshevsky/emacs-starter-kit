@@ -1,0 +1,125 @@
+#+TITLE: WanderLust configuration
+По материалам на [[https://habr.com/post/192460/][Работаем с почтой через Emacs и Wanderlust: несколько аккаунтов]]
+* Загрузка
+#+begin_src emacs-lisp
+(autoload 'wl "wl" "Wanderlust" t)
+(setq elmo-imap4-use-modified-utf7 t)
+(setq wl-from "svl@im.bas-net.by")
+(setq mime-edit-split-message nil)
+(setq mime-view-buttons-visible nil)
+#+end_src
+* Написание чтение писем в ~html~
+#+begin_src emacs-lisp
+(setq mime-view-text/html-previewer 'shr)
+#+end_src
+* Настройки для написания и удаления писем
+** Список правил для удаления писем
+   Указывается какую папку использовать для удаления сообщений в
+   каждом ящике. Правила срабатывают по регулярному выражению,
+   применяемому к имени папки, в которой вы сейчас
+   находитесь. Например папка для входящих сообщений
+   ~%INBOX:some_test/clear@imap.gmail.com:993!~ подпадает под регулярное
+   выражение ~"^%.*some_test"~, и сообщения удаленные из нее будут
+   перемещаться в папку
+   ~[Gmail]/Корзина:sergey.lemeshevsky@gmail/clear@imap.gmail.com:993!~
+ #+begin_src emacs-lisp
+ (setq wl-dispose-folder-alist
+       '(
+         ("^%.*sergey.lemeshevsky" . "%[Gmail]/Корзина:sergey.lemeshevsky/clear@imap.gmail.com:993!")
+         ("^%.*svl" . "%INBOX.Trash:svl/clear@im.bas-net.by:993!")
+         ))
+ #+end_src
+** Список почтовых адресов, с которых планируется отправлять письма
+ #+begin_src emacs-lisp
+ (setq wl-user-mail-address-list (quote ("sergey.lemeshevsky@gmail.com" "svl@im.bas-net.by")))
+ #+end_src
+** Чтобы не выдавало ошибку при старте из-за того, что smtp сервер по умолчанию не определен сразу
+ #+begin_src emacs-lisp
+ (setq wl-insert-message-id nil)
+ #+end_src
+** Чтобы при создании нового сообщения отправитель подставлялся в  зависимости от того в какой папке вы сейчас находитесь
+ #+begin_src emacs-lisp
+ (add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
+ (remove-hook 'wl-draft-send-hook 'wl-draft-config-exec)
+ #+end_src
+** Указываем что выбор SMTP сервера для отправки должен осуществляться в зависимости от правил
+ #+begin_src emacs-lisp
+ (setq wl-draft-config-matchone t)
+ #+end_src
+** Правила и настройки применяющиеся в случае срабатывания одного из них 
+ #+begin_src emacs-lisp
+ (setq wl-draft-config-alist
+       '(
+         ;; sergey.lemeshevsky@gmail.com
+         (
+          (string-match "sergey.lemeshevsky" wl-draft-parent-folder)
+          (wl-message-id-domain . "sergey.lemeshevsky@gmail.com")
+          (wl-from . "Sergey Lemeshevsky <sergey.lemeshevsky@gmail.com>")
+          ("From" . wl-from)
+          (wl-smtp-posting-server . "smtp.gmail.com")
+          (wl-smtp-connection-type . 'ssl)
+          (wl-smtp-posting-port . 465)
+          (wl-smtp-authenticate-type . "plain")
+          (wl-smtp-posting-user . "sergey.lemeshevsky")
+          (wl-local-domain . "smtp.gmail.com")
+          )
+         ;; svl@im.bas-net.by
+         (
+          (string-match "svl" wl-draft-parent-folder)
+          (wl-message-id-domain . "svl@im.bas-net.by")
+          (wl-from . "Sergey Lemeshevsky <svl@im.bas-net.by> ")
+          ("From" . wl-from)
+          (wl-smtp-posting-server . "im.bas-net.by")
+;;          (wl-smtp-connection-type . ')
+          (wl-smtp-posting-port . 25)
+          (wl-smtp-authenticate-type . "plain")
+          (wl-smtp-posting-user . "svl")
+          (wl-local-domain . "im.bas-net.by")
+          )))
+ #+end_src
+* Настройка внешнего вида
+#+begin_src emacs-lisp
+(setq 
+ ;; чтобы интерфейсы был как у Thunderbird - слева панель папок,
+ ;; справа список писем и прсомотр текущего сообшения
+ wl-stay-folder-window t 
+ wl-folder-window-width 40
+
+ ;; чтобы при просмотре сообщения не видеть слишком много ненужных полей
+ wl-message-ignored-field-list '("^.*:")
+ wl-message-visible-field-list
+  '("^\\(To\\|Cc\\):"
+    "^Subject:"
+    "^\\(From\\|Reply-To\\):"
+;    "^Organization:"
+;    "^Message-Id:"
+    "^\\(Posted\\|Date\\):"
+    )
+  wl-message-sort-field-list
+  '("^From"
+    "^Organization:"
+    "^X-Attribution:"
+     "^Subject"
+     "^Date"
+     "^To"
+     "^Cc"))
+#+end_src
+* Уведомления о новых сообщениях
+** Проверка указанных папок на новые сообщения
+ #+begin_src emacs-lisp
+ (setq wl-biff-check-folder-list 
+       '("%INBOX:\"sergey.lemeshevsky@gmail.com\"/clear@imap.gmail.com:993!"
+         "%INBOX:svl/clear@im.bas-net.by:993!"))
+#+end_src
+** Проверка каждые 60 секунд
+#+begin_src emacs-lisp
+ (setq wl-biff-check-interval 30)
+#+end_src
+** Проверка только при idle
+#+begin_src emacs-lisp
+ (setq wl-biff-use-idle-timer t)
+#+end_src
+** Use strict diff so wl-biff works with Gmail and others
+#+begin_src emacs-lisp
+ (setq wl-strict-diff-folders wl-biff-check-folder-list)
+#+end_src

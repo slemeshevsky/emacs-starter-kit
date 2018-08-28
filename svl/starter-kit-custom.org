@@ -1,20 +1,20 @@
 * Загрузка дополнительных цветовых (кастомных) тем
 ** Тема ~zenburn~
    #+begin_src emacs-lisp
-(require 'zenburn-theme)
+;(require 'zenburn-theme)
    #+end_src
 ** Темы ~solarized~
  #+begin_src emacs-lisp
-(require 'sanityinc-solarized-dark-theme)
-(require 'sanityinc-solarized-light-theme)
+;(require 'sanityinc-solarized-dark-theme)
+;(require 'sanityinc-solarized-light-theme)
  #+end_src 
 ** Тема ~wombat~
 #+begin_src emacs-lisp
-(require 'color-theme-wombat)
+;(require 'color-theme-wombat)
 #+end_src
 ** Alect Themes
 #+begin_src emacs-lisp
-(require 'alect-themes)
+;(require 'alect-themes)
 #+end_src
 * Включение понравившейся цветовой темы
   Мне понравились:
@@ -85,6 +85,15 @@
 ** Anti-Zenburn
 #+begin_src emacs-lisp
 (load-theme 'anti-zenburn t)
+#+end_src
+** Github theme 
+#+begin_src emacs-lisp
+;(load-theme 'github t)
+#+end_src
+** Spacemacs
+#+begin_src emacs-lisp
+;(load-theme 'spacemacs-light t)
+;(load-theme 'spacemacs-dark t)
 #+end_src
 * Установка =default= шрифта «Consolas»
 #+begin_src emacs_lisp

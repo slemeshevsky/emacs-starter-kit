@@ -1,4 +1,4 @@
-#+TITLE: Orgmod configuration
+#+TITLE: Orgmode configuration
 * Включение режима Org для файлов с расширением =.org= и =.pub=
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.org$\\'" . org-mode))
@@ -16,7 +16,7 @@
 * Установка комбинаций клавиш
 #+begin_src emacs-lisp
 (global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
+;(global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-iswitchb)
 (global-set-key "\C-cr" 'org-capture)
@@ -33,26 +33,21 @@
 * Мои =.org= файлы для реализации *GTD*
 #+begin_src emacs-lisp
 (setq org-agenda-files (list "~/Dropbox/org/gtd.org"
-       	        		     "~/Dropbox/org/someday.org" 
-			                 "~/Dropbox/org/journal.org"
-	               		     "~/Dropbox/org/weeklyreview.org" 
-            			     "~/Dropbox/org/council010202.org" 
-			                 "~/Dropbox/org/bodybuilding.org"
-			                 "~/Dropbox/org/calendar.org"
-			           ))
+                             "~/Dropbox/org/someday.org" 
+			     "~/Dropbox/org/journal.org"))
 #+end_src
 
 * Настройка шаблонов ~remember~
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
-		 "** TODO %^{Brief Description} %^g\n%?\nAdded: %U" )
+		 "** ❏ %^{Brief Description} %^g\n%?\n%a\nAdded: %U" )
+		("w" "Wating" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
+		 "** ⚑ %^{Brief Description} %^g\n%?\n%a\nAdded: %U" )
 		("c" "Call" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-		 "** CALL %^{Brief Description} %^g\n%?\nAdded: %U" )
+		 "** ☎ %^{Brief Description} %^g\n%?\nAdded: %U" )
 		("o" "Outside"  (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 		 "** %^{Brief Description} %^g\n%?\nAdded: %U" )
-		("h" "Check" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
-		 "* CHECK %^{Brief Description} %^g\n%?\nAdded: %U")
 		("j" "Journal" entry (file+headline "~/Dropbox/org/journal.org" "Заметки")
 		 "** %^{Head Line} %U %^g\n%i%?" )
 		("s" "Someday" entry (file+headline "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")
@@ -65,29 +60,48 @@
 (org-super-agenda-mode 1)
   #+end_src
 
+* Настройка ~calfw-org~
+** Подключение
+#+begin_src emacs-lisp
+(require 'calfw-org)
+;; Month
+(setq calendar-month-name-array
+["Январь" "Февраль" "Март"     "Апрель"   "Май"      "Июнь"
+"Июль"    "Август" "Сентябрь" "Октябрь" "Ноярь" "Декабрь"])
+    
+;; Week days
+(setq calendar-day-name-array
+["Воскресенье" "Понедельник" "Вторник" "Среда" "Четверг" "Пятница" "Суббота"])
+;; First day of the week
+(setq calendar-week-start-day 1)
+#+end_src
 * Настройка показа буфера ~Agenda~
 #+begin_src emacs-lisp
-(setq org-deadline-warning-days 7)
-(setq org-mobile-directory "~/Dropbox/Public/MobileOrg/")
-(setq org-directory "~/Dropbox/org/")
-(setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
+  (setq org-deadline-warning-days 7)
+  (setq org-mobile-directory "~/Dropbox/Public/MobileOrg/")
+  (setq org-directory "~/Dropbox/org/")
+  (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
 
-(setq org-agenda-prefix-format 
-	  '((agenda . " %i %-30:c%?-12t% s")
-		(timeline . "  % s")
-		(todo . " %i %-30:c")
-		(tags . " %i %-30:c")
-		(search . " %i %-30:c")))
+  (setq org-agenda-prefix-format 
+		'((agenda . " %i %-30:c%?-12t% s")
+		  (timeline . "  % s")
+		  (todo . " %i %-30:c")
+		  (tags . " %i %-30:c")
+		  (search . " %i %-30:c")))
+  (setq org-agenda-custom-commands
+      '(
+	  ("w" "Список дел, которые можно сделать на работе"
+	  ((agenda)
+	  (todo "⚑" ((org-agenda-overriding-header "Ожидание")
+	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+	  (tags-todo "@ИНСТИТУТ" ((org-agenda-overriding-header "Институт")
+	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))) 
+	  (tags-todo "@КОМПЬЮТЕР" ((org-agenda-overriding-header "Компьютер")
+	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))) 
+	  (tags-todo "@ВЫЕЗДЫ" ((org-agenda-overriding-header "Выезды")
+	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+	  ))
 
-(setq org-agenda-custom-commands
-  '(
-	("w" "Список дел, которые можно сделать на работе"
-	 ((agenda)
-	  (tags-todo "@ИНСТИТУТ")
-	  (tags-todo "@БГУ")
-	  (tags-todo "@КОМПЬЮТЕР")
-	  (tags-todo "@ВЫЕЗДЫ")))
-	
 	("h" "Список дел, которые можно сделать дома" 
 	 ((agenda)
 	  (tags-todo "@ДОМ") 
@@ -96,84 +110,66 @@
 	
 	("d" "Список дел на день"
 	 ((agenda "" ((org-agenda-span 'day)
-		      (org-agenda-sorting-strategy
-		       (quote ((agenda time-up priority-down tag-up))))
-		      (org-deadline-warning-days 5)))))
-
-	("f" "План"
-	 ((agenda "" ((org-agenda-span 'day)
-	              (org-super-agenda-groups
+				  (org-super-agenda-groups
 				   '((:log t)
-				     (:name "Расписание" :timegrid t)
-					 (:name "Сегодня" :scheduled today)
-					 (:name "Закончить сегодня" :deadline today)
-					 (:name "Важное" :priority "A")
-					 (:name "Просроченные" :deadline past)
-					 (:name "Скоро срок окончания" :deadline future)
-					 (:name "Запланировано ранее" :scheduled past)
-					 (:name "Ождание ..." :todo "WAITING" :order 98)))))))
-	("P" "Printed agenda"
-	 (
-;(agenda "" ((org-agenda-ndays 7)                      ;; overview of appointments
-;		      (org-agenda-start-on-weekday nil)         ;; calendar begins today
-;		      (org-agenda-repeating-timestamp-show-all t)
-;		      (org-agenda-entry-types '(:timestamp :sexp))))
-	  (agenda "" ((org-agenda-span 'day)                      ;; daily agenda
-		      (org-deadline-warning-days 7)             ;; 7 day advanced warning for deadlines
-		      (org-agenda-todo-keyword-format "[ ]")
-		      (org-agenda-scheduled-leaders '("" ""))
-		      (org-agenda-prefix-format "%t%s")))
-	  (todo "TODO"                                          ;; todos sorted by context
-		((org-agenda-prefix-format "[ ] %T: ")
-		 (org-agenda-sorting-strategy '(tag-up priority-down))
-		 (org-agenda-todo-keyword-format "")
-		 (org-agenda-overriding-header "\nЗадачи по контексту\n------------------\n"))))
-	 ((org-agenda-compact-blocks t)
-	  (org-agenda-remove-tags t)
-      (ps-font-size 12.0)
-      (ps-print-header nil)
-	  (ps-number-of-columns 2)
-	  (ps-landscape-mode t))
-	 ("~/Dropbox/org/documents/A/agendas/agenda.ps")))
-      )
+					 (:name "Расписание" 
+					        :time-grid t)
+					 (:name "Сегодня" 
+					        :scheduled today)
+					 (:name "Закончить сегодня" 
+					        :deadline today)
+					 (:name "Важное" 
+					        :priority "A")
+					 (:name "Просроченные" 
+					        :deadline past)
+					 (:name "Скоро срок окончания" 
+					        :deadline future)
+					 (:name "Запланировано ранее" 
+					        :scheduled past)
+					 (:name "Ожидание ..." 
+					        :todo "⚑"
+							:order 98)))))))
+))
 #+end_src
 * Настройка рефайлинга
 #+begin_src emacs-lisp
-(setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
+(setq org-refile-targets (quote (("gtd.org" :maxlevel . 2)
 				 ("someday.org" :level . 2))))
 #+end_src
 * Функция для =TODO= записи зависящей от нескольких вложенных
-#+begin_src emacs-lisp
-(defun org-summary-todo (n-done n-not-done)
+  #+begin_src emacs-lisp
+  (defun org-summary-todo (n-done n-not-done)
   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   (let (org-log-done org-log-states)   ; turn off logging
-    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+    (org-todo (if (= n-not-done 0) "❏" "✔"))))
      
-(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+	(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 #+end_src
 
 * Реализация таймера *Pomodoro*
-# #+begin_src emacs-lisp
-# (add-to-list 'org-modules 'org-timer) ;; Activate the org-timer module 
-# (setq org-timer-default-timer 25) ;; Set a default value for the timer, for example
-# (add-hook 'org-clock-in-hook 
-# 	  '(lambda ()  
-# 	     (if (not org-timer-current-timer) (org-timer-set-timer '(16)))
-# 	     )
-# ) 
-# (add-hook 'org-clock-out-hook
-# 	  '(lambda ()  (setq org-mode-line-string nil)))
+#  #+begin_src emacs-lisp
+#  (add-to-list 'org-modules 'org-timer) ;; Activate the org-timer module 
+#  (setq org-timer-default-timer 25) ;; Set a default value for the timer, for example
+#  (add-hook 'org-clock-in-hook 
+#  	  '(lambda ()  
+#  	     (if (not org-timer-current-timer) (org-timer-set-timer '(16)))
+#  	     )
+#  ) 
+#  (add-hook 'org-clock-out-hook
+#  	  '(lambda ()  (setq org-mode-line-string nil)))
 
-# (add-hook 'org-timer-done-hook 
-# 	  '(lambda () 
-# 	     (start-process "orgmode" nil "~/Dropbox/org/scripts/pomodoro")
-# 	     ) 
-# )
+#  (add-hook 'org-timer-done-hook 
+#  	  '(lambda () 
+#  	     (start-process "orgmode" nil "~/Dropbox/org/scripts/pomodoro")
+#  	     ) 
+#  )
 # #+end_src
 
 * Использование режима ~org-bullets~
 #+begin_src emacs-lisp
 (require 'org-bullets)
+(setq org-bullets-bullet-list
+'("◎" "◉" "⚫" "⚪" "►" "◇"))
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
 * Реализация напоминаний о событиях
@@ -239,30 +235,27 @@
 )
 #+end_src
 
-* Настройка ~org-caldav~
-#+begin_src emacs-lisp
-(require 'org-caldav)
-(setq org-caldav-url "https://www.google.com/calendar/dav")
-(setq org-caldav-calendar-id "07a1vfsinsucpg3njaq9ktkjek@group.calendar.google.com")
-(setq org-caldav-files '("~/Dropbox/org/gtd.org"))
-(setq org-caldav-inbox "~/Dropbox/org/calendar.org")
-(setq org-caldav-save-directory "~/Dropbox/org")
-(setq org-caldav-calendars  
-   '((:calendar-id "g23o82ju0h3dqcpsis6pcvuol4@group.calendar.google.com"
-      :inbox (file+headline "~/Dropbox/org/calendar.org" "Рабочий")
-      :select-tags ("@ИНСТИТУТ"))
-     (:calendar-id "912e6vc5c0t8prbmg94gma4vrk@group.calendar.google.com"
-      :inbox (file+headline "~/Dropbox/org/calendar.org" "БГУ")
-      :select-tags ("@БГУ"))
-     (:calendar-id "sergey.lemeshevsky@gmail.com"
-      :inbox (file+headline "~/Dropbox/org/calendar.org" "Личный")
-      :select-tags ("@ЛИЧНОЕ"))))
-(setq org-icalendar-timezone "Europe/Minsk")
-(setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due)
-      org-icalendar-use-scheduled '(event-if-todo event-if-not-todo todo-start))
-(global-set-key (kbd "<f3>") 'org-caldav-sync)
-#+end_src
 * Добавляем шифрования файла с паролем для календаря
 #+begin_src emacs-lisp
 (require 'epa-file)  
 #+end_src
+* Натройка ~org-ref~
+** Основные настройки
+ #+begin_src emacs-lisp
+ (setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
+       bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs"
+       bibtex-completion-notes-path "~/Dropbox/bibliography/helm-bibtex-notes")
+ #+end_src
+** Для использования ~helm-bibtex~
+ #+begin_src emacs-lisp
+ ;; open pdf with system pdf viewer (works on mac)
+ (setq bibtex-completion-pdf-open-function
+   (lambda (fpath)
+     (start-process "open" "*open*" "open" fpath)))
+ ;; alternative
+ ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
+ #+end_src
+** Подключение
+ #+begin_src emacs-lisp
+ (require 'org-ref)
+ #+end_src

@@ -34,9 +34,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-scrollbar-bg ((t (:background "#d9d9d9"))))
- '(company-scrollbar-fg ((t (:background "#cccccc"))))
- '(company-tooltip ((t (:inherit default :background "#c5c5c5"))))
+ '(company-scrollbar-bg ((t (:background "#ffffff"))))
+ '(company-scrollbar-fg ((t (:background "#ffffff"))))
+ '(company-tooltip ((t (:inherit default :background "#ffffff"))))
  '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
  '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
  '(org-agenda-done ((t (:foreground "ForestGreen" :strike-through t))))
@@ -47,8 +47,59 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(TeX-command-list
+   (quote
+	(("TeX" "%(PDF)%(tex) %(file-line-error) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+	  (plain-tex-mode texinfo-mode ams-tex-mode)
+	  :help "Run plain TeX")
+	 ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
+	  (latex-mode doctex-mode)
+	  :help "Run LaTeX")
+	 ("Makeinfo" "makeinfo %(extraopts) %t" TeX-run-compile nil
+	  (texinfo-mode)
+	  :help "Run Makeinfo with Info output")
+	 ("Makeinfo HTML" "makeinfo %(extraopts) --html %t" TeX-run-compile nil
+	  (texinfo-mode)
+	  :help "Run Makeinfo with HTML output")
+	 ("AmSTeX" "amstex %(PDFout) %(extraopts) %`%S%(mode)%' %t" TeX-run-TeX nil
+	  (ams-tex-mode)
+	  :help "Run AMSTeX")
+	 ("ConTeXt" "%(cntxcom) --once --texutil %(extraopts) %(execopts)%t" TeX-run-TeX nil
+	  (context-mode)
+	  :help "Run ConTeXt once")
+	 ("ConTeXt Full" "%(cntxcom) %(extraopts) %(execopts)%t" TeX-run-TeX nil
+	  (context-mode)
+	  :help "Run ConTeXt until completion")
+	 ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
+	 ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
+	 ("View" "%V" TeX-run-discard-or-function t t :help "Run Viewer")
+	 ("Print" "%p" TeX-run-command t t :help "Print the file")
+	 ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
+	 ("File" "%(o?)dvips %d -o %f " TeX-run-dvips t t :help "Generate PostScript file")
+	 ("Dvips" "%(o?)dvips %d -o %f " TeX-run-dvips nil t :help "Convert DVI file to PostScript")
+	 ("Dvipdfmx" "dvipdfmx %d" TeX-run-dvipdfmx nil t :help "Convert DVI file to PDF with dvipdfmx")
+	 ("Ps2pdf" "ps2pdf %f" TeX-run-ps2pdf nil t :help "Convert PostScript file to PDF")
+	 ("Glossaries" "makeglossaries %s" TeX-run-command nil t :help "Run makeglossaries to create glossary file")
+	 ("Index" "makeindex %s" TeX-run-index nil t :help "Run makeindex to create index file")
+	 ("upMendex" "upmendex %s" TeX-run-index t t :help "Run upmendex to create index file")
+	 ("Xindy" "texindy -M rueng %s.idx" TeX-run-command nil t :help "Run xindy to create index file")
+	 ("Check" "lacheck %s" TeX-run-compile nil
+	  (latex-mode)
+	  :help "Check LaTeX file for correctness")
+	 ("ChkTeX" "chktex -v6 %s" TeX-run-compile nil
+	  (latex-mode)
+	  :help "Check LaTeX file for common mistakes")
+	 ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
+	 ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
+	 ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
+	 ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
+ '(TeX-engine (quote xetex) t)
  '(bmkp-auto-light-when-set (quote all-in-buffer))
- '(bmkp-last-as-first-bookmark-file "~/Projects/Doconce/python-num/src/python-num.bmk")
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/stability-book.bmk")
+ '(ebib-file-associations (quote (("pdf" . "evince") ("ps" . "evince"))))
+ '(ebib-preload-bib-files
+   (quote
+	("~/Dropbox/org/bibliography/references.bib" "~/Dropbox/org/bibliography/mypub.bib")))
  '(ecb-layout-name "right1")
  '(ecb-options-version "2.40")
  '(ecb-prescan-directories-for-emptyness (quote unless-remote))
@@ -61,10 +112,24 @@
  '(org-agenda-todo-list-sublevels nil)
  '(package-selected-packages
    (quote
-	(org-super-agenda web-mode smart-tabs-mode python-mode pydoc projectile-speedbar professional-theme persp-projectile org-pomodoro org-bullets org-beautify-theme material-theme magit ipython ibuffer-projectile helm-projectile helm-gtags helm-bibtex helm-ag fill-column-indicator company-cmake company-c-headers company-auctex column-marker coffee-mode cmake-mode bookmark+ auto-complete anti-zenburn-theme alect-themes)))
+	(org-cliplink treemacs treemacs-projectile flatui-dark-theme flatui-theme spacemacs-theme mu4e-maildirs-extension mu4e-alert mu4e-conversation mu4e-jump-to-list wanderlust org-gnome calfw calfw-org realgud company-c-headers ggtags smartparens function-args common-lisp-snippets django-snippets el-autoyas helm-c-yasnippet yasnippet-snippets ebib org-ref github-theme org-super-agenda web-mode smart-tabs-mode python-mode pydoc projectile-speedbar professional-theme persp-projectile org-pomodoro org-bullets org-beautify-theme material-theme magit ipython ibuffer-projectile helm-projectile helm-gtags helm-bibtex helm-ag fill-column-indicator company-cmake company-auctex column-marker coffee-mode cmake-mode auto-complete anti-zenburn-theme alect-themes)))
  '(safe-local-variable-values
    (quote
-	((projectile-project-compilation-cmd . "ablog build && cp -rp _website/* 
+	((doconce-section-nickname . "mop")
+	 (doconce-chapter-nickname . "report")
+	 (projectile-project-name . "nasb-rep")
+	 (gud-gbd-comand-name
+	  (concat gud-gbd-comand-name projectile-project-run-cmd))
+	 (projectile-project-configuration-cmd . "cd ~/Projects/Cxx/build/cds-new && cmake ../../cds")
+	 (projectile-project-configure-cmd . "cd ~/Projects/Cxx/build/cds-new && cmake ../../cds-new")
+	 (gud-gbd-comand-name concat gud-gbd-comand-name projectile-project-run-cmd)
+	 (projectile-project-configure-cmd . "cd ~/Projects/Cxx/build/cds-new && cmake ../cds-new")
+	 (projectile-compilation-dir . "~/Projects/Cxx/build/cds-new")
+	 (projectile-project-run-cmd . "~/Projects/Cxx/build/cds-new/bin/MainApp")
+	 (projectile-project-run-cmd . "~/Projects/Cxx/build/cds/cds")
+	 (projectile-project-compilation-cmd . "cd ~/Projects/Cxx/build/cds-new && make")
+	 (projectile-project-name . "cds-new")
+	 (projectile-project-compilation-cmd . "ablog build && cp -rp _website/* 
 
 ../slemeshevsky.github.io")
 	 (projectile-project-run-cmd . "~/Projects/C++/build/cds/cds")
@@ -110,6 +175,7 @@
 	 (projectile-project-compilation-run . "ablog serv -r")
 	 (projectile-project-compilation-cmd . "ablog build")
 	 (projectile-project-compilation-cmd . "cd .. && make html"))))
+ '(send-mail-function (quote smtpmail-send-it))
  '(truncate-lines t))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)

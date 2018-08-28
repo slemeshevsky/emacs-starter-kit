@@ -26,11 +26,12 @@
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
-(defvar my-packages '(auctex reftex company company-auctex company-c-headers company-cmake 
+(defvar my-packages '(auctex reftex company company-auctex company-cmake 
 magit ido hideshow perspective projectile projectile-speedbar persp-projectile 
 ibuffer-projectile helm helm-core helm-bibtex helm-gtags helm-projectile python-mode 
-pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet bookmark+
-column-marker smart-tabs-mode professional-theme alect-themes material-theme web-mode anti-zenburn-theme)
+pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets column-marker 
+mu4e-alert mu4e-conversation treemacs treemacs-projectile
+smart-tabs-mode professional-theme alect-themes material-theme web-mode anti-zenburn-theme function-args)
 "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -61,6 +62,46 @@ column-marker smart-tabs-mode professional-theme alect-themes material-theme web
 (require 'color-theme)
 (eval-after-load "color-theme"
  '(progn (color-theme-initialize)))
+#+end_src
+* Регистрируем Emacs как клиент сессии Gnome
+#+begin_src emacs-lisp
+;;; save & shutdown when we get an "end of session" signal on dbus 
+(require 'dbus)
+
+(defun my-register-signals (client-path)
+  "Register for the 'QueryEndSession' and 'EndSession' signals from
+Gnome SessionManager.
+
+When we receive 'QueryEndSession', we just respond with
+'EndSessionResponse(true, \"\")'.  When we receive 'EndSession', we
+append this EndSessionResponse to kill-emacs-hook, and then call
+kill-emacs.  This way, we can shut down the Emacs daemon cleanly
+before we send our 'ok' to the SessionManager."
+  (setq my-gnome-client-path client-path)
+  (let ( (end-session-response (lambda (&optional arg)
+                                 (dbus-call-method-asynchronously
+                                  :session "org.gnome.SessionManager" my-gnome-client-path
+                                  "org.gnome.SessionManager.ClientPrivate" "EndSessionResponse" nil
+                                  t "") ) ) )
+         (dbus-register-signal
+          :session "org.gnome.SessionManager" my-gnome-client-path
+          "org.gnome.SessionManager.ClientPrivate" "QueryEndSession"
+          end-session-response )
+         (dbus-register-signal
+          :session "org.gnome.SessionManager" my-gnome-client-path
+          "org.gnome.SessionManager.ClientPrivate" "EndSession"
+          `(lambda (arg)
+             (add-hook 'kill-emacs-hook ,end-session-response t)
+             (kill-emacs) ) ) ) )
+
+;; DESKTOP_AUTOSTART_ID is set by the Gnome desktop manager when emacs
+;; is autostarted.  We can use it to register as a client with gnome
+;; SessionManager.
+(dbus-call-method-asynchronously
+ :session "org.gnome.SessionManager"
+ "/org/gnome/SessionManager" 
+ "org.gnome.SessionManager" "RegisterClient" 'my-register-signals
+ "Emacs server" (getenv "DESKTOP_AUTOSTART_ID"))
 #+end_src
 * Прикручиваем типографику к Emacs
 #+begin_src emacs-lisp  
@@ -265,6 +306,11 @@ column-marker smart-tabs-mode professional-theme alect-themes material-theme web
 (yas-global-mode 1)
 #+end_src
 
+* Отключение =Version Control (vc)=
+#+begin_src emacs-lisp
+(setq vc-handled-backends nil)
+#+end_src
+
 * Включение номеров строк слева и показ номера колонки
 ** Определение функции
 #+begin_src emacs-lisp
@@ -345,7 +391,7 @@ column-marker smart-tabs-mode professional-theme alect-themes material-theme web
 #+end_src
 * Подключаем ~bookmark+~
 #+begin_src emacs-lisp
- (require 'bookmark+)
+; (require 'bookmark+)
 #+end_src
 * Включение ~web-mode~ для файлов =.html=
 #+begin_src emacs-lisp

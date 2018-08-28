@@ -229,3 +229,7 @@
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-P") 'org-pomodoro)
 #+end_src
+* Настройка сочетания для запуска mu4e
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f12>") 'mu4e)
+#+end_src
