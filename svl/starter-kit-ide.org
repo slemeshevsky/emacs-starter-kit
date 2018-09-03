@@ -46,6 +46,8 @@
   #+end_src
 * Настройка =function-args=
   #+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/src/function-args")
+  (require 'function-args)
   (fa-config-default)
   #+end_src
 * Настройка =helm=

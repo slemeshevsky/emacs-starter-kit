@@ -29,9 +29,7 @@
 (defvar my-packages '(auctex reftex company company-auctex company-cmake 
 magit ido hideshow perspective projectile projectile-speedbar persp-projectile 
 ibuffer-projectile helm helm-core helm-bibtex helm-gtags helm-projectile python-mode 
-pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets column-marker 
-mu4e-alert mu4e-conversation treemacs treemacs-projectile
-smart-tabs-mode professional-theme alect-themes material-theme web-mode anti-zenburn-theme function-args)
+pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets)
 "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
