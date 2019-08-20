@@ -20,16 +20,18 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("elpa" . "http://tromey.com/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 #+end_src
 
 * Установка пакетов из ELPA по списку.
 #+begin_src emacs-lisp  
 (when (not package-archive-contents)
   (package-refresh-contents))
-(defvar my-packages '(auctex reftex company company-auctex company-cmake 
-magit ido hideshow perspective projectile projectile-speedbar persp-projectile 
+(defvar my-packages '(use-package auctex reftex company company-auctex 
+magit ido hideshow counsel projectile projectile-speedbar persp-projectile 
 ibuffer-projectile helm helm-core helm-bibtex helm-gtags helm-projectile python-mode 
-pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets)
+elpy pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets
+anzu)
 "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -53,7 +55,11 @@ pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets)
 #+begin_src emacs-lisp  
 (add-to-list 'load-path sitelisp-dir)
 #+end_src
-
+* Загружаем пакет =use-package=
+#+begin_src emacs-lisp
+(eval-when-compile
+  (require 'use-package))
+#+end_src
 * Этот код загружает цветовые темы, тем самым делая их доступными по-умолчанию.
 #+begin_src emacs-lisp  
 (add-to-list 'load-path (expand-file-name "color-theme" sitelisp-dir))
@@ -189,57 +195,45 @@ before we send our 'ok' to the SessionManager."
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-* *Flyspell.* Код взят из [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki: Flyspell]]. Включаем ~flyspell~ в 
-    режиме ~text-mode~ и отключаем его для режимов ~log-edit-mode~ и
-    ~change-log-mode~
+* Настройка =flyspell=
 #+begin_src emacs-lisp
-(dolist (hook '(text-mode-hook))
-     (add-hook hook (lambda () (flyspell-mode 1))))
-(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-     (add-hook hook (lambda () (flyspell-mode -1))))
-#+end_src
-
-Выбираем для проверки орфографии =aspell=
-#+begin_src emacs-lisp
-(setq ispell-program-name "aspell")
-#+end_src
-
-Если ~flyspell~ используется с программой ~aspell~ вместо ~ispell~
-нужно добавить следующую команду:
-#+begin_src emacs-lisp
-(setq ispell-list-command "--list")
-#+end_src
-Из-за того, что опция =-l= означает =--lang= в ~aspell~, а в ~ispell~
-=-l= означает =--list=, ~flyspell-buffer~ и ~flyspell-region~ страдают
-от этой проблемы.
-
-Меняем словари. Для переключения между английским и русским можно
-использовать следующую функцию
-#+begin_src emacs-lisp
-(defun fd-switch-dictionary()
-(interactive)
-(let* ((dic ispell-current-dictionary)
-   (change (if (string= dic "russian") "english" "russian")))
-   (ispell-change-dictionary change)
-   (message "Dictionary switched from %s to %s" dic change)
-))
+(use-package flyspell
+  :diminish
+  :if (executable-find "aspell")
+  :hook
+  ((text-mode org-mode doconce-mode) . flyspell-mode)
+  (prog-mode . flyspell-prog-mode)
+  :custom 
+  (ispell-program-name "aspell")
+  (ispell-extra-args '("--sug-mode=ultra" "--lang=ru_RU" "--run-together"))
+  (ispell-list-command "--list")
+  :config
+  (defun fd-switch-dictionary()
+    (interactive)
+    (let* ((dic ispell-current-dictionary)
+      (change (if (string= dic "russian") "english" "russian")))
+      (ispell-change-dictionary change)
+      (message "Dictionary switched from %s to %s" dic change)))
     
-(global-set-key (kbd "<f8>")   'fd-switch-dictionary)
+  (global-set-key (kbd "<f8>")   'fd-switch-dictionary))
 #+end_src
 
 * Подключаем ~lambda-mode~
 #+begin_src emacs-lisp
-(require 'lambda-mode)
-(add-hook 'org-mode-hook 'lambda-mode 1)
-(add-hook 'emacs-lisp-mode-hook 'lambda-mode 1)
-(setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
+(use-package lambda-mode
+  :init
+  (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
+  (add-hook 'org-mode-hook 'lambda-mode 1)
+  (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1))
 #+end_src
   
 * Подключаем ~ido~
 #+begin_src emacs-lisp
-(require 'ido)
-(ido-mode t)
-(setq ido-enable-flex-matchingido-enable-flex-matching 1)
+(use-package ido
+  :init
+  (setq ido-enable-flex-matchingido-enable-flex-matching 1)  
+  :config 
+  (ido-mode t))
 #+end_src
 
 * Отключение полосы прокрутки
@@ -257,16 +251,16 @@ before we send our 'ok' to the SessionManager."
 * Включение режима ~bs~ для отображения буфера с открытыми файлами
     (плагин buffer show)
 #+begin_src emacs-lisp
-(require 'bs)
-(setq bs-configurations
-      '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
-(add-to-list 'bs-configurations
-                 '("C++" nil nil nil
-                   (lambda (buf)
-                      (with-current-buffer buf
-                         (not (memq major-mode
-                            '(sql-interactive-mode cc-mode))))) nil))
-;(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
+  ;; (require 'bs)
+  ;; (setq bs-configurations
+  ;;       '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
+  ;; (add-to-list 'bs-configurations
+  ;;                  '("C++" nil nil nil
+  ;;                    (lambda (buf)
+  ;;                       (with-current-buffer buf
+  ;;                          (not (memq major-mode
+  ;;			      '(sql-interactive-mode cc-mode))))) nil))
+  ;(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
 #+end_src
 * Настройка ~ibuffer~
   #+begin_src emacs-lisp
@@ -300,8 +294,10 @@ before we send our 'ok' to the SessionManager."
 
 * Включение и настройка ~yasnippet~
 #+begin_src emacs-lisp
-(require 'yasnippet)
-(yas-global-mode 1)
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
+  :hook (after-init . yas-global-mode))
 #+end_src
 
 * Отключение =Version Control (vc)=
@@ -310,63 +306,52 @@ before we send our 'ok' to the SessionManager."
 #+end_src
 
 * Включение номеров строк слева и показ номера колонки
-** Определение функции
 #+begin_src emacs-lisp
-(require 'linum)
-(defun switch-linum-mode-hook ()
-  (linum-mode t))
+(use-package display-line-numbers
+  :ensure nil
+  :hook
+  ((prog-mode cmake-mode LaTeX-mode) . display-line-numbers-mode))
 #+end_src
-** Включение номеров строк в режимах программирования
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook 'switch-linum-mode-hook)
-(add-hook 'python-mode-hook 'switch-linum-mode-hook)
-#+end_src
-** Включение номеров строк в режимах программирования на C/C++
-#+begin_src emacs-lisp
-;;(add-hook 'c-mode-hook 'switch-linum-mode-hook)
-;;(add-hook 'c++-mode-hook 'switch-linum-mode-hook)
-#+end_src
-** Включение номеров строк в режимах =cmake-mode=, =makefile-mode=
-#+begin_src emacs-lisp
-(add-hook 'cmake-mode-hook 'switch-linum-mode-hook)
-#+end_src
-** Включение номеров строк в режимах =latex= и =ess=
-   #+begin_src emacs-lisp
-(add-hook 'LaTeX-mode-hook 'switch-linum-mode-hook)
-;(add-hook 'ess-mode-hook 'switch-linum-mode-hook)
-   #+end_src
 ** Показ номера колонки
 #+begin_src emacs-lisp
 (column-number-mode t)
 #+end_src
+* Интерактивное выделение активного буфера и затемнение остальных
+#+begin_src emacs-lisp
+(use-package dimmer
+  :custom
+  (dimmer-fraction 0.5)
+  (dimmer-exclusion-regexp-list
+       '(".*Minibuf.*"
+         ".*NeoTree.*"
+         ".*Messages.*"
+         ".*Warnings.*"))
+  :config
+  (dimmer-mode t))
+#+end_src
 * Отмечаем правую границу
-** Пакет =column-maker=
-# #+begin_src emacs-lisp
-# (require 'column-marker)
-# (add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
-# (add-hook 'python-mode-hook (lambda () (interactive) (column-marker-1 80)))
-# #+end_src
 ** Пакет =fill-column-indicator=
 #+begin_src emacs-lisp
-(require 'fill-column-indicator)
-(setq fci-rule-width 2)
-(setq fci-rule-column 80)
-(add-hook 'prog-mode-hook 'fci-mode)
-(add-hook 'python-mode-hook 'fci-mode)
+(use-package fill-column-indicator
+  :init
+  (setq fci-rule-width 2)
+  (setq fci-rule-column 80)
+  :hook
+  ((prog-mode python-mode) . fci-mode))
 #+end_src
 
 * Включение режима ~smart-tabs-mode~
   #+begin_src emacs-lisp
-(smart-tabs-insinuate 'c 'c++ 'python)
-(setq-default tab-width 4)
-(add-hook 'prog-mode-hook
-          (lambda () (setq indent-tabs-mode t)))
-(add-hook 'c-mode-common-hook
-          (lambda () (setq indent-tabs-mode t)))
-(add-hook 'python-mode-hook
-          (lambda () (setq indent-tabs-mode t)))
-(add-hook 'python-mode-hook
-		  (lambda () (setq tab-width 4)))
+    ;; (smart-tabs-insinuate 'c 'c++ 'python)
+    ;; (setq-default tab-width 4)
+    ;; (add-hook 'prog-mode-hook
+    ;;           (lambda () (setq indent-tabs-mode t)))
+    ;; (add-hook 'c-mode-common-hook
+    ;;           (lambda () (setq indent-tabs-mode t)))
+    ;; (add-hook 'python-mode-hook
+    ;;           (lambda () (setq indent-tabs-mode t)))
+    ;; (add-hook 'python-mode-hook
+    ;; 		  (lambda () (setq tab-width 4)))
 #+end_src
 
 * Замена «yes или no» на «y or n»
@@ -389,11 +374,19 @@ before we send our 'ok' to the SessionManager."
 #+end_src
 * Подключаем ~bookmark+~
 #+begin_src emacs-lisp
-; (require 'bookmark+)
+  ;; (require 'bookmark+)
 #+end_src
-* Включение ~web-mode~ для файлов =.html=
+* Включение ~web-mode~ для файлов типа =.html= 
 #+begin_src emacs-lisp
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(use-package web-mode
+  :mode ("\\.html?\\'" "\\.djhtml\\'"))
+#+end_src
+* Установка =default= шрифта «Consolas»
+#+begin_src emacs_lisp
+(set-default-font "Consolas-12")
+#+end_src
+* Подключение ~gmsh-mode~
+#+begin_src emacs-lisp
+(use-package gmsh
+  :mode ("\\.geo\\'" . gmsh-mode))
 #+end_src

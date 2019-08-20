@@ -1,11 +1,17 @@
 #+TITLE: Emacs as IDE for Python
 * Включение пакета =python-mode=
-#    #+begin_src emacs-lisp
-# (autoload 'python-mode "python-mode" "Python Mode." t)
-# (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-# (add-to-list 'interpreter-mode-alist '("python" . python-mode))
-# (require 'python-mode)
-  #    #+end_src
+#+begin_src emacs-lisp
+  ;;  (autoload 'python-mode "python-mode" "Python Mode." t)
+  ;;  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+  ;;  (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+  ;; (add-hook 'python-mode-hook
+  ;; 	    (lambda ()
+  ;; 		    (setq-default indent-tabs-mode t)
+  ;; 		    (setq-default tab-width 4)
+  ;; 		    (setq-default py-indent-tabs-mode t)
+  ;; 	    (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+  ;;  (require 'python-mode)
+#+end_src
 * Подключение автодополнения
   #+begin_src emacs-lisp
 ;(add-hook 'python-mode-hook 'auto-complete-mode)
@@ -14,9 +20,9 @@
   Для того, чтобы использовать =ipython= как оболочку по-умолчанию,
   добавляем строчки (у меня это плохо работает):
   #+begin_src emacs-lisp
-(require 'python)
-(setq python-shell-interpreter "ipython")
-(setq python-shell-interpreter-args "--simple-prompt -i")
+    ;; (require 'python)
+    ;; (setq python-shell-interpreter "ipython")
+    ;; (setq python-shell-interpreter-args "--simple-prompt -i")
   #+end_src
 #   Попробуем так
 #   #+begin_src emacs-lisp
@@ -25,24 +31,37 @@
 #   #+end_src
 * Включение режима =smart-tabs=
 #+begin_src emacs-lisp
-(smart-tabs-advice python-indent-line-1 python-indent)
-(add-hook 'python-mode-hook
-		  (lambda ()
-			(setq indent-tabs-mode t)
-			(setq tab-width (default-value 'tab-width))))
+  ;; (smart-tabs-advice python-indent-line-1 python-indent)
+  ;; (add-hook 'python-mode-hook
+  ;; 		  (lambda ()
+  ;; 			(setq indent-tabs-mode t)
+  ;; 			(setq tab-width 4)))
 #+end_src
-# #+begin_src emacs-lisp
-#   (add-hook 'python-mode-hook
-#          (lambda () (setq indent-tabs-mode t)))
-#   (smart-tabs-advice py-indent-line py-indent-offset)
-#   (smart-tabs-advice py-newline-and-indent py-indent-offset)
-#   (smart-tabs-advice py-indent-region py-indent-offset)
-# #+end_src
-* Подключение =helm-pydoc=
 #+begin_src emacs-lisp
-(eval-after-load "python"
-  '(progn
-     (define-key python-mode-map (kbd "C-c C-d") 'helm-pydoc)))
+  ;; (add-hook 'python-mode-hook
+  ;;        (lambda () 
+  ;; 	 (setq indent-tabs-mode t)
+  ;; 	 (setq python-indent 4)
+  ;; 	 (setq tab-width 4)))
+  ;; (smart-tabs-advice py-indent-line py-indent-offset)
+  ;; (smart-tabs-advice py-newline-and-indent py-indent-offset)
+  ;; (smart-tabs-advice py-indent-region py-indent-offset)
+#+end_src
+* Включение ~elpy~
+#+begin_src emacs-lisp
+  ;(package-initialize)
+  (elpy-enable)
+  (setq python-shell-interpreter "ipython"
+	python-shell-interpreter-args "--simple-prompt -i")
+  ;; (setq python-shell-interpreter "jupyter"
+  ;;       python-shell-interpreter-args "console --simple-prompt"
+  ;;       python-shell-prompt-detect-failure-warning nil)
+  ;; (add-to-list 'python-shell-completion-native-disabled-interpreters
+  ;; 	     "jupyter")
+  (setq python-shell-buffer-name "IPython")
+  (setq pyrhon-indent-def-block-scale 1)
+  (elpy-set-test-runner 'elpy-test-pytest-runner)
+  (setq python-shell-use-project-root nil)
 #+end_src
 * Включение =web-mode= для шаблонов ~mako~
   #+begin_src emacs-lisp

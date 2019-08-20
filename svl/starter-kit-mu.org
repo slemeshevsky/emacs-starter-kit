@@ -1,4 +1,4 @@
-#+TITILE: Настройка mu4e с использованием offlineimap
+#+TITILE: Настройка mu4e
 * Загрузка
 #+begin_src emacs-lisp
 ;(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/mu4e")
@@ -6,19 +6,47 @@
 #+end_src
 * Некоторые настройки переменных
 #+begin_src emacs-lisp
-(setq mu4e-get-mail-command "offlineimap"
-      mu4e-update-interval nil ;; in seconds or nil to desactivate
+(setq mu4e-get-mail-command "mbsync -a"
+      mu4e-update-interval 300 ;; in seconds or nil to desactivate
       mu4e-index-update-in-background t ;; nil to update in foreground
-	  mu4e-index-cleanup nil      ;; don't do a full cleanup check
-	  mu4e-index-lazy-check t    ;; don't consider up-to-date dirs
-	  mu4e-headers-has-child-prefix '("."  . "◼ ")
+      mu4e-index-cleanup nil      ;; don't do a full cleanup check
+      mu4e-index-lazy-check t    ;; don't consider up-to-date dirs
+;      mu4e-headers-has-child-prefix '("."  . "◼ ")
       mu4e-headers-default-prefix '(" "  . "│ ")
       mu4e-context-policy 'pick-first
-	  mu4e-view-prefer-html t
-	  mu4e-view-show-images t
-	  mu4e-view-image-max-width 800)
+      mu4e-view-prefer-html t
+      mu4e-view-show-images t
+      mu4e-change-filenames-when-moving t
+      mu4e-view-image-max-width 800)
+      (setq mu4e-headers-show-threads t)
+ #+end_src
+** Рендеринг html файлов 
+#+begin_src emacs-lisp
+(require 'mu4e-contrib)
+(setq mu4e-html2text-command 'mu4e-shr2text)
 (when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
+(imagemagick-register-types))
+(require 'eaf)
+(defun svl-view-in-eaf (msg)
+(eaf-open-url (concat "file://" (mu4e~write-body-to-html msg))))
+(add-to-list 'mu4e-view-actions '("Eaf view" . svl-view-in-eaf) t)
+(setq browse-url-browser-function 'browse-url-generic)
+(setq browse-url-generic-program "google-chrome-stable")
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+ #+end_src
+** Папка для сохранения вложений
+#+begin_src emacs-lisp
+(setq mu4e-attachment-dir "~/Downloads/attachments")
+#+end_src
+** Разбивка окна
+   #+begin_src emacs-lisp
+   (setq mu4e-split-view 'vertical)
+   (setq mu4e-headers-visible-columns 89)
+   #+end_src
+* Использование ~fancy~ символов
+#+begin_src emacs-lisp
+  (setq mu4e-use-fancy-chars t)
+  (defvar mu4e-headers-trashed-mark   '("T" . "☒") "Trashed.")
 #+end_src
 * Используем ~mu4e~ для e-mail в emacs
 #+begin_src emacs-lisp
@@ -26,7 +54,16 @@
 #+end_src
 * Устанавливаем основную папку для почты
 #+begin_src emacs-lisp
-(setq mu4e-maildir "/home/svl/.offlineimap/mail")
+(setq mu4e-maildir "/home/svl/.mail")
+#+end_src
+* Задаем параметры по-умолчанию для основного ящика
+#+begin_src emacs-lisp
+  (setq mu4e-sent-folder "/gmail/[Gmail]/Sent Mail"
+        mu4e-drafts-folder "/gmail/[Gmail]/Drafts"
+		user-mail-address "sergey.lemeshevsky@gmail.com"
+		smtpmail-default-smtp-server "smtp.gmail.com"
+		smtpmail-smtp-server "smtp.gmail.com"
+		smtpmail-smtp-service 587)
 #+end_src
 * Устанавливаем переменную =mu4e-contexts=
 #+begin_src emacs-lisp
@@ -37,36 +74,36 @@
    ;; FLA messages
    ((string-match "\\[some-mailing-list\\]"
           (mu4e-message-field msg :subject))
-    "/Institute/mailing-list")
-   (t "/Institute/Archive")
+    "/im/mailing-list")
+   (t "/im/Archives")
    )
   )
 (setq mu4e-contexts
  `( ,(make-mu4e-context
      :name "Gmail"
-	 :enter-func (lambda ()(mu4e-message "Подключение к Gmail"))
-	 :leave-func (lambda ()(mu4e-message "Отключение от Gmail"))
+     :enter-func (lambda ()(mu4e-message "Подключение к Gmail"))
+     :leave-func (lambda ()(mu4e-message "Отключение от Gmail"))
      :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg 
-	                                 :to "sergey.lemeshevsky@gmail.com")))
+                           :to "sergey.lemeshevsky@gmail.com")))
      :vars '((user-mail-address . "sergey.lemeshevsky@gmail.com")
 	         (user-mail-name . "Sergey Lemeshevsky")
-			 (mu4e-sent-folder . "/Gmail/[Gmail].Отправленные")  
-			 (mu4e-drafts-folder . "/Gmail/[Gmail].Черновики")  
-	         (mu4e-trash-folder . "/Gmail/[Gmail].Корзина")  
-             (mu4e-refile-folder . "/Gmail/[Gmail].Вся почта")))
+		 (mu4e-sent-folder . "/gmail/[Gmail]/Sent Mail")  
+		 (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")  
+	         (mu4e-trash-folder . "/gmail/[Gmail]/Trash")  
+		 (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")))
    ,(make-mu4e-context
      :name "Institute"
-	 :enter-func (lambda ()(mu4e-message "Подключение к Institute"))
-	 :leave-func (lambda ()(mu4e-message "Отключение от Institute"))
+     :enter-func (lambda ()(mu4e-message "Подключение к Institute"))
+     :leave-func (lambda ()(mu4e-message "Отключение от Institute"))
      :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg 
-	                                 :to "svl@im.bas-net.by")))
+                           :to "svl@im.bas-net.by")))
      :vars '(
 	   (user-mail-address . "svl@im.bas-net.by")
 	   (user-mail-name . "Sergey Lemeshevsky")
-	   (mu4e-sent-folder . "/Institute/INBOX.Sent")  
-	   (mu4e-drafts-folder . "/Institute/INBOX.Drafts")  
-       (mu4e-trash-folder . "/Institute/INBOX.Trash")
-       (mu4e-refile-folder . "/Institute/INBOX.Archives")
+	   (mu4e-sent-folder . "/im/Sent")  
+	   (mu4e-drafts-folder . "/im/Drafts")  
+	   (mu4e-trash-folder . "/im/Trash")
+	   (mu4e-refile-folder . "/im/Archives")
        ))
    ))
 #+end_src
@@ -81,141 +118,95 @@
        "flag:unread"
        " AND NOT flag:trashed"
        " AND NOT maildir:"
-       "\"/[Gmail].Вся почта\""))
+       "\"/[Gmail]/All Mail\""
+       " AND NOT maildir:"
+       "\"/im/INBOX\""))
+(setq mu4e-alert-email-notification-types '(count))
 #+end_src
 * Настройка отправки писем
-** Задаем параметры по-умолчанию для основного ящика
+** Используем программу ~msmtp~
 #+begin_src emacs-lisp
-  (setq mu4e-sent-folder "/Gmail/[Gmail].Отправленные"
-		mu4e-drafts-folder "/Gmail/[Gmail].Черновики"
-		user-mail-address "sergey.lemeshevsky@gmail.com"
-		smtpmail-default-smtp-server "smtp.gmail.com"
-		smtpmail-smtp-server "smtp.gmail.com"
-		smtpmail-smtp-service 587)
+(setq message-send-mail-function 'message-send-mail-with-sendmail)
+(setq sendmail-program "msmtp")
 #+end_src
-** Устанавливаем список аккаунтов
+** Сообщаем ~msmtp~ о выборе SMTP-сервера в соответствии с полем =from= исходящего письма
 #+begin_src emacs-lisp
-  (defvar my-mu4e-account-alist
-	'(("Gmail"
-	   (mu4e-sent-folder "/Gmail/[Gmail].Отправленные")
-	   (mu4e-drafts-folder "/Gmail/[Gmail].Черновики")
-	   (user-mail-address "sergey.lemeshevsky@gmail.com")
-	   (smtpmail-default-smtp-server "smtp.gmail.com")
-	   (smtpmail-local-domain "gmail.com")
-	   (smtpmail-smtp-user "sergey.lemeshevsky@gmail.com")
-	   (smtpmail-smtp-server "smtp.gmail.com")
-	   (smtpmail-smtp-service 587))
-	   ("Institute"
-		(mu4e-sent-folder "/Institute/INBOX.Sent")
-		(mu4e-drafts-folder "/Institute/INBOX.Drafts")
-		(user-mail-address "svl@im.bas-net.by")
-		(smtpmail-default-smtp-server "im.bas-net.by")
-		(smtpmail-local-domain "im.bas-net.by")
-		(smtpmail-smtp-user "svl")
-		(smtpmail-smtp-server "im.bas-net.by")
-		(smtpmail-smtp-service 25))))
-#+end_src
-** Функция для выбора аккаунта для отправки письма
-   Взята с [[https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html][Multiple Accounts]]
-#+begin_src emacs-lisp
-  (defun my-mu4e-set-account ()
-	"Set the account for composing a message."
-	(let* ((account
-	  (if mu4e-compose-parent-message
-		  (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-	  (string-match "/\\(.*?\\)/" maildir)
-	  (match-string 1 maildir))
-		(completing-read (format "Compose with account: (%s) "
-			   (mapconcat #'(lambda (var) (car var))
-			  my-mu4e-account-alist "/"))
-			 (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-			 nil t nil nil (caar my-mu4e-account-alist))))
-	 (account-vars (cdr (assoc account my-mu4e-account-alist))))
-	  (if account-vars
-	(mapc #'(lambda (var)
-		(set (car var) (cadr var)))
-		  account-vars)
-		(error "Ни один аккаунт не найден"))))
-#+end_src
-** Добавляем hook
-#+begin_src emacs-lisp
- (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+(setq message-sendmail-extra-arguments '("--read-envelope-from"))
+(setq message-sendmail-f-is-evil 't)
 #+end_src
 * Установка кастомных флагов для писем
-#+begin_src emacs-lisp
-  ;; (add-to-list 'mu4e-marks
-  ;;   '(todo
-  ;;      :char       "t"
-  ;;      :prompt     "Todo"
-  ;;      :show-target (lambda (target) "todo")
-  ;;      :action      (lambda (docid msg target)
-  ;;                     ;; must come before proc-move since retag runs
-  ;;                     ;; 'sed' on the file
-  ;;                     (mu4e-action-retag-message msg "+Todo")
-  ;;                     (mu4e~proc-move docid nil "+S-u-N"))))
-  ;; (add-to-list 'mu4e-marks
-  ;;   '(trips
-  ;;      :char       "v"
-  ;;      :prompt     "Visits"
-  ;;      :show-target (lambda (target) "trips")
-  ;;      :action      (lambda (docid msg target)
-  ;;                     ;; must come before proc-move since retag runs
-  ;;                     ;; 'sed' on the file
-  ;;                     (mu4e-action-retag-message msg "+Trips -Todo -Waitng")
-  ;;                     (mu4e~proc-move docid nil "+S -u -N"))))					
-  ;; (add-to-list 'mu4e-marks
-  ;;   '(waiting
-  ;;      :char       "w"
-  ;;      :prompt     "Wating"
-  ;;      :show-target (lambda (target) "waiting")
-  ;;      :action      (lambda (docid msg target)
-  ;;                     ;; must come before proc-move since retag runs
-  ;;                     ;; 'sed' on the file
-  ;;                     (mu4e-action-retag-message msg "+Waiting -Todo")
-  ;;                     (mu4e~proc-move docid nil "+S -u -N"))))
-  ;; (mu4e~headers-defun-mark-for todo)
-  ;; (mu4e~headers-defun-mark-for waiting)
-  ;; (define-key mu4e-headers-mode-map (kbd "R") 'mu4e-headers-mark-for-todo)
-  ;; (define-key mu4e-headers-mode-map (kbd "S") 'mu4e-headers-mark-for-waiting)
-#+end_src
 * Добавление новых bookmarks
 #+begin_src emacs-lisp
-  ;; (add-to-list 'mu4e-bookmarks
-  ;;   (make-mu4e-bookmark
-  ;;     :name  "Контроль"
-  ;;     :query "tag:todo or tag:waiting or tag:trips"
-  ;;     :key ?r))
   (add-to-list 'mu4e-bookmarks
 	(make-mu4e-bookmark
 	  :name  "Текущая почта"
-	  :query "maildir:/Institute/INBOX or /Gmail/INBOX"
+	  :query "maildir:/im/INBOX or maildir:/gmail/Inbox"
 	  :key ?c))
 #+end_src
 * Header-fields
 #+begin_src emacs-lisp
 (setq mu4e-headers-fields
-     '( (:human-date          .  10)    ;; alternatively, use :human-date
-        (:flags         .   6)
-        (:from          .  22)
-        (:subject       .  nil)))
+     '( (:date    .  20)    ;; alternatively, use :human-date
+        (:flags   .   6)
+        (:from    .  22)
+        (:subject .  60)))
+
+(setq mu4e-headers-date-format "%d-%m-%Y %H:%M")
 #+end_src
 * Интеграция ~org-mu4e~
 #+begin_src emacs-lisp
 (require 'org-mu4e)
 (setq org-mu4e-link-query-in-headers-mode nil)
+(setq org-mu4e-convert-to-html t)
 #+end_src
 * Настройка ~mu4e-maildir-extension~
 #+begin_src emacs-lisp
-;(require 'mu4e-maildirs-extension)
-;(setq mu4e-maildir-extension-custom-list '("/Gmail/INBOX" "/Institute/INBOX"))
-;;(mu4e-maildirs-extension)
+  ;; (require 'mu4e-maildirs-extension)
+  ;; (setq mu4e-maildir-extension-custom-list '("/gmail/Inbox" "/im/INBOX-processed"))
+  ;; (mu4e-maildirs-extension)
 #+end_src
 * Настройка ~mu4e-conversation~
-  У меня не сработало
 ** Установка
 #+begin_src emacs-lisp
-  ;;   (with-eval-after-load 'mu4e (require 'mu4e-conversation))
-  ;; ;  (setq mu4e-view-func 'mu4e-conversation)
-  ;;   (global-mu4e-conversation-mode)
+  ;;  (with-eval-after-load 'mu4e (require 'mu4e-conversation))
+  ;; (setq mu4e-view-func 'mu4e-conversation)
+  ;; (global-mu4e-conversation-mode)
 #+end_src
+* Ведение адресной книги ~org-contacts~
+#+begin_src emacs-lisp
+(setq mu4e-org-contacts-file  "/home/svl/Dropbox/org/contacts/contacts.org")
+(add-to-list 'mu4e-headers-actions
+  '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+  '("org-contact-add" . mu4e-action-add-org-contact) t)
+#+end_src
+* Настройка ~helm-mu~ и ~helm-org-contacts~
+#+begin_src emacs-lisp
+  ;; (require 'helm-mu)
+  ;; (require 'helm-org-contacts)
+  ;; (defun helm-contacts ()
+  ;;   (interactive)
+  ;;   (helm :sources '(helm-source-org-contacts helm-source-mu-contacts)
+  ;;         :full-frame t
+  ;;         :candidate-number-limit 500))
+  ;; (define-key mu4e-compose-mode-map (kbd "C-c c") 'helm-contacts)
+#+end_src
+* Прикрепление файлов через ~dired~
+#+begin_src emacs-lisp
+(require 'gnus-dired)
+;; make the `gnus-dired-mail-buffers' function also work on
+;; message-mode derived modes, such as mu4e-compose-mode
+(defun gnus-dired-mail-buffers ()
+  "Return a list of active message buffers."
+  (let (buffers)
+    (save-current-buffer
+      (dolist (buffer (buffer-list t))
+        (set-buffer buffer)
+        (when (and (derived-mode-p 'message-mode)
+                (null message-sent-message-via))
+          (push (buffer-name buffer) buffers))))
+    (nreverse buffers)))
 
+(setq gnus-dired-mail-mode 'mu4e-user-agent)
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+#+end_src

@@ -34,3 +34,10 @@ projectile-bookmarks.eld
 /image-dired/front_cover_bf1ce7b3a84c95f67450327658ec4a44.thumb.jpeg
 /src/mu4e/mu4e-actions.el
 /src/mu4e/*.el*
+/.cache/treemacs-persist-at-last-error
+/amx-items
+/eaf/browser/cookie/cookie
+/image-dired/.image-dired_db
+/persp-confs/persp-auto-save
+/request/curl-cookie-jar
+/transient/history.el

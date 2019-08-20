@@ -3,8 +3,6 @@
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.org$\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("\\.pub$\\'" . org-mode))
-;  (require 'poly-org)
-;  (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
 #+end_src
 
 * Активация ~remember-mode~
@@ -39,19 +37,28 @@
 
 * Настройка шаблонов ~remember~
 #+begin_src emacs-lisp
+(defvar my/org-contacts-template "* %(org-contacts-template-name)
+:PROPERTIES:
+:ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+:BIRTHDAY: %^{yyyy-mm-dd}
+:EMAIL: %(org-contacts-template-email)
+:NOTE: %^{NOTE}
+:END:" "Template for org-contacts.")
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
 		 "** ❏ %^{Brief Description} %^g\n%?\n%a\nAdded: %U" )
-		("w" "Wating" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
+	("w" "Wating" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ") 
 		 "** ⚑ %^{Brief Description} %^g\n%?\n%a\nAdded: %U" )
-		("c" "Call" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
+	("c" "Call" entry (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 		 "** ☎ %^{Brief Description} %^g\n%?\nAdded: %U" )
-		("o" "Outside"  (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
+	("o" "Outside"  (file+headline "~/Dropbox/org/gtd.org" "ЗАДАЧИ")
 		 "** %^{Brief Description} %^g\n%?\nAdded: %U" )
-		("j" "Journal" entry (file+headline "~/Dropbox/org/journal.org" "Заметки")
+	("j" "Journal" entry (file+headline "~/Dropbox/org/journal.org" "Заметки")
 		 "** %^{Head Line} %U %^g\n%i%?" )
-		("s" "Someday" entry (file+headline "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")
-		 "** %^{Someday Heading} %U\n%?\n" )))
+	("s" "Someday" entry (file+headline "~/Dropbox/org/someday.org" "Когда-нибудь/может быть")
+		 "** %^{Someday Heading} %U\n%?\n" )
+	("a" "Контакт" entry (file+headline "~/Dropbox/org/contacts/contacts.org" "Несортированные контакты")
+	"** %^{Имя Фамилия} \n:PROPERTIES:\n:CELL: +375 %^{cc xxx-xx-xx}\n:BIRTHDAY: %^{yyyy-mm-dd}\n:EMAIL: %^{email}\n:END:")))
 #+end_src
 
 * Настройка ~org-super-agenda~
@@ -77,59 +84,54 @@
 #+end_src
 * Настройка показа буфера ~Agenda~
 #+begin_src emacs-lisp
-  (setq org-deadline-warning-days 7)
-  (setq org-mobile-directory "~/Dropbox/Public/MobileOrg/")
-  (setq org-directory "~/Dropbox/org/")
-  (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
-
-  (setq org-agenda-prefix-format 
-		'((agenda . " %i %-30:c%?-12t% s")
-		  (timeline . "  % s")
-		  (todo . " %i %-30:c")
-		  (tags . " %i %-30:c")
-		  (search . " %i %-30:c")))
-  (setq org-agenda-custom-commands
-      '(
-	  ("w" "Список дел, которые можно сделать на работе"
-	  ((agenda)
-	  (todo "⚑" ((org-agenda-overriding-header "Ожидание")
-	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-	  (tags-todo "@ИНСТИТУТ" ((org-agenda-overriding-header "Институт")
-	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))) 
-	  (tags-todo "@КОМПЬЮТЕР" ((org-agenda-overriding-header "Компьютер")
-	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))) 
-	  (tags-todo "@ВЫЕЗДЫ" ((org-agenda-overriding-header "Выезды")
-	  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-	  ))
-
-	("h" "Список дел, которые можно сделать дома" 
-	 ((agenda)
-	  (tags-todo "@ДОМ") 
-	  (tags-todo "@КОМПЬЮТЕР") 
-	  (tags-todo "@ВЫЕЗДЫ")))
-	
-	("d" "Список дел на день"
-	 ((agenda "" ((org-agenda-span 'day)
-				  (org-super-agenda-groups
-				   '((:log t)
-					 (:name "Расписание" 
-					        :time-grid t)
-					 (:name "Сегодня" 
-					        :scheduled today)
-					 (:name "Закончить сегодня" 
-					        :deadline today)
-					 (:name "Важное" 
-					        :priority "A")
-					 (:name "Просроченные" 
-					        :deadline past)
-					 (:name "Скоро срок окончания" 
-					        :deadline future)
-					 (:name "Запланировано ранее" 
-					        :scheduled past)
-					 (:name "Ожидание ..." 
-					        :todo "⚑"
-							:order 98)))))))
-))
+    (setq org-deadline-warning-days 0)
+    (setq org-mobile-directory "~/Dropbox/Public/MobileOrg/")
+    (setq org-directory "~/Dropbox/org/")
+    (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
+    (setq org-agenda-block-separator " ") ;; 9473)
+    (setq org-agenda-prefix-format 
+		  '((agenda . " %i %-30:c%?-12t% s")
+		    (timeline . "  % s")
+		    (todo . " %i %-30:c")
+		    (tags . " %i %-30:c")
+		    (search . " %i %-30:c")))
+    (setq org-super-agenda-unmatched-name "")
+    (setq org-super-agenda-header-separator (concat "\n" (make-string 212 ?\u2500) "\n"))
+    (setq org-agenda-custom-commands
+	'(("d" "Список дел"
+	   ((agenda "" ((org-agenda-span 'day)
+	                (org-super-agenda-groups
+	 	         '((:log t)
+			   (:name "Расписание" 
+			          :time-grid t)
+			   (:name "Сегодня" 
+			          :scheduled today)
+			   (:name "Запланировано ранее" 
+			  	  :scheduled past)))))
+	     (alltodo "" ((org-agenda-overriding-header "")
+	                  (org-super-agenda-groups
+	    		   '((:name "Важное"
+			         :priority "A"
+				 :order 2)
+			     (:name "Закончить сегодня" 
+				 :deadline today
+				 :order 1)
+			     (:name "Скоро срок окончания" 
+			         :and (:deadline future :not (:todo "⚑")))
+			     (:name "Просроченные" 
+				 :deadline past
+				 :order 3)
+			     (:name "Ожидание ..." 
+		                 :todo "⚑"
+			 	 :order 4)
+			     (:name "Неважное"
+			         :priority<= "C"
+				 :category "Когда-нибудь/может быть"
+				 :order 90)
+			     (:name "Зависшее"
+			         :and (:scheduled nil :todo "❏")
+				 :order 91)
+			     (:discard (:and (:scheduled t)))))))))))
 #+end_src
 * Настройка рефайлинга
 #+begin_src emacs-lisp
@@ -142,8 +144,7 @@
   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   (let (org-log-done org-log-states)   ; turn off logging
     (org-todo (if (= n-not-done 0) "❏" "✔"))))
-     
-	(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 #+end_src
 
 * Реализация таймера *Pomodoro*
@@ -177,7 +178,7 @@
 (require 'appt)
 (appt-activate t)
 
-(setq appt-message-warning-time 5) ; Show notification 5 minutes before event
+(setq appt-message-warning-time 60) ; Show notification 5 minutes before event
 (setq appt-display-interval appt-message-warning-time) ; Disable multiple reminders
 (setq appt-display-mode-line nil)
 
@@ -243,19 +244,18 @@
 ** Основные настройки
  #+begin_src emacs-lisp
  (setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
-       bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs"
-       bibtex-completion-notes-path "~/Dropbox/bibliography/helm-bibtex-notes")
- #+end_src
-** Для использования ~helm-bibtex~
- #+begin_src emacs-lisp
- ;; open pdf with system pdf viewer (works on mac)
- (setq bibtex-completion-pdf-open-function
-   (lambda (fpath)
-     (start-process "open" "*open*" "open" fpath)))
- ;; alternative
- ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
+       bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs")
  #+end_src
 ** Подключение
  #+begin_src emacs-lisp
  (require 'org-ref)
  #+end_src
+* Пакет ~org-vcard~
+  #+begin_src emacs-lisp
+  (require 'org-vcard)
+  #+end_src
+* Настройка ~org-contacts~
+#+begin_src emacs-lisp
+(require 'org-contacts)
+(setq org-contacts-files '("~/Dropbox/org/contacts/contacts.org"))
+#+end_src

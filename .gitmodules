@@ -25,3 +25,9 @@
 [submodule "src/emacs-powerline"]
 	path = src/emacs-powerline
 	url = https://github.com/jonathanchu/emacs-powerline.git
+[submodule "src/emacs-application-framework"]
+	path = src/emacs-application-framework
+	url = https://github.com/manateelazycat/emacs-application-framework.git
+[submodule "src/helm-org-contacts"]
+	path = src/helm-org-contacts
+	url = https://github.com/tmalsburg/helm-org-contacts.git

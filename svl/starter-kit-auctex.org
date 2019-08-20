@@ -24,6 +24,7 @@
 #+begin_src emacs-lisp
 (setq TeX-PDF-mode t)
 (setq TeX-engine 'xetex)
+(setq TeX-command-extra-options "--shell-escape")
 #+end_src
 
 * Используем =pdf-tools= для просмотра PDF
