@@ -11,7 +11,7 @@
       mu4e-index-update-in-background t ;; nil to update in foreground
       mu4e-index-cleanup nil      ;; don't do a full cleanup check
       mu4e-index-lazy-check t    ;; don't consider up-to-date dirs
-;      mu4e-headers-has-child-prefix '("."  . "◼ ")
+      mu4e-headers-has-child-prefix '("."  . "◼ ")
       mu4e-headers-default-prefix '(" "  . "│ ")
       mu4e-context-policy 'pick-first
       mu4e-view-prefer-html t
@@ -40,7 +40,8 @@
 #+end_src
 ** Разбивка окна
    #+begin_src emacs-lisp
-   (setq mu4e-split-view 'vertical)
+   (setq mu4e-split-view 'vertical) ;horizontal)
+;   (setq mu4e-headers-visible-lines 14)
    (setq mu4e-headers-visible-columns 89)
    #+end_src
 * Использование ~fancy~ символов
@@ -121,7 +122,9 @@
        "\"/[Gmail]/All Mail\""
        " AND NOT maildir:"
        "\"/im/INBOX\""))
-(setq mu4e-alert-email-notification-types '(count))
+(setq mu4e-alert-email-notification-types '(subjects))
+(setq mu4e-alert-email-count-title "Почта")
+(setq mu4e-alert-icon "/usr/share/icons/eSuru++/actions/16/mail-unread-new.svg")
 #+end_src
 * Настройка отправки писем
 ** Используем программу ~msmtp~
@@ -168,9 +171,15 @@
 * Настройка ~mu4e-conversation~
 ** Установка
 #+begin_src emacs-lisp
-  ;;  (with-eval-after-load 'mu4e (require 'mu4e-conversation))
-  ;; (setq mu4e-view-func 'mu4e-conversation)
-  ;; (global-mu4e-conversation-mode)
+(use-package mu4e-conversation
+  :after mu4e
+  :config
+;  (setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
+  (global-mu4e-conversation-mode))
+
+;;  (with-eval-after-load 'mu4e (require 'mu4e-conversation))
+;;  (setq mu4e-view-func 'mu4e-conversation)
+;;  (global-mu4e-conversation-mode)
 #+end_src
 * Ведение адресной книги ~org-contacts~
 #+begin_src emacs-lisp
@@ -209,4 +218,64 @@
 
 (setq gnus-dired-mail-mode 'mu4e-user-agent)
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+#+end_src
+* Функция, которая возвращает имя получателя e-mail
+  Данная функция используется в yasnippet для быстрого шаблона
+  сообщения
+
+  Взята на [[http:://pragmaticemacs.com/emacs/email-templates-in-mu4e-with-yasnippet/][Pragmatic Emacs]]
+
+#+begin_src emacs-lisp
+(defun svl/mu4e-get-names-for-yasnippet ()
+  "Return comma separated string of names for an email"
+  (interactive)
+  (let ((email-name "") str email-string email-list email-name2 tmpname)
+    (save-excursion
+      (goto-char (point-min))
+      ;; first line in email could be some hidden line containing NO to field
+      (setq str (buffer-substring-no-properties (point-min) (point-max))))
+    ;; take name from TO field - match series of names
+    (when (string-match "^To: \"?\\(.+\\)" str)
+      (setq email-string (match-string 1 str)))
+    ;;split to list by comma
+    (setq email-list (split-string email-string " *, *"))
+    ;;loop over emails
+    (dolist (tmpstr email-list)
+      ;;get first word of email string
+      (setq tmpname (car (split-string tmpstr " ")))
+      ;;remove whitespace or ""
+      (setq tmpname (replace-regexp-in-string "[ \"]" "" tmpname))
+      ;;join to string
+      (setq email-name
+            (concat email-name ", " tmpname)))
+    ;;remove initial comma
+    (setq email-name (replace-regexp-in-string "^, " "" email-name))
+
+    ;;see if we want to use the name in the FROM field
+    ;;get name in FROM field if available, but only if there is only
+    ;;one name in TO field
+    (if (< (length email-list) 2)
+        (when (string-match "^\\([^ ,\n]+\\).+writes:$" str)
+          (progn (setq email-name2 (match-string 1 str))
+                 ;;prefer name in FROM field if TO field has "@"
+                 (when (string-match "@" email-name)
+                   (setq email-name email-name2))
+                 )))
+    email-name))
+#+end_src
+* Использование ~BBDB~
+#+begin_src emacs-lisp
+   (require 'bbdb)
+;;   (autoload 'bbdb-insinuate-mu4e "bbdb-mu4e")
+   (bbdb-initialize 'mu4e 'message)
+   (setq bbdb-mail-user-agent 'mu4e-user-agent)
+   (setq mu4e-view-mode-hook 'bbdb-mua-auto-update)
+   (setq mu4e-compose-complete-addresses nil)
+   (setq bbdb-mua-pop-up t)
+   (setq bbdb-mua-pop-up-window-size 3)
+   (setq mu4e-view-show-addresses t)
+#+end_src
+* Использование ~gmail2bbd~
+#+begin_src emacs-lisp
+(setq gmail2bbdb-bbdb-file "~/.emacs.d/bbdb")
 #+end_src

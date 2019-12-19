@@ -28,10 +28,14 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 (defvar my-packages '(use-package auctex reftex company company-auctex 
-magit ido hideshow counsel projectile projectile-speedbar persp-projectile 
+magit ido hideshow hideshowvis counsel projectile projectile-speedbar persp-projectile 
 ibuffer-projectile helm helm-core helm-bibtex helm-gtags helm-projectile python-mode 
-elpy pydoc ipython auto-complete cmake-mode sr-speedbar yasnippet yasnippet-snippets
-anzu)
+elpy pydoc ipython auto-complete cmake-mode yasnippet yasnippet-snippets
+anzu bbdb counsel-bbdb cmake-ide company-c-header councel-projectile diminish 
+dimmer dired-hide-dotfiles dired-icon doom-themes ein mu4e-alert ggtags gmail2bbdb 
+fill-column-indicator all-the-icons all-the-icons-dired org-bullets org-pomodoro 
+org-super-agenda treemacs realgud treemacs-projectile use-package amx 
+all-the-icons-gnus all-the-ivy)
 "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -182,7 +186,7 @@ before we send our 'ok' to the SessionManager."
 
 * Отключение меню
 #+begin_src emacs-lisp
-;;(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+;; (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 #+end_src
 
 * Размещаем окно emacs в левом верхнем углу
@@ -218,7 +222,7 @@ before we send our 'ok' to the SessionManager."
   (global-set-key (kbd "<f8>")   'fd-switch-dictionary))
 #+end_src
 
-* Подключаем ~lambda-mode~
+* Подключаем =lambda-mode=
 #+begin_src emacs-lisp
 (use-package lambda-mode
   :init
@@ -227,7 +231,7 @@ before we send our 'ok' to the SessionManager."
   (add-hook 'emacs-lisp-mode-hook 'lambda-mode 1))
 #+end_src
   
-* Подключаем ~ido~
+* Подключаем =ido=
 #+begin_src emacs-lisp
 (use-package ido
   :init
@@ -248,7 +252,7 @@ before we send our 'ok' to the SessionManager."
 (setq auto-save-default nil)
 #+end_src
 
-* Включение режима ~bs~ для отображения буфера с открытыми файлами
+* Включение режима =bs= для отображения буфера с открытыми файлами
     (плагин buffer show)
 #+begin_src emacs-lisp
   ;; (require 'bs)
@@ -262,7 +266,7 @@ before we send our 'ok' to the SessionManager."
   ;;			      '(sql-interactive-mode cc-mode))))) nil))
   ;(global-set-key (kbd "<f2>") 'ibuffer-bs-show)
 #+end_src
-* Настройка ~ibuffer~
+* Настройка =ibuffer=
   #+begin_src emacs-lisp
 (defun my/ibuffer-customization ()
           ;; ibuffer-projectile setup
@@ -292,12 +296,14 @@ before we send our 'ok' to the SessionManager."
 ;;                (ibuffer-switch-to-saved-filter-groups "default")))
   #+end_src
 
-* Включение и настройка ~yasnippet~
+* Включение и настройка =yasnippet=
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :diminish yas-minor-mode
   :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
   :hook (after-init . yas-global-mode))
+(use-package yasnippet-snippets
+  :config
+  (add-to-list 'yas-snippet-dirs 'yasnippet-snippets-dir t))
 #+end_src
 
 * Отключение =Version Control (vc)=
@@ -316,16 +322,19 @@ before we send our 'ok' to the SessionManager."
 #+begin_src emacs-lisp
 (column-number-mode t)
 #+end_src
-* Интерактивное выделение активного буфера и затемнение остальных
+* Интерактивное выделение активного буфера и затемнение остальныхa
 #+begin_src emacs-lisp
 (use-package dimmer
+;;  :disabled
   :custom
   (dimmer-fraction 0.5)
+  (dimmer-exclusion-regexp "\*Org Agenda\*")
   (dimmer-exclusion-regexp-list
-       '(".*Minibuf.*"
-         ".*NeoTree.*"
-         ".*Messages.*"
-         ".*Warnings.*"))
+       '("\*Minibuf.\*"
+         "\*NeoTree.\*"
+         "\*Messages.\*"
+         "\*Warnings.\*"
+	 "\*Org Agenda\*"))
   :config
   (dimmer-mode t))
 #+end_src
@@ -340,7 +349,7 @@ before we send our 'ok' to the SessionManager."
   ((prog-mode python-mode) . fci-mode))
 #+end_src
 
-* Включение режима ~smart-tabs-mode~
+* Включение режима =smart-tabs-mode=
   #+begin_src emacs-lisp
     ;; (smart-tabs-insinuate 'c 'c++ 'python)
     ;; (setq-default tab-width 4)
@@ -363,7 +372,7 @@ before we send our 'ok' to the SessionManager."
 #+begin_src emacs-lisp
 (setq ad-redefinition-action 'accept)
 #+end_src
-* Подключаем ~doconce-mode~
+* Подключаем =doconce-mode=
 #+begin_src emacs-lisp
   (defun switch-paragraph-indent-mode-hook ()
 	(interactive)
@@ -372,21 +381,33 @@ before we send our 'ok' to the SessionManager."
   (add-hook 'doconce-mode-hook 'switch-linum-mode-hook)
   (add-hook 'doconce-mode-hook 'turn-on-typopunct-mode)
 #+end_src
-* Подключаем ~bookmark+~
+* Подключаем =bookmark+=
 #+begin_src emacs-lisp
   ;; (require 'bookmark+)
 #+end_src
-* Включение ~web-mode~ для файлов типа =.html= 
+* Включение =web-mode= для файлов типа ~.html~ 
 #+begin_src emacs-lisp
 (use-package web-mode
   :mode ("\\.html?\\'" "\\.djhtml\\'"))
 #+end_src
-* Установка =default= шрифта «Consolas»
+* Установка ~default~ шрифта «Consolas»
 #+begin_src emacs_lisp
 (set-default-font "Consolas-12")
 #+end_src
-* Подключение ~gmsh-mode~
+* Подключение =gmsh-mode=
 #+begin_src emacs-lisp
 (use-package gmsh
   :mode ("\\.geo\\'" . gmsh-mode))
+#+end_src
+* Настройка =hideshowvis=
+#+begin_src emacs-lisp
+(use-package hideshowvis
+  :diminish hs-minor-mode
+  :config
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
+  (add-hook 'prog-mode-hook 
+             (lambda () 
+	       (hs-minor-mode t)
+	       (hideshowvis-enable)
+	       (hideshowvis-symbols))))
 #+end_src

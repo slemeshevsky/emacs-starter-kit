@@ -166,6 +166,14 @@
 #  )
 # #+end_src
 
+* Настройка ~org-pomodoro~
+#+begin_src emacs-lisp
+(use-package org-pomodoro
+  :after org-agenda
+  :init (setq org-pomodoro-keep-killed-pomodoro-time t)
+  :bind (:map org-agenda-mode-map
+              ("P" . org-pomodoro)))
+#+end_src
 * Использование режима ~org-bullets~
 #+begin_src emacs-lisp
 (require 'org-bullets)

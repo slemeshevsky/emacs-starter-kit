@@ -90,7 +90,7 @@
      ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
      ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
      ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
- '(TeX-engine (quote xetex) t)
+ '(TeX-engine (quote xetex))
  '(bmkp-auto-light-when-set (quote all-in-buffer))
  '(bmkp-last-as-first-bookmark-file "~/.emacs.d/stability-book.bmk")
  '(ebib-file-associations (quote (("pdf" . "evince") ("ps" . "evince"))))
@@ -101,13 +101,14 @@
  '(ecb-options-version "2.40")
  '(ecb-prescan-directories-for-emptyness (quote unless-remote))
  '(ivy-count-format "(%d/%d) ")
+ '(ivy-extra-directories nil)
  '(ivy-height 10)
  '(ivy-use-virtual-buffers t)
- '(neo-theme (quote icons))
+ '(neo-theme (quote icons) t)
  '(org-agenda-todo-list-sublevels nil)
  '(package-selected-packages
    (quote
-    (amx counsel-projectile counsel diminish dimmer use-package persp-mode doom-themes anzu cmake-ide dired-hide-dotfiles dired-icon spaceline spaceline-all-the-icons all-the-icons all-the-icons-dired all-the-icons-gnus all-the-icons-ivy neotree ein solarized-theme smart-tabs-mode elpy magit helm-mu org-vcard org-cliplink treemacs treemacs-projectile flatui-dark-theme flatui-theme spacemacs-theme mu4e-maildirs-extension mu4e-alert mu4e-conversation mu4e-jump-to-list wanderlust org-gnome calfw calfw-org realgud company-c-headers ggtags function-args common-lisp-snippets django-snippets el-autoyas helm-c-yasnippet yasnippet-snippets ebib org-ref github-theme org-super-agenda web-mode python-mode pydoc projectile-speedbar professional-theme persp-projectile org-pomodoro org-bullets org-beautify-theme material-theme ipython ibuffer-projectile helm-projectile helm-gtags helm-bibtex helm-ag fill-column-indicator company-auctex column-marker coffee-mode cmake-mode auto-complete anti-zenburn-theme alect-themes)))
+    (counsel-bbdb gmail2bbdb bbdb hideshow-org hideshowvis amx counsel-projectile counsel diminish dimmer use-package persp-mode doom-themes anzu cmake-ide dired-hide-dotfiles dired-icon spaceline spaceline-all-the-icons all-the-icons all-the-icons-dired all-the-icons-gnus all-the-icons-ivy neotree ein solarized-theme smart-tabs-mode elpy magit helm-mu org-vcard org-cliplink treemacs treemacs-projectile flatui-dark-theme flatui-theme spacemacs-theme mu4e-maildirs-extension mu4e-alert mu4e-conversation mu4e-jump-to-list wanderlust org-gnome calfw calfw-org realgud company-c-headers ggtags function-args common-lisp-snippets django-snippets el-autoyas helm-c-yasnippet yasnippet-snippets ebib org-ref github-theme org-super-agenda web-mode python-mode pydoc projectile-speedbar professional-theme persp-projectile org-pomodoro org-bullets org-beautify-theme material-theme ipython ibuffer-projectile helm-projectile helm-gtags helm-bibtex helm-ag fill-column-indicator company-auctex column-marker coffee-mode cmake-mode auto-complete anti-zenburn-theme alect-themes)))
  '(persp-auto-resume-time 0)
  '(persp-keymap-prefix "w")
  '(persp-nil-name "main")
@@ -115,7 +116,34 @@
  '(python-indent-def-block-scale 1)
  '(safe-local-variable-values
    (quote
-    ((doconce-section-nickname . "num_parab")
+    ((projectile-project-configure-cmd . "cd ~/Projects/Cxx/build/cds-new/ && cmake-gui ../../cds-new")
+     (projectile-project-compilation-cmd . "cd ~/Projects/Cxx/build/cds-new/ && make")
+     (projectile-project-configure-cmd concat "cd ~/Projects/Cxx/build/cds-new/ && cmake-gui ../../cds-new")
+     (projectile-project-compilation-dir . "~/Projects/Cxx/build/cds-new/")
+     (projectile-project-configure-cmd . "cmake-gui ")
+     (projectile-project-configure-cmd
+      (concat
+       (concat "cd " projectile-project-compilation-dir)
+       " && cmake-gui ../../cds-new"))
+     (projectile-project-configure-cmd concat
+				       (concat "cd " projectile-project-compilation-dir)
+				       " && cmake-gui ../../cds-new")
+     (projectile-project-configure-cmd concat
+				       (concat "cd " projectile-project-compilation-dir)
+				       "&& cmake-gui ../../cds-new")
+     (projectile-project-compilation-cmd . "make")
+     (projectile-project-configure-cmd . "cmake-gui ../../cds-new")
+     (projectile-project-compilation-cmd . make)
+     (projectile-project-compilation-dir . ~/Projects/Cxx/build/cds-new)
+     (projectile-project-run-cmd . "~/Projects/Cxx/build/cds-cmake/Apps/MainApp/MainApp")
+     (projectile-project-run-cmd . "~/Projects/Cxx/build/cds-cmake/bin/MainApp")
+     (projectile-project-compilation-cmd . "cd ~/Projects/Cxx/build/cds-cmake && make")
+     (projectile-project-configure-cmd . "cd ~/Projects/Cxx/build/cds-cmake && cmake-gui ../../cds-cmake")
+     (eval add-hook
+	   (quote after-save-hook)
+	   (quote org-icalendar-export-to-ics)
+	   nil t)
+     (doconce-section-nickname . "num_parab")
      (doconce-chapter-nickname . "time-dep")
      (doconce-chapter-nickname . "bvp")
      (doconce-section-nickname . "num_meth")

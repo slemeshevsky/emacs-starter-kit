@@ -33,14 +33,16 @@
     ;; 	   '(("\\.geo\\'" . makefile-mode))
     ;; 	   auto-mode-alist))
   #+end_src
-** Режим =c++-mode= для ~.h~
+** Режим =c++-mode= для ~.h~, ~.cpp~, ~.cxx~
   #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cxx\\'" . c++-mode))
   #+end_src
 
 * Включение =Eassist=
   #+begin_src emacs-lisp
-;(require 'eassist)
+;; (require 'eassist)
   #+end_src
 * Настройка =function-args=
   #+begin_src emacs-lisp
@@ -305,7 +307,7 @@
 #+end_src
 * Настройка =cedet=
 ** Включение =Semantic=
-*** Перед включением ~Semantic~ необходимо заполнить список ~semsntic-default-submodes~
+*** Перед включением ~Semantic~ необходимо заполнить список ~semantic-default-submodes~
 **** Включение глобальной поддержки ~Semanticmdb~
 #+begin_src emacs-lisp 
   (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
@@ -787,25 +789,25 @@
   #+end_src
 ** Включаем поддержку =gnu global=
    #+begin_src emacs-lisp
-     ;     (when (cedet-gnu-global-version-check t)
-	    ;; (semanticdb-enable-gnu-global-databases 'c-mode t)
-	    ;; (semanticdb-enable-gnu-global-databases 'c++-mode t)
-	    ;; (semanticdb-enable-gnu-global-databases 'python-mode t)
-     ;)
+     ;; (when (cedet-gnu-global-version-check t)
+     ;; 	 (semanticdb-enable-gnu-global-databases 'c-mode t)
+     ;; 	 (semanticdb-enable-gnu-global-databases 'c++-mode t)
+     ;; 	 (semanticdb-enable-gnu-global-databases 'python-mode t)
+     ;;   )
    #+end_src
 * Настройка =company-mode=
 ** Активация режима
 #+begin_src emacs-lisp
-  ;; (require 'company)
-  ;; (add-hook 'after-init-hook 'global-company-mode)
-  ;; (add-to-list 'company-backends 'company-semantic)
-  ;; (add-to-list 'company-backends 'company-gtags)
-  ;; ;(define-key c-mode-map  [(control tab)] 'company-complete)
-  ;; (define-key c++-mode-map  [(control tab)] 'company-complete)
+  (require 'company)
+  (add-hook 'after-init-hook 'global-company-mode)
+  (add-to-list 'company-backends 'company-semantic)
+  (add-to-list 'company-backends 'company-gtags)
+  (define-key c-mode-map  [(control tab)] 'company-complete)
+  (define-key c++-mode-map  [(control tab)] 'company-complete)
 #+end_src
 ** Включение =company-c-headers=
 #+begin_src emacs-lisp
-;; (add-to-list 'company-backends 'company-c-headers)
+ (add-to-list 'company-backends 'company-c-headers)
 #+end_src
 ** Изменение цветовой темы =company=
 #+begin_src emacs-lisp
